@@ -262,6 +262,7 @@ namespace Tizen.NUI.BaseComponents
 
         private Rectangle _border;
         private string _resourceUrl = "";
+        private string backupResourceUrl = "";
         private bool _synchronosLoading = false;
         private string _alphaMaskUrl = null;
         private int _desired_width = -1;
@@ -1022,6 +1023,31 @@ namespace Tizen.NUI.BaseComponents
             base.UpdateCornerRadius(value);
 
             UpdateImage(0, null);
+        }
+
+        internal override void LoadResource()
+        {
+            if(ResourceUrl == "")
+            {
+                ResourceUrl = backupResourceUrl;
+            }
+            foreach (View view in Children)
+            {
+                view.LoadResource();
+            }   
+        }
+
+        internal override void UnloadResource()
+        {
+            if(ResourceUrl != "")
+            {
+                backupResourceUrl = ResourceUrl;
+                ResourceUrl = "";
+            }
+            foreach (View view in Children)
+            {
+                view.UnloadResource();
+            }   
         }
 
         internal ResourceLoadingStatusType GetResourceStatus()

@@ -533,6 +533,65 @@ namespace Tizen.NUI.Components
         }
 
         /// <summary>
+        /// If this flag is true, ScrollableBase controls child items efficiently.
+        /// Only several items those are can be seen on screen or located nearby screen are loaded on the ContentContainer.
+        /// The items those are loaded or unloaded on the ContentContainer is computed dynamically based on the ScrollableBase size and position of ContentContainer.
+        /// When this many item control is used, please following direction.
+        /// 1. it is required to do not change item order.
+        /// 2. it is recommended to define each item size.
+        /// 3. Some properties values those you can get from ContentContainer or Children of it can not be exact.
+        /// 4. The position of ContentContainer is reset to default(0, 0) when this flag is changed.
+        /// 5. Linear Layout and Grid Layout are allowed for the layout of.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ControlManyItem
+        {
+            get
+            {
+                return controlManyItem;
+            }
+            set
+            {
+                if (controlManyItem == value)
+                {
+                    return;
+                }
+                controlManyItem = value;
+
+                Position = new Position(0.0f, 0.0f);
+                if (value)
+                {
+                    viewList.Clear();
+                    foreach (View view in Children)
+                    {
+                        viewList.Add(view);
+                        view.UnloadResource();
+                    }
+                    RemoveAllChildren(false);
+                    firstItemIndexInLayout = 0;
+                    lastItemIndexInLayout = -1;
+                    LoadBackwardItems(0.0f);
+
+                    Tizen.Log.Error("NUI", "firstItemIndexInLayout : " + firstItemIndexInLayout + "\n");
+                    Tizen.Log.Error("NUI", "lastItemIndexInLayout : " + lastItemIndexInLayout + "\n");
+                }
+                else
+                {
+                    RemoveAllChildren(false);
+                    foreach (View view in viewList)
+                    {
+                        Add(view);
+                        view.LoadResource();
+                    }
+                    viewList.Clear();
+                }
+
+                Tizen.Log.Error("NUI", "viewList Size : " + viewList.Count + "\n");
+                Tizen.Log.Error("NUI", "Children Size : " + Children.Count + "\n");
+            }
+        }
+
+        /// <summary>
         /// Alphafunction for scroll animation.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -552,6 +611,16 @@ namespace Tizen.NUI.Components
         private PropertyNotification propertyNotification;
         private float noticeAnimationEndBeforePosition = 0.0f;
         private bool readyToNotice = false;
+
+        // member variables for Many Item control
+        private bool controlManyItem = false;
+
+        private List<View> viewList = new List<View>();
+
+        private int firstItemIndexInLayout;
+        private int lastItemIndexInLayout;
+        private int firstItemIndexOnScreen;
+        private int lastItemIndexOnScreen;
 
         /// <summary>
         /// Notice before animation is finished.
@@ -674,6 +743,10 @@ namespace Tizen.NUI.Components
         /// <since_tizen> 8 </since_tizen>
         public override void Add(View view)
         {
+            if (ControlManyItem)
+            {
+                Layout.RequestLayout();
+            }
             ContentContainer.Add(view);
         }
 
@@ -693,6 +766,14 @@ namespace Tizen.NUI.Components
             }
 
             ContentContainer.Remove(view);
+
+            // if viewList is empty, make lastBatchIndexInLayout to -1.
+            // TODO : re-order of viewList and Children for each cases.
+            if (ControlManyItem && viewList.Count == 0)
+            {
+                firstItemIndexInLayout = -1;
+                lastItemIndexInLayout = -1;
+            }
         }
 
         private void OnScrollingChildRelayout(object source, EventArgs args)
@@ -1294,6 +1375,38 @@ namespace Tizen.NUI.Components
             float maxPosition = ScrollAvailableArea != null ? ScrollAvailableArea.Y : maxScrollDistance;
             float minPosition = ScrollAvailableArea != null ? ScrollAvailableArea.X : 0;
 
+            if(ControlManyItem)
+            {
+                Tizen.Log.Error("NUI", "11\n");
+                int lineSize = 1;
+                if (ContentContainer.Layout.GetType().Name == "GridLayout")
+                {
+                    lineSize = (mScrollingDirection == Direction.Vertical) ? ((GridLayout)ContentContainer.Layout).Columns :
+                                                                             ((GridLayout)ContentContainer.Layout).Rows;
+                }
+
+                //TODO : ScrollAvailableArea check
+                if(velocity < 0)
+                {
+                    Tizen.Log.Error("NUI", "22\n");
+                    int currentLineNumber = (lastItemIndexInLayout - firstItemIndexInLayout + 1);
+                    currentLineNumber = (int)Math.Ceiling((float)currentLineNumber / (float)lineSize);
+                    int maxLineNumber = (viewList.Count - firstItemIndexInLayout);
+                    maxLineNumber = (int)Math.Ceiling((float)maxLineNumber/(float)lineSize);
+                    if(ScrollingDirection == Direction.Vertical)
+                    {
+                        maxPosition = (float)(maxLineNumber - currentLineNumber) * (float)(viewList[lastItemIndexInLayout].Size.Height + viewList[lastItemIndexInLayout].Margin.Top + viewList[lastItemIndexInLayout].Margin.Bottom);
+                        maxPosition += ContentContainer.Size.Height - Size.Height;
+                        Tizen.Log.Error("NUI", "33 : " + maxPosition + "\n");
+                    }
+                    else
+                    {
+                        maxPosition = (float)(maxLineNumber - currentLineNumber) * (float)(viewList[lastItemIndexInLayout].Size.Width + viewList[lastItemIndexInLayout].Margin.Start + viewList[lastItemIndexInLayout].Margin.End);
+                        maxPosition += ContentContainer.Size.Width - Size.Width;
+                    }
+                }
+            }
+
             if (destination < -maxPosition || destination > minPosition)
             {
                 panAnimationDelta = velocity > 0 ? (currentScrollPosition - minPosition) : (maxPosition - currentScrollPosition);
@@ -1343,6 +1456,19 @@ namespace Tizen.NUI.Components
                     "[Duration] " + panAnimationDuration + "\n" +
                     "================================ \n"
                 );
+            }
+
+            if(ControlManyItem)
+            {
+                Tizen.Log.Error("NUI", "44\n");
+                //TODO : ScrollAvailableArea check
+                if(velocity < 0)
+                {
+                    Tizen.Log.Error("NUI", "55 : " + destination + "\n");
+                    LoadBackwardItems(destination);
+                }
+                Tizen.Log.Error("NUI", "firstItemIndexInLayout : " + firstItemIndexInLayout + "\n");
+                Tizen.Log.Error("NUI", "lastItemIndexInLayout : " + lastItemIndexInLayout + "\n");
             }
 
             finalTargetPosition = destination;
@@ -1430,6 +1556,161 @@ namespace Tizen.NUI.Components
             }
         }
 
+        private int GetFirstItemIndexOnScreen(float position)
+        {
+            float startPosition = -position;
+
+            int lineSize = 1;
+            if (ContentContainer.Layout.GetType().Name == "GridLayout")
+            {
+                lineSize = (mScrollingDirection == Direction.Vertical) ? ((GridLayout)ContentContainer.Layout).Columns :
+                                                                         ((GridLayout)ContentContainer.Layout).Rows;
+            }
+
+            if (viewList.Count <= lineSize)
+            {
+                return 0;
+            }
+
+            return 0;
+        }
+
+        private void LoadforwardItems(float position)
+        {
+            int lineSize = 1;
+            if (ContentContainer.Layout.GetType().Name == "GridLayout")
+            {
+                lineSize = (mScrollingDirection == Direction.Vertical) ? ((GridLayout)ContentContainer.Layout).Columns :
+                                                                           ((GridLayout)ContentContainer.Layout).Rows;
+            }
+
+            float startPosition;
+            float currentStartPosition = 0.0f;
+            if(mScrollingDirection == Direction.Vertical)
+            {
+                startPosition  = - position - (float)Window.Instance.WindowSize.Height;
+                if (firstItemIndexInLayout >= 0)
+                {
+                    currentStartPosition = viewList[firstItemIndexInLayout].PositionY - viewList[firstItemIndexInLayout].Margin.Top;
+                }
+                if (startPosition >= currentStartPosition)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                startPosition  = - position - (float)Window.Instance.WindowSize.Width;
+                if (firstItemIndexInLayout >= 0)
+                {
+                    currentStartPosition = viewList[firstItemIndexInLayout].PositionX + viewList[firstItemIndexInLayout].Margin.Start;
+                }
+                if (startPosition >= currentStartPosition)
+                {
+                    return;
+                }
+            }
+
+            for (int i = firstItemIndexInLayout - lineSize; i >= 0; i -= lineSize)
+            {
+                if (mScrollingDirection == Direction.Vertical)
+                {
+                    currentStartPosition -= (float)viewList[i].Size.Height + viewList[i].Margin.Top + viewList[i].Margin.Bottom;
+                }
+                else
+                {
+                    currentStartPosition -= (float)viewList[i].Size.Width + viewList[i].Margin.Start + viewList[i].Margin.End;
+                }
+
+                for (int j = lineSize - 1; j >= 0; --j)
+                {
+                    //TODO : Unload/load resource
+                    firstItemIndexInLayout--;
+                    ContentContainer.Add(viewList[firstItemIndexInLayout]);
+                    viewList[firstItemIndexInLayout].LowerToBottom();
+                    viewList[firstItemIndexInLayout].LoadResource();
+                }
+                if(currentStartPosition <= startPosition)
+                {
+                    break;
+                }
+            }
+        }
+
+        private void LoadBackwardItems(float position)
+        {
+            int lineSize = 1;
+            if (ContentContainer.Layout.GetType().Name == "GridLayout")
+            {
+                lineSize = (mScrollingDirection == Direction.Vertical) ? ((GridLayout)ContentContainer.Layout).Columns :
+                                                                           ((GridLayout)ContentContainer.Layout).Rows;
+            }
+
+            float endPosition;
+            float currentEndPosition = 0.0f;
+            if(lastItemIndexInLayout >= 0)
+            {
+                int removeItems = (lastItemIndexInLayout + 1) % lineSize;
+                Remove(viewList[lastItemIndexInLayout--]);
+            }
+
+            if(mScrollingDirection == Direction.Vertical)
+            {
+                endPosition  = (float)Size.Height - position + (float)Window.Instance.WindowSize.Height;
+                if (lastItemIndexInLayout > 0)
+                {
+                    currentEndPosition = viewList[lastItemIndexInLayout].PositionY + (float)viewList[lastItemIndexInLayout].Size.Height + viewList[lastItemIndexInLayout].Margin.Bottom;
+                }
+                if (endPosition <= currentEndPosition)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                endPosition  = (float)Size.Width - position + (float)Window.Instance.WindowSize.Width;
+                if (lastItemIndexInLayout > 0)
+                {
+                    currentEndPosition = viewList[lastItemIndexInLayout].PositionX + (float)viewList[lastItemIndexInLayout].Size.Width + viewList[lastItemIndexInLayout].Margin.End;
+                }
+                if (endPosition <= currentEndPosition)
+                {
+                    return;
+                }
+            }
+
+            for (int i = lastItemIndexInLayout + 1; i < viewList.Count; i += lineSize)
+            {
+                if (mScrollingDirection == Direction.Vertical)
+                {
+                    currentEndPosition += (float)viewList[i].Size.Height + viewList[i].Margin.Top + viewList[i].Margin.Bottom;
+                }
+                else
+                {
+                    currentEndPosition += (float)viewList[i].Size.Width + viewList[i].Margin.Start + viewList[i].Margin.End;
+                }
+
+                for (int j = 0; i + j < viewList.Count && j < lineSize; ++j)
+                {
+                    //TODO : Unload/load resource
+                    lastItemIndexInLayout++;
+                    ContentContainer.Add(viewList[lastItemIndexInLayout]);
+                    viewList[lastItemIndexInLayout].LoadResource();
+                }
+                if(currentEndPosition >= endPosition)
+                {
+                    break;
+                }
+            }
+        }
+
+        private void UnloadforwardBatch()
+        {
+        }
+
+        private void UnloadBackwardBatch()
+        {
+        }
     }
 
 } // namespace

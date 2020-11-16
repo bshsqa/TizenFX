@@ -1114,6 +1114,22 @@ namespace Tizen.NUI.BaseComponents
             if (newStyle != null && (viewStyle == null || viewStyle.GetType() == newStyle.GetType())) ApplyStyle(newStyle);
         }
 
+        internal virtual void LoadResource()
+        {
+            foreach (View view in Children)
+            {
+                view.LoadResource();
+            }   
+        }
+
+        internal virtual void UnloadResource()
+        {
+            foreach (View view in Children)
+            {
+                view.UnloadResource();
+            }   
+        }
+
         /// <summary>
         /// you can override it to clean-up your own resources.
         /// </summary>
