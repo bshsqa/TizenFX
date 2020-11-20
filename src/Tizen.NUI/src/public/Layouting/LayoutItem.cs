@@ -53,7 +53,6 @@ namespace Tizen.NUI
         private Extents _margin;
 
         private bool parentReplacement = false;
-        private bool setPositionByLayout = true;
 
         /// <summary>
         /// [Draft] Condition event that is causing this Layout to transition.
@@ -73,26 +72,6 @@ namespace Tizen.NUI
         /// This will be public opened in tizen_5.5 after ACR done. Before ACR, need to be hidden as inhouse API.
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool LayoutWithTransition { get; set; }
-
-        /// <summary>
-        /// [Draft] Set position by layouting result
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public bool SetPositionByLayout
-        {
-            get
-            {
-                return setPositionByLayout;
-            }
-            set
-            {
-                setPositionByLayout = value;
-                if (Owner != null && Owner.ExcludeLayouting == value)
-                {
-                    Owner.ExcludeLayouting = !value;
-                }
-            }
-        }
 
         /// <summary>
         /// [Draft] Margin for this LayoutItem

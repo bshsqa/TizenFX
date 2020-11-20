@@ -217,9 +217,8 @@ namespace Tizen.NUI.BaseComponents
             set
             {
                 excludeLayouting = value;
-                if (Layout != null && Layout.SetPositionByLayout == value)
+                if (Layout != null)
                 {
-                    Layout.SetPositionByLayout = !value;
                     Layout.RequestLayout();
                 }
             }
@@ -2206,8 +2205,6 @@ namespace Tizen.NUI.BaseComponents
 
                 // Remove existing layout from it's parent layout group.
                 _layout?.Unparent();
-
-                value.SetPositionByLayout = !excludeLayouting;
 
                 // Set layout to this view
                 SetLayout(value);
