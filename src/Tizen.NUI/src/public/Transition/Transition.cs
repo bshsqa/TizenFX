@@ -26,10 +26,10 @@ namespace Tizen.NUI
     /// Transition class will be used as a property of Navigator.Transition.
     /// During page Transition each of View pair those have same TransitionTag will be move with same Navigator.Transition property.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <since_tizen> 9 </since_tizen>
     public class Transition : TransitionBase
     {
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public Transition()
         {
         }

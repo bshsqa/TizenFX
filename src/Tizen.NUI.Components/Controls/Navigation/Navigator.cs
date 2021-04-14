@@ -27,7 +27,7 @@ namespace Tizen.NUI.Components
     ///
     /// With Transition class, Navigator supports smooth transition of View pair between two Pages
     /// by using PushWithTransition(Page) and PopWithTransition() methods.
-    /// If there is View pair of current top Page and next top Page those have same View.TransitionOptions.TransitionTag,
+    /// If current top Page and next top Page have same "View.TransitionOptions.TransitionTag",
     /// Navigator creates smooth transition motion for them.
     /// Navigator.Transition property can be used to set properties of the Transition such as TimePeriod and AlphaFunction.
     /// When all transitions are finished, Navigator calls a callback methods those connected on the "TransitionFinished" event.
@@ -44,7 +44,7 @@ namespace Tizen.NUI.Components
     /// </code>
     /// </example>
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <since_tizen> 9 </since_tizen>
     public class Navigator : Control
     {
         private static readonly float DefaultTransitionDuration = 0.5f;
@@ -73,16 +73,17 @@ namespace Tizen.NUI.Components
         /// <summary>
         /// Creates a new instance of a Navigator.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public Navigator() : base()
         {
             Layout = new AbsoluteLayout();
         }
         
         /// <summary>
-        /// An event for the page disappearing signal which can be used to subscribe or unsubscribe the event handler provided by the user.
+        /// An event to notice that this Transition is finished,
+        /// This event can be used to subscribe or unsubscribe the event handler provided by the user.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public event EventHandler<EventArgs> TransitionFinished;
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace Tizen.NUI.Components
         /// <summary>
         /// Transition properties for the transition of View pair those have same transition tag.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public Transition Transition
         {
             set
@@ -113,7 +114,7 @@ namespace Tizen.NUI.Components
         /// </summary>
         /// <param name="page">The page to push to Navigator.</param>
         /// <exception cref="ArgumentNullException">Thrown when the argument page is null.</exception>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public void PushWithTransition(Page page)
         {
             if (!transitionFinished)
@@ -158,7 +159,7 @@ namespace Tizen.NUI.Components
         /// </summary>
         /// <returns>The popped page.</returns>
         /// <exception cref="InvalidOperationException">Thrown when there is no page in Navigator.</exception>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public Page PopWithTransition()
         {
             if (!transitionFinished)

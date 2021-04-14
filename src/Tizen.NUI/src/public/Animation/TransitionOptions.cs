@@ -28,7 +28,7 @@ namespace Tizen.NUI
     /// Some of options could be used only for the App transition or Page transition, but others could be used for multiple purpose.
     /// </summary>
     /// <seealso cref="NUIApplication.TransitionOptions" />
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <since_tizen> 9 </since_tizen>
     public class TransitionOptions : IDisposable
     {
         private bool disposed = false;
@@ -51,7 +51,7 @@ namespace Tizen.NUI
         /// <summary>
         /// Initializes the TransitionOptions class.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public TransitionOptions()
         {
         }
@@ -109,14 +109,14 @@ namespace Tizen.NUI
         /// and new top Page have same TransitionTag, the View on the old top Page
         /// will be transition to the one of new top Page.
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public string TransitionTag { set; get; } = null;
 
         /// <summary>
         /// A View could be transition with its child Views or without them.
         /// Default value is false
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        /// <since_tizen> 9 </since_tizen>
         public bool TransitionWithChild { set; get; } = false;
 
         /// <summary>
