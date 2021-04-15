@@ -22,9 +22,11 @@ namespace Tizen.NUI.Samples
         private readonly Vector4 ColorBackground = new Vector4(0.99f, 0.94f, 0.83f, 1.0f);
 
         private readonly Vector4[] TileColor = { new Color("#F5625D"), new Color("#7DFF83"), new Color("#7E72DF") };
+        private readonly Vector4[] PageColor = { new Color("#F5625D"), new Color("#7DFF83"), Color.Cyan };
 
-        private readonly Vector2 baseSize = new Vector2(480.0f, 800.0f);
+        private readonly Vector2 baseSize = new Vector2(720.0f, 1280.0f);
         private Vector2 contentSize;
+        private Vector2 windowSize;
 
         private float magnification;
 
@@ -37,19 +39,29 @@ namespace Tizen.NUI.Samples
         public void Activate()
         {
             Window window = NUIApplication.GetDefaultWindow();
-            Vector2 windowSize = new Vector2((float)(window.Size.Width), (float)(window.Size.Height));
+            windowSize = new Vector2((float)(window.Size.Width), (float)(window.Size.Height));
             magnification = Math.Min(windowSize.X / baseSize.X, windowSize.Y / baseSize.Y);
             contentSize = baseSize * magnification;
 
             navigator = new Navigator()
             {
-                WidthResizePolicy = ResizePolicyType.FillToParent,
-                HeightResizePolicy = ResizePolicyType.FillToParent,
+                PositionUsesPivotPoint = true,
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                Size = new Size(contentSize.Width, contentSize.Height),
                 Transition = new Transition()
                 {
                     TimePeriod = new TimePeriod(0.4f),
                     AlphaFunction = new AlphaFunction(AlphaFunction.BuiltinFunctions.EaseInOutSine),
                 },
+            };
+            navigator.TransitionFinished += (object sender, EventArgs e) =>
+            {
+                navigator.Transition = new Transition()
+                {
+                    TimePeriod = new TimePeriod(0.4f),
+                    AlphaFunction = new AlphaFunction(AlphaFunction.BuiltinFunctions.EaseInOutSine),
+                };
             };
             window.Add(navigator);
 
@@ -62,21 +74,21 @@ namespace Tizen.NUI.Samples
             View layoutView = new View()
             {
                 PositionUsesPivotPoint = true,
-                PivotPoint = PivotPoint.BottomCenter,
-                ParentOrigin = ParentOrigin.BottomCenter,
+                PivotPoint = PivotPoint.TopCenter,
+                ParentOrigin = ParentOrigin.TopCenter,
                 Layout = new LinearLayout()
                 {
                     LinearAlignment = LinearLayout.Alignment.Center,
                     LinearOrientation = LinearLayout.Orientation.Horizontal,
-                    CellPadding = new Size(convertSize(60), convertSize(60)),
+                    CellPadding = new Size(convertSize(90), convertSize(90)),
                 },
-                Position = new Position(0, -convertSize(30))
+                Position = new Position(0, convertSize(90))
             };
             mainRoot.Add(layoutView);
 
-            View redButton = CreateButton(TileColor[0], Keywords[0, 0], Keywords[0, 1], redPage);
-            View greenButton = CreateButton(TileColor[1], Keywords[1, 0], Keywords[1, 1], greenPage);
-            View blueButton = CreateButton(TileColor[2], Keywords[2, 0], Keywords[2, 1], bluePage);
+            View redButton = CreateButton(0, redPage, new Radian(-(float)Math.PI / 2.0f), 0.0f);
+            View greenButton = CreateButton(1, greenPage, new Radian(0.0f), 10.0f);
+            View blueButton = CreateButton(2, bluePage, new Radian(0.0f), 0.0f);
 
             layoutView.Add(redButton);
             layoutView.Add(greenButton);
@@ -90,19 +102,38 @@ namespace Tizen.NUI.Samples
 
             View totalGreyView = new View()
             {
-                Size = new Size(convertSize(50), convertSize(50)),
-                CornerRadius = convertSize(25),
+                Size = new Size(convertSize(75), convertSize(75)),
+                CornerRadius = 0.5f,
+                CornerRadiusPolicy = VisualTransformPolicyType.Relative,
                 BackgroundColor = ColorGrey,
                 TransitionOptions = new TransitionOptions()
                 {
+                    TransitionWithChild = true,
                     TransitionTag = totalGreyTag,
                 }
             };
+
+            View innerView = new View()
+            {
+                PositionUsesPivotPoint = true,
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                Size = new Size(convertSize(60), convertSize(60)),
+                CornerRadius = 0.5f,
+                CornerRadiusPolicy = VisualTransformPolicyType.Relative,
+                BackgroundColor = Color.Wheat,
+            };
+            totalGreyView.Add(innerView);
 
             totalGreyView.TouchEvent += (object sender, View.TouchEventArgs e) =>
             {
                 if (e.Touch.GetState(0) == PointStateType.Down)
                 {
+                    navigator.Transition = new Transition()
+                    {
+                        TimePeriod = new TimePeriod(0.8f),
+                        AlphaFunction = new AlphaFunction(AlphaFunction.BuiltinFunctions.EaseInOutSine),
+                    };
                     navigator.PushWithTransition(totalPage);
                 }
                 return true;
@@ -138,7 +169,7 @@ namespace Tizen.NUI.Samples
                 {
                     Size = new Size(contentSize.Width / 2.0f, contentSize.Height / 2.0f),
                 };
-                View smallView = CreatePageScene(TileColor[i], Keywords[i, 0], Keywords[i, 1]);
+                View smallView = CreatePageScene(i, (i==1)?10.0f:0.0f);
                 smallView.Scale = new Vector3(0.45f, 0.45f, 1.0f);
                 smallView.PositionUsesPivotPoint = true;
                 smallView.PivotPoint = PivotPoint.Center;
@@ -157,14 +188,28 @@ namespace Tizen.NUI.Samples
                 PositionUsesPivotPoint = true,
                 PivotPoint = PivotPoint.Center,
                 ParentOrigin = ParentOrigin.Center,
-                Size = new Size(convertSize(70), convertSize(70)),
-                CornerRadius = convertSize(20),
+                Size = new Size(convertSize(105), convertSize(105)),
+                CornerRadius = 0.28f,
+                CornerRadiusPolicy = VisualTransformPolicyType.Relative,
                 BackgroundColor = ColorGrey,
                 TransitionOptions = new TransitionOptions()
                 {
+                    TransitionWithChild = true,
                     TransitionTag = totalGreyTag,
                 }
             };
+
+            View innerReturnView = new View()
+            {
+                PositionUsesPivotPoint = true,
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                Size = new Size(convertSize(60), convertSize(60)),
+                CornerRadius = 0.5f,
+                CornerRadiusPolicy = VisualTransformPolicyType.Relative,
+                BackgroundColor = Color.Wheat,
+            };
+            totalGreyReturnView.Add(innerReturnView);
             sizeGreyView.Add(totalGreyReturnView);
             totalLayoutView.Add(sizeGreyView);
 
@@ -172,6 +217,11 @@ namespace Tizen.NUI.Samples
             {
                 if (e.Touch.GetState(0) == PointStateType.Down)
                 {
+                    navigator.Transition = new Transition()
+                    {
+                        TimePeriod = new TimePeriod(0.8f),
+                        AlphaFunction = new AlphaFunction(AlphaFunction.BuiltinFunctions.EaseInOutSine),
+                    };
                     navigator.PopWithTransition();
                 }
                 return true;
@@ -183,18 +233,18 @@ namespace Tizen.NUI.Samples
             };
         }
 
-        private View CreateButton(Color color, string colorTag, string greyTag, Page secondPage)
+        private View CreateButton(int index, Page secondPage, Radian angle, float shadowRadius)
         {
             View colorView = new View()
             {
-                Size = new Size(convertSize(50), convertSize(50)),
+                Size = new Size(convertSize(75), convertSize(75)),
                 CornerRadius = 0.45f,
                 CornerRadiusPolicy = VisualTransformPolicyType.Relative,
-                BackgroundColor = color,
-                Orientation = new Rotation(new Radian((float)Math.PI / 2.0f), Vector3.ZAxis),
+                BackgroundColor = TileColor[index],
+                Orientation = new Rotation(angle, Vector3.ZAxis),
                 TransitionOptions = new TransitionOptions()
                 {
-                    TransitionTag = colorTag,
+                    TransitionTag = Keywords[index, 0],
                 },
             };
 
@@ -207,16 +257,22 @@ namespace Tizen.NUI.Samples
                 CornerRadius = 0.45f,
                 CornerRadiusPolicy = VisualTransformPolicyType.Relative,
                 BackgroundColor = ColorGrey,
-                Orientation = new Rotation(new Radian(-(float)Math.PI / 2.0f), Vector3.ZAxis),
+                InheritOrientation = false,
                 TransitionOptions = new TransitionOptions()
                 {
-                    TransitionTag = greyTag,
+                    TransitionTag = Keywords[index, 1],
                 }
             };
 
-            secondPage = CreatePage(color, colorTag, greyTag);
+            if(shadowRadius > 0.0f)
+            {
+                greyView.BoxShadow = new Shadow(shadowRadius, null);
+                greyView.InheritScale = false;
+            }
 
-            greyView.TouchEvent += (object sender, View.TouchEventArgs e) =>
+            secondPage = CreatePage(index, shadowRadius);
+
+            colorView.TouchEvent += (object sender, View.TouchEventArgs e) =>
             {
                 if (e.Touch.GetState(0) == PointStateType.Down)
                 {
@@ -228,7 +284,7 @@ namespace Tizen.NUI.Samples
             return colorView;
         }
 
-        private View CreatePageScene(Color color, string colorTag, string greyTag)
+        private View CreatePageScene(int index, float shadowRadius)
         {
             View pageBackground = new View()
             {
@@ -238,14 +294,14 @@ namespace Tizen.NUI.Samples
 
             View colorView = new View()
             {
-                WidthResizePolicy = ResizePolicyType.FillToParent,
-                HeightResizePolicy = ResizePolicyType.FillToParent,
-                CornerRadius = 0.05f,
-                CornerRadiusPolicy = VisualTransformPolicyType.Relative,
-                BackgroundColor = color,
+                PositionUsesPivotPoint = true,
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                Size = new Size(windowSize.Width, windowSize.Height),
+                BackgroundColor = PageColor[index],
                 TransitionOptions = new TransitionOptions()
                 {
-                    TransitionTag = colorTag
+                    TransitionTag = Keywords[index, 0]
                 }
             };
 
@@ -254,25 +310,31 @@ namespace Tizen.NUI.Samples
                 PositionUsesPivotPoint = true,
                 PivotPoint = PivotPoint.TopCenter,
                 ParentOrigin = ParentOrigin.TopCenter,
-                Position = new Position(0, convertSize(80)),
-                SizeWidth = contentSize.Width * 0.7f,
-                SizeHeight = contentSize.Height * 0.06f,
+                Position = new Position(0, convertSize(120)),
+                SizeWidth = contentSize.Width * 0.35f,
+                SizeHeight = contentSize.Height * 0.03f,
+                Scale = new Vector3(2.0f, 2.0f, 1.0f),
                 CornerRadius = 0.1f,
                 CornerRadiusPolicy = VisualTransformPolicyType.Relative,
                 BackgroundColor = ColorGrey,
                 TransitionOptions = new TransitionOptions()
                 {
-                    TransitionTag = greyTag
+                    TransitionTag = Keywords[index, 1]
                 }
             };
+
+            if(shadowRadius > 0.0f)
+            {
+                greyView.BoxShadow = new Shadow(shadowRadius, null);
+            }
 
             View whiteView = new View()
             {
                 PositionUsesPivotPoint = true,
                 PivotPoint = PivotPoint.BottomCenter,
                 ParentOrigin = ParentOrigin.BottomCenter,
-                Position = new Position(0, -convertSize(60)),
-                SizeWidth = contentSize.Width * 0.75f,
+                Position = new Position(0, -convertSize(90)),
+                SizeWidth = contentSize.Width * 0.65f,
                 SizeHeight = contentSize.Height * 0.7f,
                 CornerRadius = 0.1f,
                 CornerRadiusPolicy = VisualTransformPolicyType.Relative,
@@ -285,7 +347,7 @@ namespace Tizen.NUI.Samples
             return pageBackground;
         }
 
-        private Page CreatePage(Color color, string colorTag, string greyTag)
+        private Page CreatePage(int index, float shadowRadius)
         {
             View pageRoot = new View()
             {
@@ -293,7 +355,7 @@ namespace Tizen.NUI.Samples
                 HeightResizePolicy = ResizePolicyType.FillToParent
             };
 
-            View pageBackground = CreatePageScene(color, colorTag, greyTag);
+            View pageBackground = CreatePageScene(index, shadowRadius);
             pageBackground.TouchEvent += (object sender, View.TouchEventArgs e) =>
             {
                 if (e.Touch.GetState(0) == PointStateType.Down)
