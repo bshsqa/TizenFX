@@ -49,6 +49,17 @@ namespace Tizen.NUI
         }
 
         /// <summary>
+        /// The constructor from two vector.
+        /// </summary>
+        /// <param name="v0">Thefirst vector.</param>
+        /// <param name="v1">The second vector.</param>
+        /// <since_tizen> 3 </since_tizen>
+        public Rotation(Vector3 v0, Vector3 v1) : this(Interop.Rotation.NewRotation2(Vector3.getCPtr(v0), Vector3.getCPtr(v1)), true)
+        {
+            if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
+        }
+
+        /// <summary>
         /// (0.0f,0.0f,0.0f,1.0f).
         /// </summary>
         /// <since_tizen> 3 </since_tizen>
