@@ -27,7 +27,7 @@ namespace Tizen.NUI
     [EditorBrowsable(EditorBrowsableState.Never)]
     // in API6 ~ API8, this has been "public class", not "public static class". to support not-rebuilt API6~API8's Application, this is reverted bact to "public class".
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable", Justification = "<Pending>")]
-    public class ImageLoading
+    public class ImageLoader
     {
         /// <summary>
         /// Load an image synchronously from local file.
@@ -48,7 +48,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -72,7 +72,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -95,7 +95,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -117,7 +117,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize)), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromFile(url, Uint16Pair.getCPtr(uSize)), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -132,7 +132,7 @@ namespace Tizen.NUI
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static PixelBuffer LoadImageFromFile(string url)
         {
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromFile(url), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromFile(url), true);
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
         }
@@ -181,7 +181,7 @@ namespace Tizen.NUI
             System.Runtime.InteropServices.Marshal.Copy(streamData, 0, bufferRef.Handle, (int)streamLength);
 
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
             uSize.Dispose();
             buffer.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -231,7 +231,7 @@ namespace Tizen.NUI
             System.Runtime.InteropServices.Marshal.Copy(streamData, 0, bufferRef.Handle, (int)streamLength);
 
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
             uSize.Dispose();
             buffer.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -280,7 +280,7 @@ namespace Tizen.NUI
             System.Runtime.InteropServices.Marshal.Copy(streamData, 0, bufferRef.Handle, (int)streamLength);
 
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
             uSize.Dispose();
             buffer.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -328,7 +328,7 @@ namespace Tizen.NUI
             System.Runtime.InteropServices.Marshal.Copy(streamData, 0, bufferRef.Handle, (int)streamLength);
 
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize)), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer), Uint16Pair.getCPtr(uSize)), true);
             uSize.Dispose();
             buffer.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -370,7 +370,7 @@ namespace Tizen.NUI
             // Copy data from stream to buffer
             System.Runtime.InteropServices.Marshal.Copy(streamData, 0, bufferRef.Handle, (int)streamLength);
 
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer)), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.LoadImageFromBuffer(VectorUnsignedChar.getCPtr(buffer)), true);
             buffer.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -395,7 +395,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            var val = new Uint16Pair(Interop.ImageLoading.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
+            var val = new Uint16Pair(Interop.ImageLoader.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
             Size2D ret = new Size2D(val.GetWidth(), val.GetHeight());
             val.Dispose();
             uSize.Dispose();
@@ -421,7 +421,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            var val = new Uint16Pair(Interop.ImageLoading.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
+            var val = new Uint16Pair(Interop.ImageLoader.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
             Size2D ret = new Size2D(val.GetWidth(), val.GetHeight());
             val.Dispose();
             uSize.Dispose();
@@ -446,7 +446,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            var val = new Uint16Pair(Interop.ImageLoading.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
+            var val = new Uint16Pair(Interop.ImageLoader.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
             Size2D ret = new Size2D(val.GetWidth(), val.GetHeight());
             val.Dispose();
             uSize.Dispose();
@@ -470,7 +470,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            var val = new Uint16Pair(Interop.ImageLoading.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize)), true);
+            var val = new Uint16Pair(Interop.ImageLoader.GetClosestImageSize(filename, Uint16Pair.getCPtr(uSize)), true);
             Size2D ret = new Size2D(val.GetWidth(), val.GetHeight());
             val.Dispose();
             uSize.Dispose();
@@ -487,7 +487,7 @@ namespace Tizen.NUI
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static Size2D GetClosestImageSize(string filename)
         {
-            var val = new Uint16Pair(Interop.ImageLoading.GetClosestImageSize(filename), true);
+            var val = new Uint16Pair(Interop.ImageLoader.GetClosestImageSize(filename), true);
             Size2D ret = new Size2D(val.GetWidth(), val.GetHeight());
             val.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -516,7 +516,7 @@ namespace Tizen.NUI
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static Size2D GetOriginalImageSize(string filename, bool orientationCorrection)
         {
-            var val = new Uint16Pair(Interop.ImageLoading.GetOriginalImageSize(filename, orientationCorrection), true);
+            var val = new Uint16Pair(Interop.ImageLoader.GetOriginalImageSize(filename, orientationCorrection), true);
             Size2D ret = new Size2D(val.GetWidth(), val.GetHeight());
             val.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -542,7 +542,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode, orientationCorrection), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -566,7 +566,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize), (int)fittingMode, (int)samplingMode), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -589,7 +589,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -620,7 +620,7 @@ namespace Tizen.NUI
             }
 
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.DownloadImageSynchronously(uri.AbsoluteUri, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.DownloadImageSynchronously(uri.AbsoluteUri, Uint16Pair.getCPtr(uSize), (int)fittingMode), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -642,7 +642,7 @@ namespace Tizen.NUI
                 throw new ArgumentNullException(nameof(size));
             }
             var uSize = new Uint16Pair((uint)size.Width, (uint)size.Height);
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize)), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.DownloadImageSynchronously(url, Uint16Pair.getCPtr(uSize)), true);
             uSize.Dispose();
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
@@ -657,7 +657,7 @@ namespace Tizen.NUI
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static PixelBuffer DownloadImageSynchronously(string url)
         {
-            PixelBuffer ret = new PixelBuffer(Interop.ImageLoading.DownloadImageSynchronously(url), true);
+            PixelBuffer ret = new PixelBuffer(Interop.ImageLoader.DownloadImageSynchronously(url), true);
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
             return ret;
         }

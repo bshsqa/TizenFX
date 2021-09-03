@@ -18,7 +18,7 @@ namespace Tizen.NUI
 {
     internal static partial class Interop
     {
-        internal static partial class ImageLoading
+        internal static partial class ImageLoader
         {
             [global::System.Runtime.InteropServices.DllImport(NDalicPINVOKE.Lib, EntryPoint = "CSharp_Dali_LoadImageFromFile__SWIG_0")]
             public static extern global::System.IntPtr LoadImageFromFile(string jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, int jarg3, int jarg4, bool jarg5);

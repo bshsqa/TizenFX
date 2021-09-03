@@ -361,7 +361,7 @@ namespace NuiCommonUiSamples
         private Texture LoadStageFillingTexture(string filepath)
         {
             Size2D dimensions = new Size2D(Window.Instance.WindowSize.Width, Window.Instance.WindowSize.Height);
-            PixelBuffer pb = ImageLoading.LoadImageFromFile(filepath, dimensions, FittingModeType.ScaleToFill);
+            PixelBuffer pb = ImageLoader.LoadImageFromFile(filepath, dimensions, FittingModeType.ScaleToFill);
             PixelData pd = PixelBuffer.Convert(pb);
 
             Texture texture = new Texture(TextureType.TEXTURE_2D, pd.GetPixelFormat(), pd.GetWidth(), pd.GetHeight());

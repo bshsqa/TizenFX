@@ -30,7 +30,7 @@ namespace mytest
             iv.Position2D = new Position2D(50, 200);
             win.GetDefaultLayer().Add(iv);
 
-            Size2D imageSize = ImageLoading.GetOriginalImageSize(iv.ResourceUrl);
+            Size2D imageSize = ImageLoader.GetOriginalImageSize(iv.ResourceUrl);
             TextLabel tl = new TextLabel();
             tl.Position2D = new Position2D(iv.Position2D.X, iv.Position2D.Y + imageSize.Height);
             tl.MultiLine = true;
@@ -43,7 +43,7 @@ namespace mytest
             iv.Position2D = new Position2D(50, 600);
             win.GetDefaultLayer().Add(iv);
 
-            imageSize = ImageLoading.GetOriginalImageSize(iv.ResourceUrl);
+            imageSize = ImageLoader.GetOriginalImageSize(iv.ResourceUrl);
             tl = new TextLabel();
             tl.Position2D = new Position2D(iv.Position2D.X, iv.Position2D.Y + imageSize.Height);
             tl.MultiLine = true;
