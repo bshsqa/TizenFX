@@ -181,6 +181,13 @@ namespace Tizen.NUI.Scene3D
             return ret;
         }
 
+        private View SetModelPivot(PivotPoint modelPivot)
+        {
+            View ret = new View(Interop.Model.SetModelPivot(SwigCPtr, modelPivot), false);
+            if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
+            return ret;
+        }
+
         /// <summary>
         /// Release swigCPtr.
         /// </summary>

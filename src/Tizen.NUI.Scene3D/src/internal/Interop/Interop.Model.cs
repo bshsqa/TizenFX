@@ -59,6 +59,9 @@ namespace Tizen.NUI.Scene3D
 
             [global::System.Runtime.InteropServices.DllImport(Libraries.Scene3D, EntryPoint = "CSharp_Dali_ModelView_GetAnimation_2")]
             public static extern global::System.IntPtr GetAnimation(global::System.Runtime.InteropServices.HandleRef jarg1, string name);
+
+            [global::System.Runtime.InteropServices.DllImport(Libraries.Scene3D, EntryPoint = "CSharp_Dali_ModelView_SetModelPivot")]
+            public static extern void SetModelPivot(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef modelPivot);
         }
     }
 }
