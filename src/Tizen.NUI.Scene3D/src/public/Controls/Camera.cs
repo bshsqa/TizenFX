@@ -147,6 +147,28 @@ namespace Tizen.NUI.Scene3D
         }
 
         /// <summary>
+        /// Sets/Gets orthographic size.
+        /// </summary>
+        // This will be public opened after ACR done. (Before ACR, need to be hidden as Inhouse API)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public float OrthographicSize
+        {
+            get
+            {
+                return TopPlaneDistance;
+            }
+            set
+            {
+                SetValue(TopPlaneDistanceProperty, value);
+                SetValue(BottomPlaneDistanceProperty, -value);
+                float halfWidth = AspectRatio * value;
+                SetValue(LeftPlaneDistanceProperty, -halfWidth);
+                SetValue(RightPlaneDistanceProperty, halfWidth);
+                NotifyPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Gets the aspect ratio of the camera.
         /// </summary>
         // This will be public opened after ACR done. (Before ACR, need to be hidden as Inhouse API)
@@ -206,11 +228,6 @@ namespace Tizen.NUI.Scene3D
             {
                 return (float)GetValue(LeftPlaneDistanceProperty);
             }
-            set
-            {
-                SetValue(LeftPlaneDistanceProperty, value);
-                NotifyPropertyChanged();
-            }
         }
 
         /// <summary>
@@ -223,11 +240,6 @@ namespace Tizen.NUI.Scene3D
             get
             {
                 return (float)GetValue(RightPlaneDistanceProperty);
-            }
-            set
-            {
-                SetValue(RightPlaneDistanceProperty, value);
-                NotifyPropertyChanged();
             }
         }
 
@@ -242,11 +254,6 @@ namespace Tizen.NUI.Scene3D
             {
                 return (float)GetValue(TopPlaneDistanceProperty);
             }
-            set
-            {
-                SetValue(TopPlaneDistanceProperty, value);
-                NotifyPropertyChanged();
-            }
         }
 
         /// <summary>
@@ -259,11 +266,6 @@ namespace Tizen.NUI.Scene3D
             get
             {
                 return (float)GetValue(BottomPlaneDistanceProperty);
-            }
-            set
-            {
-                SetValue(BottomPlaneDistanceProperty, value);
-                NotifyPropertyChanged();
             }
         }
 
