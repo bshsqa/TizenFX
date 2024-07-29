@@ -65,6 +65,18 @@ namespace Tizen.NUI
         }
 
         /// <summary>
+        /// Gets or sets whether this capture source can be render on Screen or not.
+        /// If it is true, the source is not rendered on screen but it will be captured.
+        /// If it is false, the source is rendered on both of screen and capture result.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsExclusive
+        {
+            get => Interop.Capture.IsExclusive(SwigCPtr);
+            set => Interop.Capture.SetExclusive(SwigCPtr, value);
+        }
+
+        /// <summary>
         /// Dispose
         /// </summary>
         /// <param name="type"></param>
