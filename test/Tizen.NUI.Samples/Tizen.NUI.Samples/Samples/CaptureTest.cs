@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 using global::System;
 using Tizen.NUI;
 using Tizen.NUI.BaseComponents;
@@ -25,7 +25,7 @@ namespace Tizen.NUI.Samples
                 BackgroundColor = Color.White,
             };
 
-            window.Add(root);
+//            window.Add(root);
 
             log.Debug(tag, $"root view added \n");
 
@@ -63,8 +63,12 @@ namespace Tizen.NUI.Samples
                 log.Debug(tag, $"url={imageUrl.ToString()} \n");
 
                 capturedImage.Size = new Size(510, 510);
-                capturedImage.Position = new Position(10, 10);
-                root.Add(capturedImage);
+                capturedImage.Position = new Position(500, 500);
+                window.Add(capturedImage);
+                
+                Tizen.Log.Error("NUI", "21\n");
+                root.Unparent();
+                Tizen.Log.Error("NUI", "22\n");
                 done = false;
             }
         }
@@ -75,10 +79,19 @@ namespace Tizen.NUI.Samples
             {
                 if (!done)
                 {
+                    Tizen.Log.Error("NUI", "1\n");
+                    window.Add(root);
+                    Tizen.Log.Error("NUI", "2\n");
                     done = true;
+                    Tizen.Log.Error("NUI", "3\n");
                     capture = new Capture();
+                    Tizen.Log.Error("NUI", "4\n");
+                    capture.IsExclusive = true;
+                    Tizen.Log.Error("NUI", "5\n");
                     capture.Start(root, new Size(510, 510), "");
+                    Tizen.Log.Error("NUI", "6\n");
                     capture.Finished += onCaptureFinished;
+                    Tizen.Log.Error("NUI", "7\n");
                     log.Debug(tag, $"capture done \n");
                 }
             }
