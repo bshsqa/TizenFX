@@ -5,29 +5,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Struct Color
-   </title>
+ </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Color
-   ">
-    <meta name="generator" content="docfx 2.56.1.0">
+ ">
+    <meta name="generator" content="docfx ">
     <meta name="version" content="API8">
-    
+  
     <link rel="shortcut icon" href="../../images/tizen_favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../../styles/docfx.css">
     <link rel="stylesheet" href="../../styles/main.css">
     <link rel="stylesheet" href="../../styles/tizen.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
     <meta property="docfx:navrel" content="../../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
-    
-    <meta property="docfx:rel" content="../../">
-    
+  
+  <meta property="docfx:rel" content="../../">
+  
   </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
-        
+
         <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -37,7 +36,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              
+
               <a class="navbar-brand" href="../../index.html">
                 <img id="logo" class="svg" src="../../images/tizen_logo.png" alt="">
               </a>
@@ -45,13 +44,13 @@
             <div class="collapse navbar-collapse" id="navbar">
               <form class="navbar-form navbar-right" role="search" id="search">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                  <input type="text" class="form-control" id="search-query" placeholder="" autocomplete="off">
                 </div>
               </form>
             </div>
           </div>
         </nav>
-        
+
         <div class="subnav navbar navbar-default">
           <div class="container hide-when-search" id="breadcrumb">
             <ul class="breadcrumb">
@@ -61,19 +60,19 @@
         </div>
       </header>
       <div class="container body-content">
-        
+
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list"> <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="data-prev=" data-next="data-last="></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
-        
+
         <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle"></a>
           <div class="sidetoggle collapse" id="sidetoggle">
             <div id="sidetoc"></div>
           </div>
@@ -81,84 +80,38 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Tizen.Common.Color">
-  
-  
+
+
   <h1 id="Tizen_Common_Color" data-uid="Tizen.Common.Color" class="text-break">Struct Color
-  </h1>
+</h1>
   <h3 class="hidden-anchor" id="definition"><a href="#definition"></a>Definition</h3>
-  
-  <dl class="attribute-list"><dt>Namespace:</dt><dd><a class="xref" href="Tizen.Common.html">Tizen.Common</a></dd></dl>
+
+  <dl class="attribute-list"><dt>Namespace:</dt><dd><a class="xref" href="Tizen.html">Tizen</a>.<a class="xref" href="Tizen.Common.html">Common</a></dd></dl>
   <dl class="attribute-list"><dt>Assembly:</dt><dd>Tizen.dll</dd></dl>
-  <dl class="attribute-list"><dt>API Level:</dt><dd><span>3</span></dd></dl>
-  
+
   <div class="markdown level0 summary"><p>Structure that represents a color as RGBA.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public struct Color : IEquatable&lt;Color&gt;</code></pre>
   </div>
 
-  
+
   <dl class="attribute-list stack">
     <dt>Implements</dt>
     <dd>
-      <div class="pdl"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Tizen.Common.Color.html">Color</a>&gt;</div>
+      <div class="pdl"><span class="xref">System.IEquatable&lt;T&gt;</span>&lt;<a class="xref" href="Tizen.Common.Color.html">Color</a>&gt;</div>
     </dd>
   </dl>
-  
+
   <h3 id="constructors">Constructors
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L172">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L151">View Source</a>
   </span>
   <a id="Tizen_Common_Color__ctor_" data-uid="Tizen.Common.Color.#ctor*"></a>
-  <h4 id="Tizen_Common_Color__ctor_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.#ctor(System.Int32,System.Int32,System.Int32)">Color(Int32, Int32, Int32)</h4>
-  <div class="markdown level1 summary"><p>Initiates the new color with R,G,B components. The Alpha value will be 255 as default.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Color(int r, int g, int b)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td><span class="parametername">r</span></td>
-        <td><p>Red (0 ~ 255).</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td><span class="parametername">g</span></td>
-        <td><p>Green (0 ~ 255).</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
-        <td><span class="parametername">b</span></td>
-        <td><p>Blue (0 ~ 255).</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L151">View Source</a>
-  </span>
-  <a id="Tizen_Common_Color__ctor_" data-uid="Tizen.Common.Color.#ctor*"></a>
-  <h4 id="Tizen_Common_Color__ctor_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">Color(Int32, Int32, Int32, Int32)</h4>
+  <h4 id="Tizen_Common_Color__ctor_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">Color(int, int, int, int)</h4>
   <div class="markdown level1 summary"><p>Initiates the new color with R,G,B,A components.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -177,38 +130,85 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">r</span></td>
         <td><p>Red (0 ~ 255).</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">g</span></td>
         <td><p>Green (0 ~ 255).</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">b</span></td>
         <td><p>Blue (0 ~ 255).</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">a</span></td>
         <td><p>Alpha (0 ~ 255).</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
-  <h3 id="fields">Fields
-  </h3>
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L43">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L172">View Source</a>
+  </span>
+  <a id="Tizen_Common_Color__ctor_" data-uid="Tizen.Common.Color.#ctor*"></a>
+  <h4 id="Tizen_Common_Color__ctor_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.#ctor(System.Int32,System.Int32,System.Int32)">Color(int, int, int)</h4>
+  <div class="markdown level1 summary"><p>Initiates the new color with R,G,B components. The Alpha value will be 255 as default.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color(int r, int g, int b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">r</span></td>
+        <td><p>Red (0 ~ 255).</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Green (0 ~ 255).</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">int</span></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>Blue (0 ~ 255).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <div style="margin-bottom: 15px"></div>
+
+  <h3 id="fields">Fields
+</h3>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L43">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Aqua" data-uid="Tizen.Common.Color.Aqua">Aqua</h4>
   <div class="markdown level1 summary"><p>Aqua color instance. Its RGB value is (0, 255, 255).</p>
@@ -233,11 +233,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L49">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L49">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Black" data-uid="Tizen.Common.Color.Black">Black</h4>
   <div class="markdown level1 summary"><p>Black color instance. Its RGB value is (0, 0, 0).</p>
@@ -262,11 +263,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L55">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L55">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Blue" data-uid="Tizen.Common.Color.Blue">Blue</h4>
   <div class="markdown level1 summary"><p>Blue color instance. Its RGB value is (0, 0, 255).</p>
@@ -291,11 +293,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L31">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L31">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Empty" data-uid="Tizen.Common.Color.Empty">Empty</h4>
   <div class="markdown level1 summary"><p>Empty color instance. All components are 0.</p>
@@ -320,11 +323,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L61">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L61">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Fuchsia" data-uid="Tizen.Common.Color.Fuchsia">Fuchsia</h4>
   <div class="markdown level1 summary"><p>Fuchsia color instance. Its RGB value is (255, 0, 255).</p>
@@ -349,11 +353,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L67">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L67">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Gray" data-uid="Tizen.Common.Color.Gray">Gray</h4>
   <div class="markdown level1 summary"><p>Gray color instance. Its RGB value is (128, 128, 128).</p>
@@ -378,11 +383,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L73">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L73">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Green" data-uid="Tizen.Common.Color.Green">Green</h4>
   <div class="markdown level1 summary"><p>Green color instance. Its RGB value is (0, 128, 0).</p>
@@ -407,11 +413,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L79">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L79">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Lime" data-uid="Tizen.Common.Color.Lime">Lime</h4>
   <div class="markdown level1 summary"><p>Lime color instance. Its RGB value is (0, 255, 0).</p>
@@ -436,11 +443,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L85">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L85">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Maroon" data-uid="Tizen.Common.Color.Maroon">Maroon</h4>
   <div class="markdown level1 summary"><p>Maroon color instance. Its RGB value is (128, 0, 0).</p>
@@ -465,11 +473,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L91">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L91">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Navy" data-uid="Tizen.Common.Color.Navy">Navy</h4>
   <div class="markdown level1 summary"><p>Navy color instance. Its RGB value is (0, 0, 128).</p>
@@ -494,11 +503,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L97">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L97">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Olive" data-uid="Tizen.Common.Color.Olive">Olive</h4>
   <div class="markdown level1 summary"><p>Olive color instance. Its RGB value is (128, 128, 0).</p>
@@ -523,11 +533,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L109">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L109">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Pink" data-uid="Tizen.Common.Color.Pink">Pink</h4>
   <div class="markdown level1 summary"><p>Pink color instance. Its RGB value is (255, 102, 255).</p>
@@ -552,11 +563,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L103">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L103">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Purple" data-uid="Tizen.Common.Color.Purple">Purple</h4>
   <div class="markdown level1 summary"><p>Purple color instance. Its RGB value is (128, 0, 128).</p>
@@ -581,11 +593,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L115">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L115">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Red" data-uid="Tizen.Common.Color.Red">Red</h4>
   <div class="markdown level1 summary"><p>Red color instance. Its RGB value is (255, 0, 0).</p>
@@ -610,11 +623,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L121">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L121">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Silver" data-uid="Tizen.Common.Color.Silver">Silver</h4>
   <div class="markdown level1 summary"><p>Silver color instance. Its RGB value is (192, 192, 192).</p>
@@ -639,11 +653,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L127">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L127">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Teal" data-uid="Tizen.Common.Color.Teal">Teal</h4>
   <div class="markdown level1 summary"><p>Teal color instance. Its RGB value is (0, 128, 128).</p>
@@ -668,11 +683,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L37">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L37">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Transparent" data-uid="Tizen.Common.Color.Transparent">Transparent</h4>
   <div class="markdown level1 summary"><p>Transparent color instance. All components are 0.</p>
@@ -697,11 +713,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L133">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L133">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_White" data-uid="Tizen.Common.Color.White">White</h4>
   <div class="markdown level1 summary"><p>White color instance. Its RGB value is (255, 255, 255).</p>
@@ -726,11 +743,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L139">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L139">View Source</a>
   </span>
   <h4 id="Tizen_Common_Color_Yellow" data-uid="Tizen.Common.Color.Yellow">Yellow</h4>
   <div class="markdown level1 summary"><p>Yellow color instance. Its RGB value is (255, 255, 0).</p>
@@ -755,13 +773,14 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="properties">Properties
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L209">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L209">View Source</a>
   </span>
   <a id="Tizen_Common_Color_A_" data-uid="Tizen.Common.Color.A*"></a>
   <h4 id="Tizen_Common_Color_A" data-uid="Tizen.Common.Color.A">A</h4>
@@ -782,16 +801,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L200">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L200">View Source</a>
   </span>
   <a id="Tizen_Common_Color_B_" data-uid="Tizen.Common.Color.B*"></a>
   <h4 id="Tizen_Common_Color_B" data-uid="Tizen.Common.Color.B">B</h4>
@@ -812,16 +832,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L191">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L191">View Source</a>
   </span>
   <a id="Tizen_Common_Color_G_" data-uid="Tizen.Common.Color.G*"></a>
   <h4 id="Tizen_Common_Color_G" data-uid="Tizen.Common.Color.G">G</h4>
@@ -842,16 +863,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L182">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L182">View Source</a>
   </span>
   <a id="Tizen_Common_Color_R_" data-uid="Tizen.Common.Color.R*"></a>
   <h4 id="Tizen_Common_Color_R" data-uid="Tizen.Common.Color.R">R</h4>
@@ -872,21 +894,22 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="methods">Methods
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L356">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L356">View Source</a>
   </span>
   <a id="Tizen_Common_Color_Equals_" data-uid="Tizen.Common.Color.Equals*"></a>
-  <h4 id="Tizen_Common_Color_Equals_System_Object_" data-uid="Tizen.Common.Color.Equals(System.Object)">Equals(Object)</h4>
+  <h4 id="Tizen_Common_Color_Equals_System_Object_" data-uid="Tizen.Common.Color.Equals(System.Object)">Equals(object)</h4>
   <div class="markdown level1 summary"><p>Returns a boolean indicating whether the given object is equal to this Color instance.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -905,7 +928,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="xref">object</span></td>
         <td><span class="parametername">obj</span></td>
         <td><p>The object to compare against.</p>
 </td>
@@ -922,19 +945,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td><p>True if the object is equal to this color; False otherwise.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.equals#System_ValueType_Equals_System_Object_">ValueType.Equals(Object)</a></div>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+  <div><span class="xref">System.ValueType.Equals(object)</span></div>
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L345">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L345">View Source</a>
   </span>
   <a id="Tizen_Common_Color_Equals_" data-uid="Tizen.Common.Color.Equals*"></a>
   <h4 id="Tizen_Common_Color_Equals_Tizen_Common_Color_" data-uid="Tizen.Common.Color.Equals(Tizen.Common.Color)">Equals(Color)</h4>
@@ -973,20 +997,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td><p>True if the other color is equal to this instance; False otherwise.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L275">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L275">View Source</a>
   </span>
   <a id="Tizen_Common_Color_FromHex_" data-uid="Tizen.Common.Color.FromHex*"></a>
-  <h4 id="Tizen_Common_Color_FromHex_System_String_" data-uid="Tizen.Common.Color.FromHex(System.String)">FromHex(String)</h4>
+  <h4 id="Tizen_Common_Color_FromHex_System_String_" data-uid="Tizen.Common.Color.FromHex(System.String)">FromHex(string)</h4>
   <div class="markdown level1 summary"><p>Returns a new RGB color instance with the requested Red, Green, and Blue channels. The Alpha channel is set if hex contains one.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1005,7 +1030,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">hex</span></td>
         <td><p>A string that contains the hexadecimal RGB(A) color representation.</p>
 </td>
@@ -1028,14 +1053,15 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L250">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L250">View Source</a>
   </span>
   <a id="Tizen_Common_Color_FromRgb_" data-uid="Tizen.Common.Color.FromRgb*"></a>
-  <h4 id="Tizen_Common_Color_FromRgb_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.FromRgb(System.Int32,System.Int32,System.Int32)">FromRgb(Int32, Int32, Int32)</h4>
+  <h4 id="Tizen_Common_Color_FromRgb_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.FromRgb(System.Int32,System.Int32,System.Int32)">FromRgb(int, int, int)</h4>
   <div class="markdown level1 summary"><p>Returns a new RGB color instance.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1054,19 +1080,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">r</span></td>
         <td><p>The Red component of the color.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">g</span></td>
         <td><p>The Green component of the color.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">b</span></td>
         <td><p>The Blue component of the color.</p>
 </td>
@@ -1088,14 +1114,15 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L264">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L264">View Source</a>
   </span>
   <a id="Tizen_Common_Color_FromRgba_" data-uid="Tizen.Common.Color.FromRgba*"></a>
-  <h4 id="Tizen_Common_Color_FromRgba_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.FromRgba(System.Int32,System.Int32,System.Int32,System.Int32)">FromRgba(Int32, Int32, Int32, Int32)</h4>
+  <h4 id="Tizen_Common_Color_FromRgba_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="Tizen.Common.Color.FromRgba(System.Int32,System.Int32,System.Int32,System.Int32)">FromRgba(int, int, int, int)</h4>
   <div class="markdown level1 summary"><p>Returns a new RGBA color instance.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1114,25 +1141,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">r</span></td>
         <td><p>The Red component of the color.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">g</span></td>
         <td><p>The Green component of the color.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">b</span></td>
         <td><p>The Blue component of the color.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><span class="parametername">a</span></td>
         <td><p>The Alpha component of the color.</p>
 </td>
@@ -1155,11 +1182,12 @@
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L324">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L324">View Source</a>
   </span>
   <a id="Tizen_Common_Color_GetArgb_" data-uid="Tizen.Common.Color.GetArgb*"></a>
   <h4 id="Tizen_Common_Color_GetArgb" data-uid="Tizen.Common.Color.GetArgb">GetArgb()</h4>
@@ -1180,16 +1208,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L380">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L380">View Source</a>
   </span>
   <a id="Tizen_Common_Color_GetHashCode_" data-uid="Tizen.Common.Color.GetHashCode*"></a>
   <h4 id="Tizen_Common_Color_GetHashCode" data-uid="Tizen.Common.Color.GetHashCode">GetHashCode()</h4>
@@ -1210,19 +1239,20 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td><p>The hash code.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.gethashcode#System_ValueType_GetHashCode">ValueType.GetHashCode()</a></div>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L315">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L315">View Source</a>
   </span>
   <a id="Tizen_Common_Color_GetRgba_" data-uid="Tizen.Common.Color.GetRgba*"></a>
   <h4 id="Tizen_Common_Color_GetRgba" data-uid="Tizen.Common.Color.GetRgba">GetRgba()</h4>
@@ -1243,16 +1273,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L334">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L334">View Source</a>
   </span>
   <a id="Tizen_Common_Color_ToHex_" data-uid="Tizen.Common.Color.ToHex*"></a>
   <h4 id="Tizen_Common_Color_ToHex" data-uid="Tizen.Common.Color.ToHex">ToHex()</h4>
@@ -1273,17 +1304,18 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><p>The string representation in Hex.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L370">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L370">View Source</a>
   </span>
   <a id="Tizen_Common_Color_ToString_" data-uid="Tizen.Common.Color.ToString*"></a>
   <h4 id="Tizen_Common_Color_ToString" data-uid="Tizen.Common.Color.ToString">ToString()</h4>
@@ -1304,24 +1336,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><p>The string representation.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.tostring#System_ValueType_ToString">ValueType.ToString()</a></div>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+  <div><span class="xref">System.ValueType.ToString()</span></div>
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="operators">Operators
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L225">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L225">View Source</a>
   </span>
   <a id="Tizen_Common_Color_op_Equality_" data-uid="Tizen.Common.Color.op_Equality*"></a>
-  <h4 id="Tizen_Common_Color_op_Equality_Tizen_Common_Color_Tizen_Common_Color_" data-uid="Tizen.Common.Color.op_Equality(Tizen.Common.Color,Tizen.Common.Color)">Equality(Color, Color)</h4>
+  <h4 id="Tizen_Common_Color_op_Equality_Tizen_Common_Color_Tizen_Common_Color_" data-uid="Tizen.Common.Color.op_Equality(Tizen.Common.Color,Tizen.Common.Color)">operator ==(Color, Color)</h4>
   <div class="markdown level1 summary"><p>Returns a boolean indicating whether the two given colors are equal.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1363,20 +1396,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td><p>True if the colors are equal; False otherwise.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L237">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L237">View Source</a>
   </span>
   <a id="Tizen_Common_Color_op_Inequality_" data-uid="Tizen.Common.Color.op_Inequality*"></a>
-  <h4 id="Tizen_Common_Color_op_Inequality_Tizen_Common_Color_Tizen_Common_Color_" data-uid="Tizen.Common.Color.op_Inequality(Tizen.Common.Color,Tizen.Common.Color)">Inequality(Color, Color)</h4>
+  <h4 id="Tizen_Common_Color_op_Inequality_Tizen_Common_Color_Tizen_Common_Color_" data-uid="Tizen.Common.Color.op_Inequality(Tizen.Common.Color,Tizen.Common.Color)">operator !=(Color, Color)</h4>
   <div class="markdown level1 summary"><p>Returns a boolean indicating whether the two given colors are not equal.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1418,28 +1452,29 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td><p>True if the colors are not equal; False if they are equal.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">System.IEquatable&lt;T&gt;</a>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>
-          
+
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen/Tizen.Common/Color.cs/#L25" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen/Tizen.Common/Color.cs/#L25" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
@@ -1450,7 +1485,7 @@
           </div>
         </div>
       </div>
-      
+
       <footer>
         <div class="grad-bottom"></div>
         <div class="footer">
@@ -1458,13 +1493,13 @@
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>Copyright &copy; 2016-2020 Samsung <br> Generated by <strong>DocFX</strong></span>
-            
+      <span>Copyright &copy; 2016-2023 Samsung <br> Generated by <strong>DocFX</strong></span>
+      
           </div>
         </div>
       </footer>
     </div>
-    
+
     <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
     <script type="text/javascript" src="../../styles/docfx.js"></script>
     <script type="text/javascript" src="../../styles/main.js"></script>

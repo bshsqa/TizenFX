@@ -1,5 +1,9 @@
 $(function () {
   var monikers = {
+    "API12": "API Level 12 / Tizen vNext",
+    "API11": "API Level 11 / Tizen 8.0",
+    "API10": "API Level 10 / Tizen 7.0",
+    "API9": "API Level 9 / Tizen 6.5",
     "API8": "API Level 8 / Tizen 6.0",
     "API7": "API Level 7 / Tizen 5.5 M3",
     "API6": "API Level 6 / Tizen 5.5 M2",
@@ -13,13 +17,22 @@ $(function () {
     var picker = $('.moniker-picker-menu');
     if (picker.length) {
       clearInterval(readyForPicker);
-      registerMonikers(picker);
-      registerMonikerChangedEvent(picker);
+      if (version == 'internals') {
+        hideMonikerPicker();
+      } else {
+        registerMonikers(picker);
+        registerMonikerChangedEvent(picker);
+      }
     }
   }, 10);
 
+  function hideMonikerPicker() {
+    $('.moniker-picker').hide();
+    $('.sidetoc').css("top", "140px");
+  }
+
   function registerMonikers(obj) {
-    var levels = Object.keys(monikers).sort().reverse();
+    var levels = Object.keys(monikers);
     levels.forEach(function(k) {
       obj.append(new Option(monikers[k], k));
     });
@@ -31,5 +44,20 @@ $(function () {
       window.location.href = '../../' + event.target.value + '/api/';
     });
   }
+
+  var readyForAffix = setInterval(function() {
+    var items = $('#affix ul .bs-docs-sidenav a');
+    if (items.length > 0) {
+      clearInterval(readyForAffix);
+      var obsoleteIds = $.map($('div .obsolete'), function(item) {
+        return '#' + $(item).data('id');
+      });
+      $.each(items, function(idx, item) {
+        if (obsoleteIds.indexOf(item.hash) >= 0) {
+          $(item).css("text-decoration", 'line-through')
+        }
+      });
+    }
+  }, 10);
 
 });

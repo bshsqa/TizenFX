@@ -109,8 +109,7 @@ dl.attribute-list dd {
 
 .pdl-holder .pdl:after {
   color: #5e5e5e;
-  content: "arrow_forward";
-  font-family: Material Icons;
+  content: ">";
   font-size: 14px;
   padding-left: 6px;
   padding-right: 6px;
@@ -133,4 +132,15 @@ dl.attribute-list dd {
 
 .affix > ul.level1 {
   overflow: inherit;
+}
+
+.obsolete {
+  background-color: palevioletred;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.obsolete-affix {
+    text-decoration: line-through;
 }

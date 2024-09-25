@@ -5,29 +5,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Class SttClient
-   </title>
+ </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class SttClient
-   ">
-    <meta name="generator" content="docfx 2.56.1.0">
+ ">
+    <meta name="generator" content="docfx ">
     <meta name="version" content="API8">
-    
+  
     <link rel="shortcut icon" href="../../images/tizen_favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../../styles/docfx.css">
     <link rel="stylesheet" href="../../styles/main.css">
     <link rel="stylesheet" href="../../styles/tizen.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
     <meta property="docfx:navrel" content="../../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
-    
-    <meta property="docfx:rel" content="../../">
-    
+  
+  <meta property="docfx:rel" content="../../">
+  
   </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
-        
+
         <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -37,7 +36,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              
+
               <a class="navbar-brand" href="../../index.html">
                 <img id="logo" class="svg" src="../../images/tizen_logo.png" alt="">
               </a>
@@ -45,13 +44,13 @@
             <div class="collapse navbar-collapse" id="navbar">
               <form class="navbar-form navbar-right" role="search" id="search">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                  <input type="text" class="form-control" id="search-query" placeholder="" autocomplete="off">
                 </div>
               </form>
             </div>
           </div>
         </nav>
-        
+
         <div class="subnav navbar navbar-default">
           <div class="container hide-when-search" id="breadcrumb">
             <ul class="breadcrumb">
@@ -61,19 +60,19 @@
         </div>
       </header>
       <div class="container body-content">
-        
+
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list"> <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="data-prev=" data-next="data-last="></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
-        
+
         <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle"></a>
           <div class="sidetoggle collapse" id="sidetoggle">
             <div id="sidetoc"></div>
           </div>
@@ -81,16 +80,15 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Tizen.Uix.Stt.SttClient">
-  
-  
+
+
   <h1 id="Tizen_Uix_Stt_SttClient" data-uid="Tizen.Uix.Stt.SttClient" class="text-break">Class SttClient
-  </h1>
+</h1>
   <h3 class="hidden-anchor" id="definition"><a href="#definition"></a>Definition</h3>
-  
-  <dl class="attribute-list"><dt>Namespace:</dt><dd><a class="xref" href="Tizen.Uix.Stt.html">Tizen.Uix.Stt</a></dd></dl>
+
+  <dl class="attribute-list"><dt>Namespace:</dt><dd><a class="xref" href="Tizen.html">Tizen</a>.<span class="xref">Uix</span>.<a class="xref" href="Tizen.Uix.Stt.html">Stt</a></dd></dl>
   <dl class="attribute-list"><dt>Assembly:</dt><dd>Tizen.Uix.Stt.dll</dd></dl>
-  <dl class="attribute-list"><dt>API Level:</dt><dd><span>3</span></dd></dl>
-  
+
   <div class="markdown level0 summary"><p>A main function of Speech-To-Text (below STT) API recognizes sound data recorded by users.
 After choosing a language, the applications will start recording and recognizing.
 After recording, the applications will receive the recognized result.
@@ -99,35 +97,35 @@ The STT service always works in the background as a server. If the service is no
 The service has engines and a recorder, so that the client does not have the recorder itself. Only the client request commands to the STT service for using STT.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class SttClient : IDisposable</code></pre>
   </div>
 
-  
+
   <dl class="attribute-list stack">
     <dt>Inheritance</dt>
     <dd>
       <div class="pdl-holder">
-        <div class="pdl"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+        <div class="pdl"><span class="xref">object</span></div>
         <div><span class="xref">SttClient</span></div>
       </div>
     </dd>
   </dl>
 
-  
-  
+
+
   <dl class="attribute-list stack">
     <dt>Implements</dt>
     <dd>
-      <div class="pdl"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+      <div class="pdl"><span class="xref">System.IDisposable</span></div>
     </dd>
   </dl>
-  
+
   <h3 id="constructors">Constructors
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L353">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L353">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient__ctor_" data-uid="Tizen.Uix.Stt.SttClient.#ctor*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient__ctor" data-uid="Tizen.Uix.Stt.SttClient.#ctor">SttClient()</h4>
@@ -148,38 +146,35 @@ The service has engines and a recorder, so that the client does not have the rec
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to operation failed.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.outofmemoryexception">OutOfMemoryException</a></td>
+        <td><span class="xref">System.OutOfMemoryException</span></td>
         <td><p>This exception can be due to out of memory.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="properties">Properties
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L694">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L694">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_CurrentState_" data-uid="Tizen.Uix.Stt.SttClient.CurrentState*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_CurrentState" data-uid="Tizen.Uix.Stt.SttClient.CurrentState">CurrentState</h4>
@@ -206,13 +201,12 @@ The service has engines and a recorder, so that the client does not have the rec
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L629">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L629">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_DefaultLanguage_" data-uid="Tizen.Uix.Stt.SttClient.DefaultLanguage*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_DefaultLanguage" data-uid="Tizen.Uix.Stt.SttClient.DefaultLanguage">DefaultLanguage</h4>
@@ -235,19 +229,18 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><p>Default language in STT.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L736">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L736">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Engine_" data-uid="Tizen.Uix.Stt.SttClient.Engine*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_Engine" data-uid="Tizen.Uix.Stt.SttClient.Engine">Engine</h4>
@@ -268,7 +261,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><p>Current STT engine id.</p>
 </td>
       </tr>
@@ -284,7 +277,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exceptioncan occur while setting due to the following reasons:</p>
 <ol>
 <li>Operation Failed</li>
@@ -293,35 +286,33 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.outofmemoryexception">OutOfMemoryException</a></td>
+        <td><span class="xref">System.OutOfMemoryException</span></td>
         <td><p>This exception can be due to out of memory.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><span class="xref">System.ArgumentException</span></td>
         <td><p>This can happen if improper EngineId is provided while setting the value.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be created.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L661">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L661">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_RecordingVolume_" data-uid="Tizen.Uix.Stt.SttClient.RecordingVolume*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_RecordingVolume" data-uid="Tizen.Uix.Stt.SttClient.RecordingVolume">RecordingVolume</h4>
@@ -342,22 +333,20 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="xref">float</span></td>
         <td><p>Recording volume in STT.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be recording.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="methods">Methods
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1498">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1498">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Cancel_" data-uid="Tizen.Uix.Stt.SttClient.Cancel*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_Cancel" data-uid="Tizen.Uix.Stt.SttClient.Cancel">Cancel()</h4>
@@ -380,7 +369,7 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -392,30 +381,23 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be Recording or Processing.</span></h6>
-  <h6><strong>Postcondition</strong>: <span>It will invoke the StateChanged event, if registered.
-    If this function succeeds, the STT state will be ready.
-    If you call this function again before the state changes, you will receive ErrorINProgressToReady.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1515">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1515">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Dispose_" data-uid="Tizen.Uix.Stt.SttClient.Dispose*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_Dispose" data-uid="Tizen.Uix.Stt.SttClient.Dispose">Dispose()</h4>
@@ -426,14 +408,15 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
   </div>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1528">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1528">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Dispose_" data-uid="Tizen.Uix.Stt.SttClient.Dispose*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_Dispose_System_Boolean_" data-uid="Tizen.Uix.Stt.SttClient.Dispose(System.Boolean)">Dispose(Boolean)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_Dispose_System_Boolean_" data-uid="Tizen.Uix.Stt.SttClient.Dispose(System.Boolean)">Dispose(bool)</h4>
   <div class="markdown level1 summary"><p>Method to release resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -452,32 +435,35 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td><span class="parametername">disposing</span></td>
         <td><p>The boolean value for destoying stt handle.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L369">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L369">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Finalize_" data-uid="Tizen.Uix.Stt.SttClient.Finalize*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_Finalize" data-uid="Tizen.Uix.Stt.SttClient.Finalize">Finalize()</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_Finalize" data-uid="Tizen.Uix.Stt.SttClient.Finalize">~SttClient()</h4>
   <div class="markdown level1 summary"><p>Destructor to destroy a STT instance.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void Finalize()</code></pre>
+    <pre><code class="lang-csharp hljs">protected ~SttClient()</code></pre>
   </div>
-  
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L788">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L788">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_GetDetailedResult_" data-uid="Tizen.Uix.Stt.SttClient.GetDetailedResult*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_GetDetailedResult" data-uid="Tizen.Uix.Stt.SttClient.GetDetailedResult">GetDetailedResult()</h4>
@@ -498,7 +484,7 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Tizen.Uix.Stt.ResultTime.html">ResultTime</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.ResultTime.html">ResultTime</a>&gt;</td>
         <td><p>List of ResultTime.</p>
 </td>
       </tr>
@@ -517,34 +503,31 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to operation failed.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L833">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L833">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_GetPrivateData_" data-uid="Tizen.Uix.Stt.SttClient.GetPrivateData*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_GetPrivateData_System_String_" data-uid="Tizen.Uix.Stt.SttClient.GetPrivateData(System.String)">GetPrivateData(String)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_GetPrivateData_System_String_" data-uid="Tizen.Uix.Stt.SttClient.GetPrivateData(System.String)">GetPrivateData(string)</h4>
   <div class="markdown level1 summary"><p>Gets the private data from the STT engine.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -563,7 +546,7 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">key</span></td>
         <td><p>The key string.</p>
 </td>
@@ -580,7 +563,7 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><p>The data corresponding to the key is provided.</p>
 </td>
       </tr>
@@ -596,32 +579,28 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to invalid state.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a></td>
+        <td><span class="xref">System.TimeoutException</span></td>
         <td><p>This exception can be due to No Answer from STT Service.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L904">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L904">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_GetSupportedEngines_" data-uid="Tizen.Uix.Stt.SttClient.GetSupportedEngines*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_GetSupportedEngines" data-uid="Tizen.Uix.Stt.SttClient.GetSupportedEngines">GetSupportedEngines()</h4>
@@ -642,7 +621,7 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Tizen.Uix.Stt.SupportedEngine.html">SupportedEngine</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.SupportedEngine.html">SupportedEngine</a>&gt;</td>
         <td><p>IEnumerable&lt;SupportedEngine&gt; list of supported engines.</p>
 </td>
       </tr>
@@ -658,36 +637,33 @@ After successful cancellation, the StateChanged event is invoked, otherwise if a
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to operation failed.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.outofmemoryexception">OutOfMemoryException</a></td>
+        <td><span class="xref">System.OutOfMemoryException</span></td>
         <td><p>This exception can be due to out of memory.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1057">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1057">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_GetSupportedLanguages_" data-uid="Tizen.Uix.Stt.SttClient.GetSupportedLanguages*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_GetSupportedLanguages" data-uid="Tizen.Uix.Stt.SttClient.GetSupportedLanguages">GetSupportedLanguages()</h4>
@@ -710,7 +686,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>&lt;<span class="xref">string</span>&gt;</td>
         <td><p>List of strings for supported languages.</p>
 </td>
       </tr>
@@ -726,7 +702,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Engine Not Found.</li>
@@ -735,26 +711,23 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>4</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1107">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1107">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_IsRecognitionTypeSupported_" data-uid="Tizen.Uix.Stt.SttClient.IsRecognitionTypeSupported*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_IsRecognitionTypeSupported_Tizen_Uix_Stt_RecognitionType_" data-uid="Tizen.Uix.Stt.SttClient.IsRecognitionTypeSupported(Tizen.Uix.Stt.RecognitionType)">IsRecognitionTypeSupported(RecognitionType)</h4>
@@ -793,7 +766,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td><p>Bool value indicating whether the recognition type is supported.</p>
 </td>
       </tr>
@@ -809,7 +782,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -819,22 +792,18 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L988">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L988">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Prepare_" data-uid="Tizen.Uix.Stt.SttClient.Prepare*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_Prepare" data-uid="Tizen.Uix.Stt.SttClient.Prepare">Prepare()</h4>
@@ -855,37 +824,31 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to invalid state.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be created.</span></h6>
-  <h6><strong>Postcondition</strong>: <span>If this function is successful, the STT state will be ready.
-    If this function is unsuccessful, ErrorOccurred event will be invoked.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L954">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L954">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_SetCredential_" data-uid="Tizen.Uix.Stt.SttClient.SetCredential*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_SetCredential_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetCredential(System.String)">SetCredential(String)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_SetCredential_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetCredential(System.String)">SetCredential(string)</h4>
   <div class="markdown level1 summary"><p>Sets the application credential.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -904,7 +867,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">credential</span></td>
         <td><p>The credential string.</p>
 </td>
@@ -921,7 +884,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exceptioncan be due to the following reasons:</p>
 <ol>
 <li>Operation Failed</li>
@@ -930,40 +893,36 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.outofmemoryexception">OutOfMemoryException</a></td>
+        <td><span class="xref">System.OutOfMemoryException</span></td>
         <td><p>This exception can be due to out of memory.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
-        <td><p>This can happen if Improper value is provided while setting the value. </p>
+        <td><span class="xref">System.ArgumentException</span></td>
+        <td><p>This can happen if Improper value is provided while setting the value.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be created.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L873">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L873">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_SetPrivateData_" data-uid="Tizen.Uix.Stt.SttClient.SetPrivateData*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_SetPrivateData_System_String_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetPrivateData(System.String,System.String)">SetPrivateData(String, String)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_SetPrivateData_System_String_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetPrivateData(System.String,System.String)">SetPrivateData(string, string)</h4>
   <div class="markdown level1 summary"><p>Sets the private data to the STT engine.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -982,13 +941,13 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">key</span></td>
         <td><p>The key string.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">data</span></td>
         <td><p>The data string.</p>
 </td>
@@ -1005,37 +964,33 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to invalid state.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.timeoutexception">TimeoutException</a></td>
+        <td><span class="xref">System.TimeoutException</span></td>
         <td><p>This exception can be due to No Answer from STT Service.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
-        <td><p>This can happen if Improper value is provided while setting the value. </p>
+        <td><span class="xref">System.ArgumentException</span></td>
+        <td><p>This can happen if Improper value is provided while setting the value.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1181">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1181">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_SetSilenceDetection_" data-uid="Tizen.Uix.Stt.SttClient.SetSilenceDetection*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_SetSilenceDetection_Tizen_Uix_Stt_SilenceDetection_" data-uid="Tizen.Uix.Stt.SttClient.SetSilenceDetection(Tizen.Uix.Stt.SilenceDetection)">SetSilenceDetection(SilenceDetection)</h4>
@@ -1074,7 +1029,7 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1084,25 +1039,21 @@ For example, &quot;ko_KR&quot; for Korean, &quot;en_US&quot; for American Englis
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1220">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1220">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_SetStartSound_" data-uid="Tizen.Uix.Stt.SttClient.SetStartSound*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_SetStartSound_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetStartSound(System.String)">SetStartSound(String)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_SetStartSound_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetStartSound(System.String)">SetStartSound(string)</h4>
   <div class="markdown level1 summary"><p>Sets the sound to start recording.
 Sound file type should be .wav type.</p>
 </div>
@@ -1122,7 +1073,7 @@ Sound file type should be .wav type.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">filePath</span></td>
         <td><p>File path for the sound.</p>
 </td>
@@ -1139,7 +1090,7 @@ Sound file type should be .wav type.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1148,35 +1099,31 @@ Sound file type should be .wav type.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
-        <td><p>If an Invalid Parameter is provided. </p>
+        <td><span class="xref">System.ArgumentException</span></td>
+        <td><p>If an Invalid Parameter is provided.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1293">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1293">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_SetStopSound_" data-uid="Tizen.Uix.Stt.SttClient.SetStopSound*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_SetStopSound_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetStopSound(System.String)">SetStopSound(String)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_SetStopSound_System_String_" data-uid="Tizen.Uix.Stt.SttClient.SetStopSound(System.String)">SetStopSound(string)</h4>
   <div class="markdown level1 summary"><p>Sets the sound to stop recording.
 Sound file type should be .wav type.</p>
 </div>
@@ -1196,7 +1143,7 @@ Sound file type should be .wav type.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">filePath</span></td>
         <td><p>File Path for the sound.</p>
 </td>
@@ -1213,7 +1160,7 @@ Sound file type should be .wav type.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1222,35 +1169,31 @@ Sound file type should be .wav type.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><span class="xref">System.ArgumentException</span></td>
         <td><p>This exception can be due to Invalid Parameter.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1377">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1377">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Start_" data-uid="Tizen.Uix.Stt.SttClient.Start*"></a>
-  <h4 id="Tizen_Uix_Stt_SttClient_Start_System_String_Tizen_Uix_Stt_RecognitionType_" data-uid="Tizen.Uix.Stt.SttClient.Start(System.String,Tizen.Uix.Stt.RecognitionType)">Start(String, RecognitionType)</h4>
+  <h4 id="Tizen_Uix_Stt_SttClient_Start_System_String_Tizen_Uix_Stt_RecognitionType_" data-uid="Tizen.Uix.Stt.SttClient.Start(System.String,Tizen.Uix.Stt.RecognitionType)">Start(string, RecognitionType)</h4>
   <div class="markdown level1 summary"><p>Starts the recording and recognition asynchronously.
 This function starts recording in the STT service and sends the recording data to the engine.
 This work continues until stop, cancel, or silence is detected by engine.</p>
@@ -1271,7 +1214,7 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td><span class="parametername">language</span></td>
         <td><p>The language selected.</p>
 </td>
@@ -1294,7 +1237,7 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1305,35 +1248,28 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><span class="xref">System.ArgumentException</span></td>
         <td><p>This exception can be due to an invalid language.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  <h6><strong>Postcondition</strong>: <span>It will invoke the StateChanged event, if registered.
-    If this function succeeds, the STT state will be recording.
-    If you call this function again before the state changes, you will receive ErrorINProgressToRecording.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1454">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1454">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Stop_" data-uid="Tizen.Uix.Stt.SttClient.Stop*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_Stop" data-uid="Tizen.Uix.Stt.SttClient.Stop">Stop()</h4>
@@ -1354,7 +1290,7 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1366,31 +1302,23 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be Recording.</span></h6>
-  <h6><strong>Postcondition</strong>: <span>It will invoke the StateChanged Event, if registered.
-    If this function succeeds, the STT state will be processing.
-    If you call this function again before the state changes, you will receive ErrorINProgressToProcessing.
-    After processing of engine, the RecognitionResult event is invoked.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1021">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1021">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_Unprepare_" data-uid="Tizen.Uix.Stt.SttClient.Unprepare*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_Unprepare" data-uid="Tizen.Uix.Stt.SttClient.Unprepare">Unprepare()</h4>
@@ -1411,33 +1339,28 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to invalid state.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state must be ready.</span></h6>
-  <h6><strong>Postcondition</strong>: <span>If this function is successful, the STT state will be Created.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1254">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1254">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_UnsetStartSound_" data-uid="Tizen.Uix.Stt.SttClient.UnsetStartSound*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_UnsetStartSound" data-uid="Tizen.Uix.Stt.SttClient.UnsetStartSound">UnsetStartSound()</h4>
@@ -1458,7 +1381,7 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1467,27 +1390,23 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>This exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1327">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L1327">View Source</a>
   </span>
   <a id="Tizen_Uix_Stt_SttClient_UnsetStopSound_" data-uid="Tizen.Uix.Stt.SttClient.UnsetStopSound*"></a>
   <h4 id="Tizen_Uix_Stt_SttClient_UnsetStopSound" data-uid="Tizen.Uix.Stt.SttClient.UnsetStopSound">UnsetStopSound()</h4>
@@ -1508,7 +1427,7 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></td>
+        <td><span class="xref">System.InvalidOperationException</span></td>
         <td><p>This exception can be due to the following reasons:</p>
 <ol>
 <li>Invalid State</li>
@@ -1517,29 +1436,25 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a></td>
+        <td><span class="xref">System.NotSupportedException</span></td>
         <td><p>This exception can be due to STT not supported.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.unauthorizedaccessexception">UnauthorizedAccessException</a></td>
+        <td><span class="xref">System.UnauthorizedAccessException</span></td>
         <td><p>his exception can be due to permission denied.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  <h6><strong>Privilege Level</strong>: public</h6>
-  <h6><strong>Privilege</strong>: <span class="tz_multiple_items"><span>http://tizen.org/privilege/recorder</span></span></h6>
-  <h6><strong>Feature</strong>: <span class="tz_multiple_items"><span>http://tizen.org/feature/speech.recognition
-    http://tizen.org/feature/microphone</span></span></h6>
-  <h6><strong>Precondition</strong>: <span>The state should be ready.</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="events">Events
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L523">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L523">View Source</a>
   </span>
   <h4 id="Tizen_Uix_Stt_SttClient_DefaultLanguageChanged" data-uid="Tizen.Uix.Stt.SttClient.DefaultLanguageChanged">DefaultLanguageChanged</h4>
   <div class="markdown level1 summary"><p>Event to be invoked when the default language changes.</p>
@@ -1559,16 +1474,17 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Tizen.Uix.Stt.DefaultLanguageChangedEventArgs.html">DefaultLanguageChangedEventArgs</a>&gt;</td>
+        <td><span class="xref">System.EventHandler&lt;TEventArgs&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.DefaultLanguageChangedEventArgs.html">DefaultLanguageChangedEventArgs</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L571">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L571">View Source</a>
   </span>
   <h4 id="Tizen_Uix_Stt_SttClient_EngineChanged" data-uid="Tizen.Uix.Stt.SttClient.EngineChanged">EngineChanged</h4>
   <div class="markdown level1 summary"><p>Event to be invoked to detect the engine change.</p>
@@ -1588,16 +1504,17 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Tizen.Uix.Stt.EngineChangedEventArgs.html">EngineChangedEventArgs</a>&gt;</td>
+        <td><span class="xref">System.EventHandler&lt;TEventArgs&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.EngineChangedEventArgs.html">EngineChangedEventArgs</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L478">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L478">View Source</a>
   </span>
   <h4 id="Tizen_Uix_Stt_SttClient_ErrorOccurred" data-uid="Tizen.Uix.Stt.SttClient.ErrorOccurred">ErrorOccurred</h4>
   <div class="markdown level1 summary"><p>Event to be invoked when an error occurs.</p>
@@ -1617,16 +1534,17 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Tizen.Uix.Stt.ErrorOccurredEventArgs.html">ErrorOccurredEventArgs</a>&gt;</td>
+        <td><span class="xref">System.EventHandler&lt;TEventArgs&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.ErrorOccurredEventArgs.html">ErrorOccurredEventArgs</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>4</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L378">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L378">View Source</a>
   </span>
   <h4 id="Tizen_Uix_Stt_SttClient_RecognitionResult" data-uid="Tizen.Uix.Stt.SttClient.RecognitionResult">RecognitionResult</h4>
   <div class="markdown level1 summary"><p>Event to be invoked when the recognition is done.</p>
@@ -1646,16 +1564,17 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Tizen.Uix.Stt.RecognitionResultEventArgs.html">RecognitionResultEventArgs</a>&gt;</td>
+        <td><span class="xref">System.EventHandler&lt;TEventArgs&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.RecognitionResultEventArgs.html">RecognitionResultEventArgs</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L431">View Source</a>
+    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L431">View Source</a>
   </span>
   <h4 id="Tizen_Uix_Stt_SttClient_StateChanged" data-uid="Tizen.Uix.Stt.SttClient.StateChanged">StateChanged</h4>
   <div class="markdown level1 summary"><p>Event to be invoked when the STT state changes.</p>
@@ -1675,27 +1594,28 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler-1">EventHandler</a>&lt;<a class="xref" href="Tizen.Uix.Stt.StateChangedEventArgs.html">StateChangedEventArgs</a>&gt;</td>
+        <td><span class="xref">System.EventHandler&lt;TEventArgs&gt;</span>&lt;<a class="xref" href="Tizen.Uix.Stt.StateChangedEventArgs.html">StateChangedEventArgs</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+      <span class="xref">System.IDisposable</span>
   </div>
 </article>
           </div>
-          
+
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/Samsung/TizenFX/blob/master/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L320" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Samsung/TizenFX/blob/API8/src/Tizen.Uix.Stt/Tizen.Uix.Stt/SttClient.cs/#L320" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
@@ -1706,7 +1626,7 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
           </div>
         </div>
       </div>
-      
+
       <footer>
         <div class="grad-bottom"></div>
         <div class="footer">
@@ -1714,13 +1634,13 @@ This work continues until stop, cancel, or silence is detected by engine.</p>
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>Copyright &copy; 2016-2020 Samsung <br> Generated by <strong>DocFX</strong></span>
-            
+      <span>Copyright &copy; 2016-2023 Samsung <br> Generated by <strong>DocFX</strong></span>
+      
           </div>
         </div>
       </footer>
     </div>
-    
+
     <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
     <script type="text/javascript" src="../../styles/docfx.js"></script>
     <script type="text/javascript" src="../../styles/main.js"></script>

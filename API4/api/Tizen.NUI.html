@@ -5,29 +5,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Namespace Tizen.NUI
-   </title>
+ </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Tizen.NUI
-   ">
-    <meta name="generator" content="docfx 2.56.1.0">
+ ">
+    <meta name="generator" content="docfx ">
     <meta name="version" content="API4">
-    
+  
     <link rel="shortcut icon" href="../../images/tizen_favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../../styles/docfx.css">
     <link rel="stylesheet" href="../../styles/main.css">
     <link rel="stylesheet" href="../../styles/tizen.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
     <meta property="docfx:navrel" content="../../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
-    
-    <meta property="docfx:rel" content="../../">
-    
+  
+  <meta property="docfx:rel" content="../../">
+  
   </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
-        
+
         <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -37,7 +36,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              
+
               <a class="navbar-brand" href="../../index.html">
                 <img id="logo" class="svg" src="../../images/tizen_logo.png" alt="">
               </a>
@@ -45,13 +44,13 @@
             <div class="collapse navbar-collapse" id="navbar">
               <form class="navbar-form navbar-right" role="search" id="search">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                  <input type="text" class="form-control" id="search-query" placeholder="" autocomplete="off">
                 </div>
               </form>
             </div>
           </div>
         </nav>
-        
+
         <div class="subnav navbar navbar-default">
           <div class="container hide-when-search" id="breadcrumb">
             <ul class="breadcrumb">
@@ -61,19 +60,19 @@
         </div>
       </header>
       <div class="container body-content">
-        
+
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list"> <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="data-prev=" data-next="data-last="></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
-        
+
         <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle"></a>
           <div class="sidetoggle collapse" id="sidetoggle">
             <div id="sidetoc"></div>
           </div>
@@ -81,14 +80,14 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Tizen.NUI">
-  
+
   <h1 id="Tizen_NUI" data-uid="Tizen.NUI" class="text-break">Namespace Tizen.NUI
-  </h1>
+</h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
-  </h3>
+</h3>
       <h4><a class="xref" href="Tizen.NUI.Adaptor.html">Adaptor</a></h4>
       <section><p>An Adaptor object is used to initialize and control how Dali runs.</p>
 <p>It provides the lifecycle interface that allows the application
@@ -143,11 +142,11 @@ added to them.</p>
 Used for registering controls and any scriptable properties they have (see ScriptableProperty).</p>
 <p>Internal Design from C# to C++</p>
 <ul>
-<li>Each custom C# view should have it&apos;s static constructor called before any JSON file is loaded.
+<li>Each custom C# view should have it's static constructor called before any JSON file is loaded.
 Static constructors for a class will only run once ( they are run per control type, not per instance).
 Example of running a static constructor:
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor (typeof(Spin).TypeHandle);
-Inside the static constructor the control should register it&apos;s type with the ViewRegistry
+Inside the static constructor the control should register it's type with the ViewRegistry
 For example:</li>
 </ul>
 <p>static Spin()
@@ -371,7 +370,7 @@ All values (x, y, and z) should be between [0, 1].</p>
       <section><p>This should be internal, please do not use.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.ScrollView.SnapEvent.html">ScrollView.SnapEvent</a></h4>
-      <section><p>Snaps signal event&apos;s data.</p>
+      <section><p>Snaps signal event's data.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.ScrollView.SnapStartedEventArgs.html">ScrollView.SnapStartedEventArgs</a></h4>
       <section><p>Event arguments that passed via the SnapStarted signal.</p>
@@ -430,7 +429,7 @@ Timer is provided for application developers to be able to issue
 simple periodic or one-shot events. Please note that the timer
 callback functions should return as soon as possible because they
 block the next SignalTick. Please note that timer signals are not
-in sync with DALi&apos;s render timer.<br>
+in sync with DALi's render timer.<br>
 This class is a handle class so it can be stack allocated and used
 as a member.<br></p>
 </section>
@@ -538,7 +537,7 @@ The window has an orientation and indicator properties.<br></p>
       <section><p>Wheel event arguments.</p>
 </section>
     <h3 id="structs">Structs
-  </h3>
+</h3>
       <h4><a class="xref" href="Tizen.NUI.BorderVisualProperty.html">BorderVisualProperty</a></h4>
       <section><p>This specifies properties of the BorderVisual.</p>
 </section>
@@ -585,7 +584,7 @@ The window has an orientation and indicator properties.<br></p>
       <section><p>This specifies shader properties.</p>
 </section>
     <h3 id="interfaces">Interfaces
-  </h3>
+</h3>
       <h4><a class="xref" href="Tizen.NUI.FocusManager.ICustomFocusAlgorithm.html">FocusManager.ICustomFocusAlgorithm</a></h4>
       <section><p>ICustomFocusAlgorithm is used to provide the custom keyboard focus algorithm for retrieving the next focusable view.<br>
 The application can implement the interface and override the keyboard focus behavior.<br>
@@ -594,7 +593,7 @@ If this does not provide a valid view, then the Keyboard FocusManager will check
 If focusable properties are not set, then the keyboard FocusManager calls the GetNextFocusableView() method of this interface.<br></p>
 </section>
     <h3 id="enums">Enums
-  </h3>
+</h3>
       <h4><a class="xref" href="Tizen.NUI.AlphaFunction.BuiltinFunctions.html">AlphaFunction.BuiltinFunctions</a></h4>
       <section><p>This specifies the various types of BuiltinFunctions.</p>
 </section>
@@ -602,7 +601,7 @@ If focusable properties are not set, then the keyboard FocusManager calls the Ge
       <section><p>This specifies which mode is set for AlphaFunction.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.Animatable.Capability.html">Animatable.Capability</a></h4>
-      <section><p>Enumeration for Handle&apos;s capabilities that can be queried.</p>
+      <section><p>Enumeration for Handle's capabilities that can be queried.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.Animation.EndActions.html">Animation.EndActions</a></h4>
       <section><p>Enumeration for what to do when the animation ends, stopped, or destroyed.</p>
@@ -620,7 +619,7 @@ If focusable properties are not set, then the keyboard FocusManager calls the Ge
       <section><p>Enumeration for type determination of how the camera operates.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.ClippingModeType.html">ClippingModeType</a></h4>
-      <section><p>Enumeration for the ClippingMode describing how this actor&apos;s children will be clipped against it.</p>
+      <section><p>Enumeration for the ClippingMode describing how this actor's children will be clipped against it.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.ColorMode.html">ColorMode</a></h4>
       <section><p>This specifies whether the actor uses its own color or inherits.</p>
@@ -643,7 +642,7 @@ If focusable properties are not set, then the keyboard FocusManager calls the Ge
       <h4><a class="xref" href="Tizen.NUI.DisposeTypes.html">DisposeTypes</a></h4>
       <section></section>
       <h4><a class="xref" href="Tizen.NUI.DrawModeType.html">DrawModeType</a></h4>
-      <section><p>Enumeration for the instance of how the actor and it&apos;s children will be drawn.</p>
+      <section><p>Enumeration for the instance of how the actor and it's children will be drawn.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.FilterModeType.html">FilterModeType</a></h4>
       <section><p>The filter mode type.</p>
@@ -654,7 +653,7 @@ A fitting mode controls the region of a loaded image to be mapped to the desired
 All fitting modes preserve the aspect ratio of the image contents.<br></p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.FontWeightType.html">FontWeightType</a></h4>
-      <section><p>Enumeration type for the font&apos;s weight.</p>
+      <section><p>Enumeration type for the font's weight.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.Geometry.Type.html">Geometry.Type</a></h4>
       <section><p>Enumeration for the description of the type of geometry,
@@ -728,7 +727,7 @@ SpreadMethod defines what happens if the gradient starts or ends inside the boun
       <section><p>The shading mode used by the mesh visual.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.NotificationLevel.html">NotificationLevel</a></h4>
-      <section><p>An enum of notification window&apos;s priority level.</p>
+      <section><p>An enum of notification window's priority level.</p>
 </section>
       <h4><a class="xref" href="Tizen.NUI.NUIApplication.WindowMode.html">NUIApplication.WindowMode</a></h4>
       <section><p>Enumeration for deciding whether a NUI application window is opaque or transparent.</p>
@@ -843,7 +842,7 @@ but all other filter modes do if the desired dimensions are not more than the ra
 WrapModeU and WrapModeV separately decide how the texture should be sampled when the u and v coordinate exceeds the range of 0.0 to 1.0.</p>
 </section>
     <h3 id="delegates">Delegates
-  </h3>
+</h3>
       <h4><a class="xref" href="Tizen.NUI.DaliEventHandler-2.html">DaliEventHandler&lt;T, U&gt;</a></h4>
       <section><p>[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 this should be removed with EventHandler from .NET</p>
@@ -856,7 +855,7 @@ this should be removed with EventHandler from .NET</p>
 </section>
 </article>
           </div>
-          
+
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
@@ -870,7 +869,7 @@ this should be removed with EventHandler from .NET</p>
           </div>
         </div>
       </div>
-      
+
       <footer>
         <div class="grad-bottom"></div>
         <div class="footer">
@@ -878,13 +877,13 @@ this should be removed with EventHandler from .NET</p>
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>Copyright &copy; 2016-2020 Samsung <br> Generated by <strong>DocFX</strong></span>
-            
+      <span>Copyright &copy; 2016-2023 Samsung <br> Generated by <strong>DocFX</strong></span>
+      
           </div>
         </div>
       </footer>
     </div>
-    
+
     <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
     <script type="text/javascript" src="../../styles/docfx.js"></script>
     <script type="text/javascript" src="../../styles/main.js"></script>

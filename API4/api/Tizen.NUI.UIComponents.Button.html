@@ -5,29 +5,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Class Button
-   </title>
+ </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Button
-   ">
-    <meta name="generator" content="docfx 2.56.1.0">
+ ">
+    <meta name="generator" content="docfx ">
     <meta name="version" content="API4">
-    
+  
     <link rel="shortcut icon" href="../../images/tizen_favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../../styles/docfx.css">
     <link rel="stylesheet" href="../../styles/main.css">
     <link rel="stylesheet" href="../../styles/tizen.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
     <meta property="docfx:navrel" content="../../toc.html">
     <meta property="docfx:tocrel" content="toc.html">
-    
-    <meta property="docfx:rel" content="../../">
-    
+  
+  <meta property="docfx:rel" content="../../">
+  
   </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
-        
+
         <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -37,7 +36,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              
+
               <a class="navbar-brand" href="../../index.html">
                 <img id="logo" class="svg" src="../../images/tizen_logo.png" alt="">
               </a>
@@ -45,13 +44,13 @@
             <div class="collapse navbar-collapse" id="navbar">
               <form class="navbar-form navbar-right" role="search" id="search">
                 <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                  <input type="text" class="form-control" id="search-query" placeholder="" autocomplete="off">
                 </div>
               </form>
             </div>
           </div>
         </nav>
-        
+
         <div class="subnav navbar navbar-default">
           <div class="container hide-when-search" id="breadcrumb">
             <ul class="breadcrumb">
@@ -61,19 +60,19 @@
         </div>
       </header>
       <div class="container body-content">
-        
+
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list"> <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="data-prev=" data-next="data-last="></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
-        
+
         <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle"></a>
           <div class="sidetoggle collapse" id="sidetoggle">
             <div id="sidetoc"></div>
           </div>
@@ -81,22 +80,21 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="Tizen.NUI.UIComponents.Button">
-  
-  
+
+
   <h1 id="Tizen_NUI_UIComponents_Button" data-uid="Tizen.NUI.UIComponents.Button" class="text-break">Class Button
-  </h1>
+</h1>
   <h3 class="hidden-anchor" id="definition"><a href="#definition"></a>Definition</h3>
-  
-  <dl class="attribute-list"><dt>Namespace:</dt><dd><a class="xref" href="Tizen.NUI.UIComponents.html">Tizen.NUI.UIComponents</a></dd></dl>
+
+  <dl class="attribute-list"><dt>Namespace:</dt><dd><a class="xref" href="Tizen.html">Tizen</a>.<a class="xref" href="Tizen.NUI.html">NUI</a>.<a class="xref" href="Tizen.NUI.UIComponents.html">UIComponents</a></dd></dl>
   <dl class="attribute-list"><dt>Assembly:</dt><dd>Tizen.NUI.dll</dd></dl>
-  <dl class="attribute-list"><dt>API Level:</dt><dd><span>3</span></dd></dl>
-  
+
   <div class="markdown level0 summary"><p>The Button class is a base class for different kinds of buttons.<br>
 This class provides the disabled property and the clicked signal.<br>
-The clicked event handler is emitted when the button is touched, and the touch point doesn&apos;t leave the boundary of the button.<br>
+The clicked event handler is emitted when the button is touched, and the touch point doesn't leave the boundary of the button.<br>
 When the disabled property is set to true, no signal is emitted.<br>
-The &apos;Visual&apos; describes not just traditional images like PNG and BMP, but also refers to whatever is used to show the button. It could be a color, gradient, or some other kind of renderer.<br>
-The button&apos;s appearance can be modified by setting properties for the various visuals or images.<br>
+The 'Visual' describes not just traditional images like PNG and BMP, but also refers to whatever is used to show the button. It could be a color, gradient, or some other kind of renderer.<br>
+The button's appearance can be modified by setting properties for the various visuals or images.<br>
 It is not mandatory to set all the visuals. A button could be defined only by setting its background visual, or by setting its background and selected visuals.<br>
 The button visual is shown over the background visual.<br>
 When pressed, the unselected visuals are replaced by the selected visuals.<br>
@@ -104,17 +102,17 @@ The text label is always placed on the top of all images.<br>
 When the button is disabled, the background button and the selected visuals are replaced by their disabled visuals.<br></p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class Button : View, IDisposable</code></pre>
   </div>
 
-  
+
   <dl class="attribute-list stack">
     <dt>Inheritance</dt>
     <dd>
       <div class="pdl-holder">
-        <div class="pdl"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+        <div class="pdl"><span class="xref">object</span></div>
         <div class="pdl"><a class="xref" href="Tizen.NUI.BaseHandle.html">BaseHandle</a></div>
         <div class="pdl"><a class="xref" href="Tizen.NUI.Animatable.html">Animatable</a></div>
         <div class="pdl"><a class="xref" href="Tizen.NUI.Container.html">Container</a></div>
@@ -137,17 +135,17 @@ When the button is disabled, the background button and the selected visuals are 
       <div class="pdl"><a class="xref" href="Tizen.NUI.UIComponents.RadioButton.html">RadioButton</a></div>
     </dd>
   </dl>
-  
-  
+
+
   <dl class="attribute-list stack">
     <dt>Implements</dt>
     <dd>
-      <div class="pdl"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+      <div class="pdl"><span class="xref">System.IDisposable</span></div>
     </dd>
   </dl>
-  
+
   <h3 id="constructors">Constructors
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L572">View Source</a>
   </span>
@@ -161,11 +159,12 @@ Only the derived versions can be instantiated.<br></p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Button()</code></pre>
   </div>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="properties">Properties
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L609">View Source</a>
   </span>
@@ -188,14 +187,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L432">View Source</a>
   </span>
@@ -223,9 +223,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L342">View Source</a>
   </span>
@@ -253,9 +254,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L414">View Source</a>
   </span>
@@ -283,9 +285,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L360">View Source</a>
   </span>
@@ -313,9 +316,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L530">View Source</a>
   </span>
@@ -343,9 +347,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L627">View Source</a>
   </span>
@@ -368,14 +373,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="xref">float</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L735">View Source</a>
   </span>
@@ -403,9 +409,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L512">View Source</a>
   </span>
@@ -433,9 +440,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L450">View Source</a>
   </span>
@@ -458,14 +466,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Tizen.NUI.UIComponents.Button.Align.html">Button.Align</a></td>
+        <td><a class="xref" href="Tizen.NUI.UIComponents.Button.html">Button</a>.<a class="xref" href="Tizen.NUI.UIComponents.Button.Align.html">Align</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L753">View Source</a>
   </span>
@@ -488,14 +497,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">string</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L645">View Source</a>
   </span>
@@ -518,14 +528,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="xref">float</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L681">View Source</a>
   </span>
@@ -548,14 +559,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L396">View Source</a>
   </span>
@@ -583,9 +595,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L717">View Source</a>
   </span>
@@ -613,9 +626,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L324">View Source</a>
   </span>
@@ -643,9 +657,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L663">View Source</a>
   </span>
@@ -668,14 +683,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">bool</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L378">View Source</a>
   </span>
@@ -703,9 +719,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L699">View Source</a>
   </span>
@@ -733,9 +750,10 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L306">View Source</a>
   </span>
@@ -763,11 +781,12 @@ Only the derived versions can be instantiated.<br></p>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="methods">Methods
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L57">View Source</a>
   </span>
@@ -799,16 +818,17 @@ Only the derived versions can be instantiated.<br></p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Tizen.NUI.BaseComponents.View.html#Tizen_NUI_BaseComponents_View_Dispose_Tizen_NUI_DisposeTypes_">View.Dispose(DisposeTypes)</a></div>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="events">Events
-  </h3>
+</h3>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L136">View Source</a>
   </span>
   <h4 id="Tizen_NUI_UIComponents_Button_Clicked" data-uid="Tizen.NUI.UIComponents.Button.Clicked">Clicked</h4>
-  <div class="markdown level1 summary"><p>The Clicked event will be triggered when the button is touched and the touch point doesn&apos;t leave the boundary of the button.</p>
+  <div class="markdown level1 summary"><p>The Clicked event will be triggered when the button is touched and the touch point doesn't leave the boundary of the button.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -825,14 +845,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>, <span class="xref">EventArgs</span>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a>&gt;</td>
+        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<span class="xref">object</span>, <span class="xref">EventArgs</span>, <span class="xref">bool</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L181">View Source</a>
   </span>
@@ -854,14 +875,15 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>, <span class="xref">EventArgs</span>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a>&gt;</td>
+        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<span class="xref">object</span>, <span class="xref">EventArgs</span>, <span class="xref">bool</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L225">View Source</a>
   </span>
@@ -883,19 +905,20 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>, <span class="xref">EventArgs</span>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a>&gt;</td>
+        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<span class="xref">object</span>, <span class="xref">EventArgs</span>, <span class="xref">bool</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/Samsung/TizenFX/blob/API4/src/Tizen.NUI/src/public/UIComponents/Button.cs/#L268">View Source</a>
   </span>
   <h4 id="Tizen_NUI_UIComponents_Button_StateChanged" data-uid="Tizen.NUI.UIComponents.Button.StateChanged">StateChanged</h4>
-  <div class="markdown level1 summary"><p>The StateChanged event will be triggered when the button&apos;s state is changed.</p>
+  <div class="markdown level1 summary"><p>The StateChanged event will be triggered when the button's state is changed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -912,21 +935,22 @@ Only the derived versions can be instantiated.<br></p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>, <span class="xref">EventArgs</span>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a>&gt;</td>
+        <td><a class="xref" href="Tizen.NUI.EventHandlerWithReturnType-3.html">EventHandlerWithReturnType</a>&lt;<span class="xref">object</span>, <span class="xref">EventArgs</span>, <span class="xref">bool</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  
-  <h6><strong>API Level</strong>: <span>3</span></h6>
-  
+
+
+  <div style="margin-bottom: 15px"></div>
+
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+      <span class="xref">System.IDisposable</span>
   </div>
 </article>
           </div>
-          
+
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
@@ -943,7 +967,7 @@ Only the derived versions can be instantiated.<br></p>
           </div>
         </div>
       </div>
-      
+
       <footer>
         <div class="grad-bottom"></div>
         <div class="footer">
@@ -951,13 +975,13 @@ Only the derived versions can be instantiated.<br></p>
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>Copyright &copy; 2016-2020 Samsung <br> Generated by <strong>DocFX</strong></span>
-            
+      <span>Copyright &copy; 2016-2023 Samsung <br> Generated by <strong>DocFX</strong></span>
+      
           </div>
         </div>
       </footer>
     </div>
-    
+
     <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
     <script type="text/javascript" src="../../styles/docfx.js"></script>
     <script type="text/javascript" src="../../styles/main.js"></script>
