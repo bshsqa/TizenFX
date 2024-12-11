@@ -19,11 +19,34 @@ using System.ComponentModel;
 
 namespace Tizen.NUI
 {
+
+    /// <summary>
+    /// The Hint class is used to provide additional information to the shader.
+    /// </summary>
+    /// <since_tizen> 3 </since_tizen>
+    public enum ShaderHint
+    {
+        /// <summary>
+        /// No hints.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Might generate transparent alpha from opaque inputs
+        /// </summary>
+        TransparentOutput,
+
+        /// <summary>
+        /// Might change position of vertices, this option disables any culling optimizations
+        /// </summary>
+        ModifiesGeometry
+    }
+
     /// <summary>
     /// Shader allows custom vertex and color transformations in the GPU.
     /// </summary>
     /// <since_tizen> 3 </since_tizen>
-    public class Shader : Animatable
+    public partial class Shader : Animatable
     {
 
         /// <summary>
@@ -32,8 +55,7 @@ namespace Tizen.NUI
         /// <param name="vertexShader">The vertex shader code for the effect.</param>
         /// <param name="fragmentShader">The fragment Shader code for the effect.</param>
         /// <param name="hints">The hints to define the geometry of the rendered object.</param>
-        /// <since_tizen> 3 </since_tizen>
-        public Shader(string vertexShader, string fragmentShader, Shader.Hint.Value hints) : this(Interop.Shader.New(vertexShader, fragmentShader, (int)hints), true)
+        public Shader(string vertexShader, string fragmentShader, ShaderHint hints) : this(Interop.Shader.New(vertexShader, fragmentShader, (int)hints), true)
         {
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
         }
@@ -80,38 +102,6 @@ namespace Tizen.NUI
         protected override void ReleaseSwigCPtr(System.Runtime.InteropServices.HandleRef swigCPtr)
         {
             Interop.Shader.DeleteShader(swigCPtr);
-        }
-
-        /// <summary>
-        /// The Hint class is used to provide additional information to the shader.
-        /// </summary>
-        /// <since_tizen> 3 </since_tizen>
-        public sealed class Hint
-        {
-            /// <summary>
-            /// Enumeration for the hint value.
-            /// </summary>
-            /// <since_tizen> 3 </since_tizen>
-            public enum Value
-            {
-                /// <summary>
-                /// No hints.
-                /// </summary>
-                /// <since_tizen> 3 </since_tizen>
-                NONE = 0x00,
-
-                /// <summary>
-                /// Might generate transparent alpha from opaque inputs
-                /// </summary>
-                /// <since_tizen> 3 </since_tizen>
-                OUTPUT_IS_TRANSPARENT = 0x01,
-
-                /// <summary>
-                /// Might change position of vertices, this option disables any culling optimizations
-                /// </summary>
-                /// <since_tizen> 3 </since_tizen>
-                MODIFIES_GEOMETRY = 0x02
-            }
         }
 
         /// <summary>

@@ -26,9 +26,8 @@ namespace Tizen.NUI
     /// VertexBuffers can be used to provide data to Geometry objects.
     /// </summary>
     /// <since_tizen> 8 </since_tizen>
-    public class VertexBuffer : BaseHandle
+    public partial class VertexBuffer : BaseHandle
     {
-
         /// <summary>
         /// The constructor to creates a VertexBuffer.
         /// </summary>
@@ -42,6 +41,11 @@ namespace Tizen.NUI
 
         internal VertexBuffer(global::System.IntPtr cPtr, bool cMemoryOwn) : base(cPtr, cMemoryOwn)
         {
+        }
+
+        public uint Size
+        {
+            get => RetrieveSize();
         }
 
         /// <summary>
@@ -86,8 +90,7 @@ namespace Tizen.NUI
         /// Gets the number of elements in the buffer.
         /// </summary>
         /// <returns>Number of elements in the buffer.</returns>
-        /// <since_tizen> 8 </since_tizen>
-        public uint GetSize()
+        private uint RetrieveSize()
         {
             uint ret = Interop.VertexBuffer.GetSize(SwigCPtr);
             if (NDalicPINVOKE.SWIGPendingException.Pending)

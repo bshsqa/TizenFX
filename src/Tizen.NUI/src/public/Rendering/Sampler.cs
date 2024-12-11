@@ -18,12 +18,37 @@ using System.ComponentModel;
 
 namespace Tizen.NUI
 {
+    public enum SamplerFilterType
+    {
+        /// <summary>
+        /// Filter nearest.
+        /// </summary>
+        /// <since_tizen> 3 </since_tizen>
+        Nearest,
+
+        /// <summary>
+        /// Filter linear.
+        /// </summary>
+        /// <since_tizen> 3 </since_tizen>
+        Linear,
+    }
+
+    public enum SamplerMipmapFilterType
+    {
+        None,
+        Nearest,
+        Linear
+    }
+
     /// <summary>
     /// Sampler is a handle to an object that can be used to provide the sampling parameters to sample textures.
     /// </summary>
     /// <since_tizen> 3 </since_tizen>
-    public class Sampler : BaseHandle
+    public partial class Sampler : BaseHandle
     {
+        private SamplerFilterType minificationFilter = SamplerFilterType.Linear;
+        private SamplerFilterType magnificationFilter = SamplerFilterType.Linear;
+        private SamplerMipmapFilterType mipmapFilter = SamplerMipmapFilterType.None;
 
         /// <summary>
         /// Create an instance of Sampler.
@@ -34,13 +59,51 @@ namespace Tizen.NUI
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
         }
 
+        public SamplerFilterType MinificationFilter
+        {
+            get => minificationFilter;
+            set
+            {
+                if (minificationFilter != value)
+                {
+                    minificationFilter = value;
+                    SetFilterMode(SamplerUtility.GetPresetFilter(minificationFilter, mipmapFilter), SamplerUtility.GetPresetFilter(magnificationFilter));
+                }
+            }
+        }
+
+        public SamplerFilterType MagnificationFilter
+        {
+            get => magnificationFilter;
+            set
+            {
+                if (magnificationFilter != value)
+                {
+                    magnificationFilter = value;
+                    SetFilterMode(SamplerUtility.GetPresetFilter(minificationFilter, mipmapFilter), SamplerUtility.GetPresetFilter(magnificationFilter));
+                }
+            }
+        }
+
+        public SamplerMipmapFilterType MipmapFilter
+        {
+            get => mipmapFilter;
+            set
+            {
+                if (mipmapFilter != value)
+                {
+                    mipmapFilter = value;
+                    SetFilterMode(SamplerUtility.GetPresetFilter(minificationFilter, mipmapFilter), SamplerUtility.GetPresetFilter(magnificationFilter));
+                }
+            }
+        }
+
         /// <summary>
         /// Sets the filter modes for this sampler.
         /// </summary>
         /// <param name="minFilter">The minification filter that will be used.</param>
         /// <param name="magFilter">The magnification filter that will be used.</param>
-        /// <since_tizen> 3 </since_tizen>
-        public void SetFilterMode(FilterModeType minFilter, FilterModeType magFilter)
+        private void SetFilterMode(SamplerUtility.PresetSamplerFilter minFilter, SamplerUtility.PresetSamplerFilter magFilter)
         {
             Interop.Sampler.SetFilterMode(SwigCPtr, (int)minFilter, (int)magFilter);
             if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
@@ -51,7 +114,6 @@ namespace Tizen.NUI
         /// </summary>
         /// <param name="uWrap">Wrap mode for u coordinates.</param>
         /// <param name="vWrap">Wrap mode for v coordinates.</param>
-        /// <since_tizen> 3 </since_tizen>
         public void SetWrapMode(WrapModeType uWrap, WrapModeType vWrap)
         {
             Interop.Sampler.SetWrapMode(SwigCPtr, (int)uWrap, (int)vWrap);
@@ -64,7 +126,6 @@ namespace Tizen.NUI
         /// <param name="rWrap">Wrap mode for the x direction.</param>
         /// <param name="sWrap">Wrap mode for the y direction.</param>
         /// <param name="tWrap">Wrap mode for the z direction.</param>
-        /// <since_tizen> 3 </since_tizen>
         public void SetWrapMode(WrapModeType rWrap, WrapModeType sWrap, WrapModeType tWrap)
         {
             Interop.Sampler.SetWrapMode(SwigCPtr, (int)rWrap, (int)sWrap, (int)tWrap);

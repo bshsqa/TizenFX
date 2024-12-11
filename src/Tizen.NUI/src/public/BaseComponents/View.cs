@@ -4359,7 +4359,7 @@ namespace Tizen.NUI.BaseComponents
         /// Gets the number of renderers held by the view.
         /// </summary>
         /// <since_tizen> 3 </since_tizen>
-        public uint RendererCount
+        public uint RenderableCount
         {
             get
             {
