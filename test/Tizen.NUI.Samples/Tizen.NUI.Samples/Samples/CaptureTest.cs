@@ -1,121 +1,64 @@
-﻿
+﻿using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using global::System;
 using Tizen.NUI;
 using Tizen.NUI.BaseComponents;
-using NUnit.Framework;
+using Tizen.NUI.Scene3D;
 
 namespace Tizen.NUI.Samples
 {
     using log = Tizen.Log;
     public class CaptureTest : IExample
     {
+        private Window window;
+        private SceneView sceneView;
+        private TextLabel textLabel;
         public void Activate()
         {
-            log.Debug(tag, $"Activate(): start \n");
-            resourcePath = Tizen.Applications.Application.Current.DirectoryInfo.Resource;
-
             window = NUIApplication.GetDefaultWindow();
-            window.TouchEvent += Win_TouchEvent;
-
-            root = new View()
+            window.BackgroundColor = Color.White;
+            Size2D windowSize = window.Size;
+            
+            sceneView = new SceneView()
             {
-                Name = "test_root",
-                Size = new Size(500, 500),
-                Position = new Position(10, 10),
-                BackgroundColor = Color.White,
+                Size = new Size(windowSize.Width / 2, windowSize.Height / 2),
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                PositionUsesPivotPoint = true,
+                BackgroundColor = Color.Beige,
+                UseFramebuffer = true,
             };
+            window.Add(sceneView);
 
-            window.Add(root);
-
-            log.Debug(tag, $"root view added \n");
-
-            capturedView0 = new ImageView(resourcePath + "/images/image1.jpg")
+            textLabel = new TextLabel("SampleText")
             {
-                Name = "test_v0",
-                Size = new Size(100, 100),
-                BackgroundColor = Color.Red,
+                Size = new Size(250, 200),
+                Position = new Position(1.0f, 1.0f, 1.0f),
+                Orientation = new Rotation(new Radian(new Degree(-30.0f)), Vector3.ZAxis),
+                Scale = new Vector3(1.0f/50.0f, 1.0f/50.0f, 1.0f),
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                PositionUsesPivotPoint = true,
             };
-            root.Add(capturedView0);
+            sceneView.Add(textLabel);
 
-            capturedView1 = new ImageView(resourcePath + "/images/image2.jpg")
-            {
-                Name = "test_v1",
-                Size = new Size(150, 150),
-                Position = new Position(150, 150),
-                BackgroundColor = Color.Yellow,
-            };
-            root.Add(capturedView1);
-
-            //TDD
-            //tddTest();
-            //checkCaptureNew();
+            Scene3D.Camera camera = sceneView.GetSelectedCamera();
+            camera.Position = new Position(2.0f, 2.0f, 2.0f);
+            camera.LookAt(Vector3.One);
+            camera.NearPlaneDistance = 0.5f;
+            camera.FarPlaneDistance = 10.0f;
         }
 
-        private void onCaptureFinished(object sender, CaptureFinishedEventArgs e)
+        private void WindowKeyEvent(object sender, Window.KeyEventArgs e)
         {
-            log.Debug(tag, $"onCaptureFinished() statue={e.Success} \n");
-
-            if (sender is Capture)
+            if (e.Key.State == Key.StateType.Down)
             {
-                log.Debug(tag, $"sender is Capture \n");
-                PixelBuffer pixelBuffer = capture.GetCapturedBuffer();
-                PixelData pixelData = PixelBuffer.Convert(pixelBuffer);
-                //var imageUrl = pixelData.GenerateUrl();//capture.GetNativeImageSource().Url;
-                //capturedImage = new ImageView(imageUrl.ToString());
-                var url = pixelData.GenerateUrl();
-                capturedImage = new ImageView(url.ToString());
-                log.Debug(tag, $"url={url} \n");
-
-                capturedImage.Size = new Size(510, 510);
-                capturedImage.Position = new Position(10, 10);
-                root.Add(capturedImage);
-                done = false;
             }
-        }
-
-        private void Win_TouchEvent(object sender, Window.TouchEventArgs e)
-        {
-            if (e.Touch.GetState(0) == PointStateType.Down)
-            {
-                if (!done)
-                {
-                    done = true;
-                    capture = new Capture();
-                    capture.Start(root, new Size(510, 510), @"/opt/usr/nui_captured.jpg");
-                    capture.Finished += onCaptureFinished;
-                    log.Debug(tag, $"capture done \n");
-                }
-            }
-        }
-
-        private void tddTest()
-        {
-            log.Debug(tag, $"TDD test before Assert");
-
-            Assert.IsFalse(true, "TDD test, Exception throw");
-
-            Assert.IsFalse(false, "TDD test, Exception throw");
-
-            log.Debug(tag, $"TDD test after Assert");
-        }
-
-        private void checkCaptureNew()
-        {
-            var target = new Capture();
-            Assert.IsNotNull(target, "target should not be null");
-            Assert.IsTrue(target is Capture, "target should be Capture class");
         }
 
         public void Deactivate()
         {
+            window.KeyEvent -= WindowKeyEvent;
         }
-
-        const string tag = "NUITEST";
-        private Window window;
-        private View root, capturedView0, capturedView1;
-        private Capture capture;
-        private ImageView capturedImage;
-        private bool done = false;
-        private string resourcePath;
     }
 }
