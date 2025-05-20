@@ -427,6 +427,15 @@ namespace Tizen.NUI
             }
         }
 
+        public void EnableSkipPreResumeFrames()
+        {
+            if (ApplicationHandle != null && ApplicationHandle.SwigCPtr.Handle != IntPtr.Zero)
+            {
+                Interop.Application.ApplicationEnableSkipPreResumeFrames(ApplicationHandle.SwigCPtr);
+                if (NDalicPINVOKE.SWIGPendingException.Pending) throw NDalicPINVOKE.SWIGPendingException.Retrieve();
+            }
+        }
+
         /// <summary>
         /// Register the assembly to XAML.
         /// </summary>
