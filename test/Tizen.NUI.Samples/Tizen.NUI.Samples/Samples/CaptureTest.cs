@@ -4,114 +4,1064 @@ using Tizen.NUI;
 using Tizen.NUI.BaseComponents;
 using NUnit.Framework;
 
-namespace Tizen.NUI.Samples
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Linq;
+using System.CodeDom.Compiler;
+using System.Linq.Expressions;
+
+using System;
+using System.Diagnostics;
+
+
+public enum LineType
 {
-    using log = Tizen.Log;
-    public class CaptureTest : IExample
+    Paragraph,
+    Heading,
+    ListItem,
+    Quote,
+    CodeBlock,
+    Table,
+    Empty,
+    ThematicBreak
+}
+
+public class MarkdownLine
+{
+    public LineType Type { get; set; } = LineType.Empty;
+
+    public StringBuilder ContentBuffer { get; set; } = new StringBuilder();
+
+    public StringBuilder TrailingBuffer { get; set; } = new StringBuilder();
+
+    public int HeadingLevel { get; set; } = 0;
+
+    public int IndentLevel { get; set; } = 0;
+
+    public int blockIndent = 0;
+
+    public string BlockInfoString;
+
+    public StringBuilder Content { get; set; } = new StringBuilder();
+
+    public int OrderedListIndex = -1; // < 0 : bullet, >= 0 : numbering list
+
+    public override string ToString() => $"[{Type}] {(ContentBuffer.ToString() + TrailingBuffer.ToString()).TrimEnd()}, IndentLevel : {IndentLevel}" + (Type == LineType.Heading ? $", HeadingLevel : {HeadingLevel}" : "");
+    public string TypeToString() => $"[{Type}]";
+    public string InfoToString() => $"IndentLevel : {IndentLevel}" + (Type == LineType.Heading ? $", HeadingLevel : {HeadingLevel}" : "") + (OrderedListIndex > 0 ? $", OrderedListIndex : {OrderedListIndex}" : "") + ((BlockInfoString != null && BlockInfoString.Length > 0) ? $", BlockInfoString : {BlockInfoString}" : "");
+    public string OriginalContentToString() => $"{(ContentBuffer.ToString() + TrailingBuffer.ToString()).TrimEnd()}";
+    public string ContentToString() => $"{Content.ToString()}";
+}
+
+public class IndentEntry
+{
+    public int Indent { get; }
+    public int ContentStart { get; }
+    public int OrderedListIndex { get; set; }
+
+    public IndentEntry(int indent, int contentStart, int orderedListIndex)
     {
-        public void Activate()
+        Indent = indent;
+        ContentStart = contentStart;
+        OrderedListIndex = orderedListIndex;
+    }
+
+    public override string ToString() => $"(Indent: {Indent}, ContentStart: {ContentStart})";
+}
+
+public class MarkdownStreamParser
+{
+    enum NewLineType
+    {
+        MergeToContent,
+
+        MoveToNewLine,
+
+        FinalizeAndReset,
+
+        NotNewLine
+    }
+
+    enum CodeBlockType
+    {
+        Backtick,
+
+        Space
+    }
+
+    private List<MarkdownLine> lines = new List<MarkdownLine>();
+    private MarkdownLine activeLine = new MarkdownLine();
+    private bool inTable = false;   // TODO
+    private bool isLineNeverThematicBreak = false;
+    private Stack<IndentEntry> indentStack = new Stack<IndentEntry>();
+    private Stack<int> orderedListIndex;
+    private bool requireLineFullUpdate = false;
+
+
+    // For code block optimize
+    private bool inCodeBlock = false;
+    private bool requiredToCloseCodeBlock = false;
+    private bool skipFirstNewLineInCodeblock = false;
+    private CodeBlockType codeBlockType = CodeBlockType.Backtick;
+
+    public MarkdownStreamParser()
+    {
+        lines.Add(activeLine);
+        indentStack.Push(new IndentEntry(0, 0, -1));
+    }
+
+    private int CurrentIndentLevel => indentStack.Count - 1;
+
+            double totaltime = 0.0;
+            int tickCount = 0;
+
+    public void InputChar(char c)
+    {
+        if (c == '\r')
         {
-            log.Debug(tag, $"Activate(): start \n");
-            resourcePath = Tizen.Applications.Application.Current.DirectoryInfo.Resource;
-
-            window = NUIApplication.GetDefaultWindow();
-            window.TouchEvent += Win_TouchEvent;
-
-            root = new View()
-            {
-                Name = "test_root",
-                Size = new Size(500, 500),
-                Position = new Position(10, 10),
-                BackgroundColor = Color.White,
-            };
-
-            window.Add(root);
-
-            log.Debug(tag, $"root view added \n");
-
-            capturedView0 = new ImageView(resourcePath + "/images/image1.jpg")
-            {
-                Name = "test_v0",
-                Size = new Size(100, 100),
-                BackgroundColor = Color.Red,
-            };
-            root.Add(capturedView0);
-
-            capturedView1 = new ImageView(resourcePath + "/images/image2.jpg")
-            {
-                Name = "test_v1",
-                Size = new Size(150, 150),
-                Position = new Position(150, 150),
-                BackgroundColor = Color.Yellow,
-            };
-            root.Add(capturedView1);
-
-            //TDD
-            //tddTest();
-            //checkCaptureNew();
+            return;
+        }
+        if (c == '\t')
+        {
+            AppendTabAsSpaces();
+        }
+        else
+        {
+            activeLine.TrailingBuffer.Append(c);
         }
 
-        private void onCaptureFinished(object sender, CaptureFinishedEventArgs e)
+        NewLineType newLineType = IsNewLineRequired();
+        if (newLineType != NewLineType.NotNewLine)
         {
-            log.Debug(tag, $"onCaptureFinished() statue={e.Success} \n");
+            requireLineFullUpdate = (requireLineFullUpdate || newLineType == NewLineType.MoveToNewLine || newLineType == NewLineType.FinalizeAndReset) ? true : false;
+            FinalizeActiveLine(newLineType);
+        }
 
-            if (sender is Capture)
+        bool isLineBreakDetected = IsLineBreakDetected(activeLine.TrailingBuffer);
+        if (isLineBreakDetected)
+        {
+            activeLine.ContentBuffer.Append(activeLine.TrailingBuffer.ToString());
+            activeLine.TrailingBuffer.Clear();
+        }
+
+        UpdateActiveLine();
+    }
+
+    private void AppendTabAsSpaces()
+    {
+        string trailingBuffer = activeLine.TrailingBuffer.ToString();
+        int trailingSpaces = 0;
+        for (int i = trailingBuffer.Length - 1; i >= 0; --i)
+        {
+            if (trailingBuffer[i] != ' ')
             {
-                log.Debug(tag, $"sender is Capture \n");
-                ImageUrl imageUrl = capture.GetImageUrl();
-                capturedImage = new ImageView(imageUrl.ToString());
-                log.Debug(tag, $"url={imageUrl.ToString()} \n");
+                break;
+            }
+            trailingSpaces++;
+        }
 
-                capturedImage.Size = new Size(510, 510);
-                capturedImage.Position = new Position(10, 10);
-                root.Add(capturedImage);
-                done = false;
+        int spaceToAdd = 4 - (trailingSpaces % 4);
+        if (spaceToAdd == 4)
+        {
+            spaceToAdd = 0;
+        }
+
+        activeLine.TrailingBuffer.Append(new string(' ', spaceToAdd));
+    }
+
+    private NewLineType IsNewLineRequired()
+    {
+        string trailingBuffer = activeLine.TrailingBuffer.ToString();
+        string trimmedTrailingBuffer = trailingBuffer.Trim();
+        string content = activeLine.ContentBuffer.ToString();
+
+        // Handle Code Block
+        // Code Block Start -> Copied new line. Do not merge trailingBuffer to ContentBuffer
+        if (!inCodeBlock && trailingBuffer.EndsWith("\n") && Regex.IsMatch(trimmedTrailingBuffer, @"^\s*```"))
+        {
+            if(string.IsNullOrWhiteSpace(content))
+            {
+                return NewLineType.NotNewLine;
+            }
+            return NewLineType.MoveToNewLine;
+        }
+
+        // Code Block Start or End-> Copied new line. Do not merge trailingBuffer to ContentBuffer
+        if (trailingBuffer.EndsWith("\n") && Regex.IsMatch(trimmedTrailingBuffer, "^```$"))
+        {
+            if(string.IsNullOrWhiteSpace(content))
+            {
+                return NewLineType.NotNewLine;
+            }
+
+            if (inCodeBlock)
+            {
+                requireLineFullUpdate = true;
+                return NewLineType.MergeToContent;
+            }
+            else
+            {
+                return NewLineType.MoveToNewLine;
             }
         }
 
-        private void Win_TouchEvent(object sender, Window.TouchEventArgs e)
+        if (inCodeBlock)
         {
-            if (e.Touch.GetState(0) == PointStateType.Down)
+            if (string.IsNullOrEmpty(trimmedTrailingBuffer))
             {
-                if (!done)
+                return NewLineType.NotNewLine;
+            }
+
+            int indent = 0;
+            int contentStart = 0;
+            ComputeIndentAndContentStart(trailingBuffer, out indent, out contentStart);
+
+            var top = indentStack.Peek();
+            int delta = indent - activeLine.blockIndent;
+            if (delta < 0)
+            {
+                requiredToCloseCodeBlock = true;
+                return NewLineType.MoveToNewLine;
+            }
+            return NewLineType.NotNewLine;
+        }
+        // Handle Code Block Finished
+
+        // "\n   \n" -> Empry new line. Merge trailingBuffer to ContentBuffer
+        if (trailingBuffer.EndsWith("\n") && string.IsNullOrWhiteSpace(trailingBuffer))
+        {
+            return (string.IsNullOrEmpty(content)) ? NewLineType.MergeToContent : NewLineType.FinalizeAndReset;
+        }
+
+        // "  \n" -> Empry new line. Merge trailingBuffer to ContentBuffer
+        if (trailingBuffer.EndsWith("  \n"))
+        {
+            return NewLineType.MergeToContent;
+        }
+
+        // ThematicBreak -> Empry new line. Merge trailingBuffer to ContentBuffer
+        if (trailingBuffer.EndsWith("\n") && IsThematicBreak(trimmedTrailingBuffer))
+        {
+            return (string.IsNullOrEmpty(content)) ? NewLineType.MergeToContent : NewLineType.FinalizeAndReset;
+        }
+
+        // "\n" after heading -> Empry new line. Merge trailingBuffer to ContentBuffer
+        if (trailingBuffer.EndsWith("\n") && activeLine.Type == LineType.Heading) //Regex.IsMatch(trimmedTrailingBuffer, @"^\s*#{1,6}\s"))
+        {
+            return NewLineType.MergeToContent;
+        }
+
+        // List -> Copied new line. Do not merge trailingBuffer to ContentBuffer
+        if (!string.IsNullOrWhiteSpace(content) && trailingBuffer.EndsWith(" ") && Regex.IsMatch(trailingBuffer, @"^\s*([-*+]|\d+\.)\s$"))
+        {
+            return NewLineType.MoveToNewLine;
+        }
+
+        // Heading -> Copied new line. Do not merge trailingBuffer to ContentBuffer
+        if (!string.IsNullOrWhiteSpace(content) && trailingBuffer.EndsWith(" ") && Regex.IsMatch(trailingBuffer, @"^\s*#\s$"))
+        {
+            return NewLineType.MoveToNewLine;
+        }
+
+        // Quote -> Copied new line. Do not merge trailingBuffer to ContentBuffer
+        if (!string.IsNullOrWhiteSpace(content) && Regex.IsMatch(trailingBuffer, @"^\s*>$"))
+        {
+            return NewLineType.MoveToNewLine;
+        }
+
+        return NewLineType.NotNewLine;
+    }
+
+    private void FinalizeActiveLine(NewLineType newLineType)
+    {
+        if (newLineType == NewLineType.MergeToContent)
+        {
+            activeLine.ContentBuffer.Append(activeLine.TrailingBuffer.ToString());
+            activeLine.TrailingBuffer.Clear();
+        }
+
+        string newLineString = activeLine.TrailingBuffer.ToString();
+        activeLine.TrailingBuffer.Clear();
+
+        UpdateActiveLine();
+
+        StartNewLine(newLineString);
+
+        if (newLineType == NewLineType.FinalizeAndReset)
+        {
+            activeLine.ContentBuffer.AppendLine(activeLine.TrailingBuffer.ToString());
+            activeLine.TrailingBuffer.Clear();
+            UpdateActiveLine();
+            StartNewLine(activeLine.TrailingBuffer.ToString());
+        }
+    }
+
+    private void StartNewLine(string newLineString)
+    {
+        bool isActiveLineEmpty = activeLine.Type == LineType.Empty;
+        bool isPreviousActiveLineEmpty = ((lines.Count < 2) || (lines[lines.Count - 2].Type == LineType.Empty));
+
+        if (isActiveLineEmpty && isPreviousActiveLineEmpty)
+        {
+            if (lines.Count >= 2)
+            {
+                lines[lines.Count - 2].ContentBuffer.Append(activeLine.ContentBuffer.ToString());
+                activeLine.ContentBuffer.Clear();
+            }
+        }
+        else
+        {
+            activeLine = new MarkdownLine();
+            lines.Add(activeLine);
+        }
+        activeLine.TrailingBuffer.Append(newLineString);
+        isLineNeverThematicBreak = false;
+    }
+
+    private void UpdateActiveLine()
+    {
+        LineType previousType = activeLine.Type;
+        UpdateActiveLineType();
+
+
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+        UpdateActiveLineContent(previousType != activeLine.Type);
+
+            stopwatch.Stop();
+
+            double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
+            Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
+            if (elapsedMilliseconds < 30.0)
+            {
+                tickCount++;
+                totaltime += elapsedMilliseconds;
+                double aveTime = totaltime / tickCount;
+                Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
+            }
+    }
+
+    private void UpdateActiveLineType()
+    {
+        string line = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+        string trimmed = line.Trim();
+
+        if (!inCodeBlock && string.IsNullOrWhiteSpace(line))
+        {
+            activeLine.Type = LineType.Empty;
+            activeLine.IndentLevel = 0;
+            return;
+        }
+
+        if (UpdateCodeBlock(line, trimmed))
+        {
+            return;
+        }
+
+        // ThematicBreak should be checked before ListItem
+        // TODO How to move this after ListItem
+        if (!isLineNeverThematicBreak)
+        {
+            char lastChar = trimmed[trimmed.Length - 1];
+            if (lastChar != '-' && lastChar != '_' && lastChar != '*')
+            {
+                isLineNeverThematicBreak = true;
+            }
+            else
+            {
+                if (IsThematicBreak(trimmed))
                 {
-                    done = true;
-                    capture = new Capture();
-                    capture.Start(root, new Size(510, 510), "");
-                    capture.Finished += onCaptureFinished;
-                    log.Debug(tag, $"capture done \n");
+                    activeLine.Type = LineType.ThematicBreak;
+                    activeLine.IndentLevel = 0;
+                    return;
                 }
             }
         }
 
-        private void tddTest()
+        // Heading
+        if (activeLine.Type == LineType.Heading || (line.EndsWith(" ") && Regex.IsMatch(line, @"^\s*#{1,6}\s")))
         {
-            log.Debug(tag, $"TDD test before Assert");
+            if (activeLine.Type != LineType.Heading)
+            {
+                activeLine.Type = LineType.Heading;
 
-            Assert.IsFalse(true, "TDD test, Exception throw");
+                activeLine.IndentLevel = 0;
 
-            Assert.IsFalse(false, "TDD test, Exception throw");
-
-            log.Debug(tag, $"TDD test after Assert");
+                Match match = Regex.Match(trimmed, @"^\s*#{1,6}");
+                activeLine.HeadingLevel = match.Value.Length;
+            }
+            return;
         }
 
-        private void checkCaptureNew()
+        // ListItem
+        if (activeLine.Type == LineType.ListItem || (line.EndsWith(" ") && IsListItem(line)))
         {
-            var target = new Capture();
-            Assert.IsNotNull(target, "target should not be null");
-            Assert.IsTrue(target is Capture, "target should be Capture class");
+            if (activeLine.Type != LineType.ListItem)
+            {
+                int indent = 0;
+                int contentStart = 0;
+                ComputeIndentAndContentStart(line, out indent, out contentStart);
+                activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, true);
+
+                Match match = Regex.Match(line, @"^\s*(\d+)\.\s");
+                if (match.Success)
+                {
+                    if (indentStack.Peek().OrderedListIndex == -1)
+                    {
+                        indentStack.Peek().OrderedListIndex = Convert.ToInt32(match.Groups[1].ToString());
+                    }
+                    else
+                    {
+                        indentStack.Peek().OrderedListIndex++;
+                    }
+                }
+                else
+                {
+                    indentStack.Peek().OrderedListIndex = -1;
+                }
+                activeLine.OrderedListIndex = indentStack.Peek().OrderedListIndex;
+            }
+            activeLine.Type = LineType.ListItem;
+            return;
+        }
+
+        // Quote
+        if (activeLine.Type == LineType.Quote || trimmed.StartsWith(">"))
+        {
+            if (CurrentIndentLevel > 0 && activeLine.Type != LineType.Quote)
+            {
+                int indent = 0;
+                int contentStart = 0;
+                ComputeIndentAndContentStart(line, out indent, out contentStart);
+                activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, false);
+            }
+            activeLine.Type = LineType.Quote;
+            return;
+        }
+
+        activeLine.Type = LineType.Paragraph;
+        if (CurrentIndentLevel > 0 && indentStack.Count > 1)
+        {
+            if (activeLine.IndentLevel == 0)
+            {
+                int indent = 0;
+                int contentStart = 0;
+                ComputeIndentAndContentStart(line, out indent, out contentStart);
+                activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, false);
+            }
+        }
+        else
+        {
+            activeLine.IndentLevel = 0;
+        }
+    }
+
+    private bool UpdateCodeBlock(string line, string trimmed)
+    {
+        if (requiredToCloseCodeBlock)
+        {
+            inCodeBlock = false;
+            requiredToCloseCodeBlock = false;
+            return true;
+        }
+
+        if (inCodeBlock && codeBlockType == CodeBlockType.Backtick && line.EndsWith("\n"))
+        {
+            if (Regex.IsMatch(trimmed, @"\n *```$"))
+            {
+                inCodeBlock = false;
+                return true;
+            }
+        }
+
+        // "```" should be checked before to check "    ";
+        if (line.EndsWith("\n") && trimmed.StartsWith("```"))
+        {
+            if (!inCodeBlock)
+            {
+                // TODO Need to control strings in code block
+                activeLine.IndentLevel = 0;
+                if (CurrentIndentLevel > 0 && activeLine.Type != LineType.CodeBlock)
+                {
+                    int indent = 0;
+                    int contentStart = 0;
+                    ComputeIndentAndContentStart(line, out indent, out contentStart);
+                    int blockIndentLevel = ComputeIndentLevel(indent, contentStart, false);
+                    if (blockIndentLevel == CurrentIndentLevel)
+                    {
+                        activeLine.blockIndent = indent;
+                        activeLine.IndentLevel = blockIndentLevel;
+                    }
+                }
+                activeLine.Type = LineType.CodeBlock;
+                inCodeBlock = true;
+                codeBlockType = CodeBlockType.Backtick;
+            }
+            return true;
+        }
+
+        if (line.StartsWith("    "))
+        {
+            int indent = 0;
+            int contentStart = 0;
+            ComputeIndentAndContentStart(line, out indent, out contentStart);
+
+            if (indent >= 4 + indentStack.Peek().ContentStart)
+            {
+                if (!inCodeBlock)
+                {
+                    inCodeBlock = true;
+                    codeBlockType = CodeBlockType.Space;
+                    activeLine.Type = LineType.CodeBlock;
+
+                    activeLine.blockIndent = indent;
+                    activeLine.IndentLevel = CurrentIndentLevel;
+                }
+                return true;
+            }
+        }
+
+        // Do not change type during code block.
+        if (inCodeBlock)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void UpdateActiveLineContent(bool typeChanged)
+    {
+        if (typeChanged || requireLineFullUpdate)
+        {
+            string content = new string("");
+            switch (activeLine.Type)
+            {
+                case LineType.Paragraph:
+                    {
+                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+                        content = contentLine;
+                        break;
+                    }
+                case LineType.Heading:
+                    {
+                        activeLine.Content.Clear();
+                        int trailingBufferStart = 0;
+                        int trailingBufferEnd = activeLine.TrailingBuffer.Length - 1;
+                        while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
+                        {
+                            trailingBufferStart++;
+                        }
+
+                        while (trailingBufferStart < trailingBufferEnd && activeLine.TrailingBuffer[trailingBufferStart] == '#')
+                        {
+                            trailingBufferStart++;
+                        }
+
+                        while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
+                        {
+                            trailingBufferStart++;
+                        }
+
+                        while (trailingBufferEnd >= trailingBufferStart && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferEnd]))
+                        {
+                            trailingBufferEnd--;
+                        }
+
+                        char prevChar = ' ';
+                        for (int i = trailingBufferStart; i <= trailingBufferEnd; ++i)
+                        {
+                            char currentChar = (activeLine.TrailingBuffer[i] == '\n') ? ' ' : activeLine.TrailingBuffer[i];
+                            if (prevChar != ' ' || currentChar != ' ')
+                            {
+                                activeLine.Content.Append(currentChar);
+                            }
+                            prevChar = currentChar;
+                        }
+
+                        requireLineFullUpdate = false;
+                        return;
+                    }
+                case LineType.ListItem:
+                    {
+                        StringBuilder builder = (activeLine.ContentBuffer.Length == 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
+                        activeLine.Content.Clear();
+                        int bufferStart = 0;
+                        int bufferEnd = builder.Length - 1;
+                        while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
+                        {
+                            bufferStart++;
+                        }
+
+                        if (builder[bufferStart] == '-' || builder[bufferStart] == '+' || builder[bufferStart] == '*')
+                        {
+                            bufferStart++;
+                        }
+                        else
+                        {
+                            while (bufferStart < bufferEnd && char.IsDigit(builder[bufferStart]))
+                            {
+                                bufferStart++;
+                            }
+                            if (builder[bufferStart] == '.')
+                            {
+                                bufferStart++;
+                            }
+                        }
+
+                        while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
+                        {
+                            bufferStart++;
+                        }
+
+                        while (bufferEnd >= bufferStart && char.IsWhiteSpace(builder[bufferEnd]))
+                        {
+                            bufferEnd--;
+                        }
+
+                        char prevChar = ' ';
+                        for (int i = bufferStart; i <= bufferEnd; ++i)
+                        {
+                            char currentChar = (builder[i] == '\n') ? ' ' : builder[i];
+                            if (prevChar != ' ' || currentChar != ' ')
+                            {
+                                activeLine.Content.Append(currentChar);
+                            }
+                            prevChar = currentChar;
+                        }
+
+                        requireLineFullUpdate = false;
+                        return;
+                    }
+                case LineType.Quote:
+                    {
+                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+                        content = Regex.Replace(contentLine, @"^\s*>\s*", "");
+                        break;
+                    }
+                case LineType.CodeBlock:
+                    {
+                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+                        var lines = contentLine.Split('\n').ToList();
+
+                        string firstLine = lines[0];
+                        Match startMatch = Regex.Match(firstLine, @"^(\s*)(`{3,})([^\r\n]*)?$");
+                        if (startMatch.Success)
+                        {
+                            activeLine.BlockInfoString = startMatch.Groups[3].Value.Trim();
+                        }
+
+                        int codeStartLine = codeBlockType == CodeBlockType.Backtick ? 1 : 0;
+                        for (int i = codeStartLine; i < lines.Count; ++i)
+                        {
+                            string line = lines[i];
+                            if (Regex.IsMatch(line, @"^\s*`{3,}\s*$") || line.Length <= activeLine.blockIndent)
+                            {
+                                break;
+                            }
+                            content = content + (content.Length == 0 ? "" : "\n") + line.Substring(activeLine.blockIndent);
+                        }
+                        break;
+                    }
+                case LineType.Table:
+                    {
+                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+                        content = contentLine;
+                        break;
+                    }
+                case LineType.ThematicBreak:
+                    {
+                        activeLine.Content.Clear();
+                        activeLine.Content.Append("---");
+                        break;
+                    }
+            }
+
+            requireLineFullUpdate = false;
+            string trimmedContent = content.Trim();
+
+            if (activeLine.Type == LineType.CodeBlock)
+            {
+                return;
+            }
+
+            char previousChar = ' ';
+            activeLine.Content.Clear();
+            foreach (char c in trimmedContent)
+            {
+                if (c == ' ' && previousChar == ' ')
+                {
+                    continue;
+                }
+
+                char newChar = c;
+                if (c == '\n')
+                {
+                    newChar = ' ';
+                }
+                activeLine.Content.Append(newChar);
+                previousChar = c;
+            }
+        }
+        else
+        {
+            if (activeLine.Type == LineType.Empty)
+            {
+                activeLine.Content.Clear();
+                return;
+            }
+
+            if (activeLine.ContentBuffer.Length == 0 && activeLine.TrailingBuffer.Length == 0)
+            {
+                return;
+            }
+
+            char lineLastChar = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer[activeLine.TrailingBuffer.Length - 1] : activeLine.ContentBuffer[activeLine.ContentBuffer.Length - 1];
+            if (lineLastChar == '\r')
+            {
+                return;
+            }
+
+            StringBuilder builder = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
+            if (activeLine.Type == LineType.CodeBlock)
+            {
+                bool needToSkip = false;
+                if (lineLastChar == ' ')
+                {
+                    int whiteCount = 0;
+                    int linePoint = builder.Length - 1;
+                    while (linePoint >= 0 && builder[linePoint] != '\n')
+                    {
+                        if (builder[linePoint] == ' ')
+                        {
+                            whiteCount++;
+                        }
+                        else
+                        {
+                            whiteCount = activeLine.blockIndent + 1;
+                            break;
+                        }
+                        linePoint--;
+                    }
+
+                    if (whiteCount <= activeLine.blockIndent)
+                    {
+                        needToSkip = true;
+                    }
+                }
+                if (!needToSkip)
+                {
+                    activeLine.Content.Append(lineLastChar);
+                }
+                return;
+            }
+
+            if (lineLastChar == ' ' && (activeLine.Content.Length == 0 || activeLine.Content[activeLine.Content.Length - 1] == ' '))
+            {
+                return;
+            }
+
+            if (lineLastChar == '\n')
+            {
+                lineLastChar = ' ';
+            }
+            activeLine.Content.Append(lineLastChar);
+        }
+    }
+
+    private void ComputeIndentAndContentStart(string line, out int indent, out int contentStart)
+    {
+        indent = 0;
+        contentStart = 0;
+
+        int i = 0;
+        while (i < line.Length && line[i] == ' ')
+        {
+            i++;
+        }
+        indent = i;
+        contentStart = i;
+
+        string trimmed = line.Substring(i);
+        var match = Regex.Match(trimmed, @"^([-*+]|\d+\.) ");
+        if (match.Success)
+        {
+            int markerLength = match.Value.Length;
+            contentStart += markerLength;
+        }
+    }
+
+    private int ComputeIndentLevel(int indent, int contentStart, bool isList)
+    {
+        while (indentStack.Count > 1 && indent < indentStack.Peek().Indent)
+        {
+            indentStack.Pop();
+        }
+        var top = indentStack.Peek();
+
+        if (isList)
+        {
+            int delta = indent - top.ContentStart;
+            if (indentStack.Count == 1 || (delta >= 0 && delta <= 2))
+            {
+                indentStack.Push(new IndentEntry(indent, contentStart, -1));
+            }
+        }
+        else
+        {
+            while (indentStack.Count > 1 && indentStack.Peek().ContentStart > contentStart)
+            {
+                indentStack.Pop();
+            }
+        }
+
+        return CurrentIndentLevel;
+    }
+
+    private bool IsLineBreakDetected(StringBuilder line)
+    {
+        return (line.Length > 0 && line[line.Length - 1] == '\n');
+    }
+
+    private int CountLeadingSpaces(string line)
+    {
+        int count = 0;
+        foreach (char c in line)
+        {
+            if (c == ' ') count++;
+            else break;
+        }
+        return count;
+    }
+
+    private bool IsListItem(string line)
+    {
+        return Regex.IsMatch(line, @"^\s*([-*+]|\d+\.)\s");
+    }
+
+    private bool IsThematicBreak(string trimmedLine)
+    {
+        return Regex.IsMatch(trimmedLine, @"^(-\s*){3,}$") || Regex.IsMatch(trimmedLine, @"^(_\s*){3,}$") || Regex.IsMatch(trimmedLine, @"^(\*\s*){3,}$");
+    }
+
+    public void PrintLines()
+    {
+        foreach (var line in lines)
+        {
+            Tizen.Log.Error("NUI", $"{line}\n");
+        }
+    }
+
+    private int showPositionY = 0;
+    private View activeView;
+    private int previousLineIdx = 0;
+
+    public void ShowContent(View root)
+    {
+        List<Vector4> colors = new List<Vector4> { new Vector4(1.0f, 0.0f, 0.0f, 0.3f), new Vector4(0.0f, 1.0f, 0.0f, 0.3f), new Vector4(0.0f, 0.0f, 1.0f, 0.3f) };
+
+        for (int i = previousLineIdx; i < lines.Count; ++i)
+        {
+            var line = lines[i];
+            if (activeView == null || i != previousLineIdx)
+            {
+                int colorIdx = (i + 1) % colors.Count;
+                activeView = new View()
+                {
+                    Size = new Size(2000, 70),
+                    PositionY = showPositionY,
+                    PositionUsesPivotPoint = true,
+                    PivotPoint = PivotPoint.TopLeft,
+                    ParentOrigin = ParentOrigin.TopLeft,
+                    BackgroundColor = colors[colorIdx],
+                };
+
+                TextLabel type = new TextLabel(line.TypeToString())
+                {
+                    Name = "type",
+                    Size = new Size(500, 50),
+                    PositionUsesPivotPoint = true,
+                    PivotPoint = PivotPoint.TopLeft,
+                    ParentOrigin = ParentOrigin.TopLeft
+                };
+                activeView.Add(type);
+
+                TextLabel info = new TextLabel(line.InfoToString())
+                {
+                    Name = "info",
+                    PositionY = 30,
+                    Size = new Size(500, 50),
+                    PositionUsesPivotPoint = true,
+                    PivotPoint = PivotPoint.TopLeft,
+                    ParentOrigin = ParentOrigin.TopLeft
+                };
+                activeView.Add(info);
+
+                TextLabel content = new TextLabel(line.ContentToString())
+                {
+                    Name = "content",
+                    PositionX = 500,
+                    SizeWidth = 800,
+                    PositionUsesPivotPoint = true,
+                    PivotPoint = PivotPoint.TopLeft,
+                    ParentOrigin = ParentOrigin.TopLeft,
+                    MultiLine = true,
+                };
+                activeView.Add(content);
+
+                TextLabel originalContent = new TextLabel(line.OriginalContentToString())
+                {
+                    Name = "originalContent",
+                    PositionX = 1300,
+                    PositionUsesPivotPoint = true,
+                    PivotPoint = PivotPoint.TopLeft,
+                    ParentOrigin = ParentOrigin.TopLeft,
+                    MultiLine = true,
+                };
+                activeView.Add(originalContent);
+                root.Add(activeView);
+                showPositionY += 70;
+            }
+            else
+            {
+                uint childCnt = activeView.ChildCount;
+                for (uint cidx = 0; cidx < childCnt; ++cidx)
+                {
+                    TextLabel textLabel = activeView.GetChildAt(cidx) as TextLabel;
+                    if (textLabel == null)
+                    {
+                        continue;
+                    }
+
+                    if (textLabel.Name == "type")
+                    {
+                        textLabel.Text = line.TypeToString();
+                    }
+                    else if (textLabel.Name == "info")
+                    {
+                        textLabel.Text = line.InfoToString();
+                    }
+                    else if (textLabel.Name == "content")
+                    {
+                        textLabel.Text = line.ContentToString();
+                    }
+                    else if (textLabel.Name == "originalContent")
+                    {
+                        textLabel.Text = line.OriginalContentToString();
+                    }
+                }
+            }
+        }
+        previousLineIdx = lines.Count - 1;
+    }
+
+    public List<MarkdownLine> GetLines() => lines;
+}
+
+
+namespace Tizen.NUI.Samples
+{
+    public class CaptureTest : IExample
+    {
+        private Window window;
+        private Animation animation;
+        Timer timer = new Timer(1);
+        int inputIdx = 0;
+        bool played = false;
+
+        TextLabel timeLabel;
+
+
+        public void Activate()
+        {
+            window = NUIApplication.GetDefaultWindow();
+            window.KeyEvent += WindowKeyEvent;
+
+            var parser = new MarkdownStreamParser();
+            string input = "### Heading\npara  \nnew para\n  - List item lv1\n   - List item lv1\n    - List item lv2\n     - List item lv2\n- List item lv1\n   - List item lv2\n     - List item lv3\n\n       >Continuation Quote lv3\n\n  Continuation Block lv1\n    - List item lv2\n\nParagraph\n     # Heading in code block\nParagraph\n# Heading\nParagraph text\n\nParagraph text2\n- List item lv1\n  - List item lv2\n    ```code block lv2\n    more code lv2\n  ```\n  more code lv1\n```  \nmore code lv0\n  ```\n  Paragraph text3\n    Paragraph text 4\n   ** *   *\n  _ _ __ \n __*___ \n - -- - \n      \n132. number list\n     13. number list\n     16. number list\n132. number list\n153. number list\n+ unordered list\n5. number list\n100. number list\n         space codeblock indented\n\n         space codeblock\n         more code block\n   paragraph code block failed\n\n- List lv1\n  - List lv2\n        Paragraph test space code block but failed.\n\n        space code block lv2.\n      Paragraph code block broken.\n    Paragraph continue.\n\n    Paragraph continue.\n\n  Paragraph lv1.\n\n";
+            //string input = "firstline\n- list\n  ```str\n  asdf\n ```\nnext code";
+            //string input = "- List item lv1\n  - List item lv2\n    ```code block lv2\n    more code lv2\n  ```\n  more code lv1\n```  \nmore code lv0\n  ```\n  Paragraph text3\n    Paragraph text 4";
+
+            View root = new View()
+            {
+                Size = new Size(window.Size),
+                PositionUsesPivotPoint = true,
+                PivotPoint = PivotPoint.BottomLeft,
+                ParentOrigin = ParentOrigin.BottomLeft,
+                WidthResizePolicy = ResizePolicyType.FitToChildren,
+                HeightResizePolicy = ResizePolicyType.FitToChildren,
+            };
+            window.Add(root);
+
+            timeLabel = new TextLabel()
+            {
+                Name = "timeLabel",
+                PositionUsesPivotPoint = true,
+                PivotPoint = PivotPoint.Center,
+                ParentOrigin = ParentOrigin.Center,
+                MultiLine = true,
+                SizeWidth = 200,
+            };
+
+//            window.Add(timeLabel);
+
+            timer.Tick += (e, s) =>
+            {
+                parser.InputChar(input[inputIdx]);
+                parser.ShowContent(root);
+
+                inputIdx++;
+
+                if (inputIdx < input.Length)
+                {
+                    return true;
+                }
+                else
+                {
+                    Tizen.Log.Error("NUI", $"Input : \n{input}");
+                    parser.PrintLines();
+                    return false;
+                }
+            };
+
+
+            window.TouchEvent += (s, e) =>
+            {
+                if (!played)
+                {
+                    timer.Start();
+                    played = true;
+                }
+            };
+
+            window.KeyEvent += (s, e) =>
+            {
+                if (e.Key.State == Key.StateType.Down)
+                {
+                    if (e.Key.KeyPressedName == "Up")
+                    {
+                        root.PositionY -= 10;
+                    }
+                    if (e.Key.KeyPressedName == "Down")
+                    {
+                        root.PositionY += 10;
+                    }
+                }
+            };
+
+        }
+
+        private void WindowKeyEvent(object sender, Window.KeyEventArgs e)
+        {
+            if (e.Key.State == Key.StateType.Up)
+            {
+            }
         }
 
         public void Deactivate()
         {
         }
-
-        const string tag = "NUITEST";
-        private Window window;
-        private View root, capturedView0, capturedView1;
-        private Capture capture;
-        private ImageView capturedImage;
-        private bool done = false;
-        private string resourcePath;
     }
 }
