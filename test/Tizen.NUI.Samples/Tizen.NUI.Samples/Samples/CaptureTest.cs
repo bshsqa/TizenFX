@@ -130,8 +130,23 @@ public class MarkdownStreamParser
         {
             activeLine.TrailingBuffer.Append(c);
         }
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
         NewLineType newLineType = IsNewLineRequired();
+
+            stopwatch.Stop();
+
+            double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
+            Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
+            if (elapsedMilliseconds < 30.0)
+            {
+                tickCount++;
+                totaltime += elapsedMilliseconds;
+                double aveTime = totaltime / tickCount;
+                Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
+            }
+
         if (newLineType != NewLineType.NotNewLine)
         {
             requireLineFullUpdate = (requireLineFullUpdate || newLineType == NewLineType.MoveToNewLine || newLineType == NewLineType.FinalizeAndReset) ? true : false;
@@ -144,6 +159,7 @@ public class MarkdownStreamParser
             activeLine.ContentBuffer.Append(activeLine.TrailingBuffer.ToString());
             activeLine.TrailingBuffer.Clear();
         }
+
 
         UpdateActiveLine();
     }
@@ -322,22 +338,7 @@ public class MarkdownStreamParser
     private void UpdateActiveLine()
     {
         LineType previousType = activeLine.Type;
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
         UpdateActiveLineType();
-
-            stopwatch.Stop();
-
-            double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
-            Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
-            if (elapsedMilliseconds < 30.0)
-            {
-                tickCount++;
-                totaltime += elapsedMilliseconds;
-                double aveTime = totaltime / tickCount;
-                Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
-            }
         UpdateActiveLineContent(previousType != activeLine.Type);
     }
 
@@ -379,7 +380,7 @@ public class MarkdownStreamParser
         }
 
         // Heading
-        if (activeLine.Type == LineType.Heading || (line.Length > 0 && line[line.Length - 1] == ' ' && Regex.IsMatch(line, @"^\s*#{1,6}\s")))
+        if (activeLine.Type == LineType.Heading || (line.Length > 0 && line[line.Length - 1] == ' ' && IsHeading(line))) //Regex.IsMatch(line, @"^\s*#{1,6}\s")))
         {
             if (activeLine.Type != LineType.Heading)
             {
@@ -865,11 +866,6 @@ public class MarkdownStreamParser
         return count;
     }
 
-    private bool IsListItem(string line)
-    {
-        return Regex.IsMatch(line, @"^\s*([-*+]|\d+\.)\s");
-    }
-
     private bool IsThematicBreak(string trimmedLine)
     {
         char thematicBreakTypeChar = trimmedLine[0];
@@ -895,6 +891,60 @@ public class MarkdownStreamParser
             {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private bool IsHeading(string line)
+    {
+        int contentStart = 0;
+        while(contentStart < line.Length && line[contentStart] == ' ')
+        {
+            contentStart++;
+        }
+
+        while(contentStart < line.Length && line[contentStart] != ' ')
+        {
+            if(line[contentStart] != '#')
+            {
+                return false;
+            }
+            contentStart++;
+        }
+        return true;
+    }
+
+    private bool IsListItem(string line)
+    {
+        int contentStart = 0;
+        while(contentStart < line.Length && line[contentStart] == ' ')
+        {
+            contentStart++;
+        }
+
+        if (line[contentStart] != '-' && line[contentStart] != '+' && line[contentStart] != '*' && !char.IsDigit(line[contentStart]))
+        {
+            return false;
+        }
+
+        bool isOrderedList = (char.IsDigit(line[contentStart])) ? true : false;
+        if (!isOrderedList)
+        {
+            if (line[contentStart + 1] == ' ')
+            {
+                return true;
+            }
+            return false;
+        }
+
+        while (contentStart < line.Length && char.IsDigit(line[contentStart]))
+        {
+            contentStart++;
+        }
+
+        if(line[contentStart] == '.' && line[contentStart + 1] == ' ')
+        {
+            return true;
         }
         return false;
     }
