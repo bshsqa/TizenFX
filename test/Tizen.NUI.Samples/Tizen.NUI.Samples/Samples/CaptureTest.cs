@@ -322,14 +322,10 @@ public class MarkdownStreamParser
     private void UpdateActiveLine()
     {
         LineType previousType = activeLine.Type;
-        UpdateActiveLineType();
-
-
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
-        UpdateActiveLineContent(previousType != activeLine.Type);
+        UpdateActiveLineType();
 
             stopwatch.Stop();
 
@@ -342,6 +338,7 @@ public class MarkdownStreamParser
                 double aveTime = totaltime / tickCount;
                 Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
             }
+        UpdateActiveLineContent(previousType != activeLine.Type);
     }
 
     private void UpdateActiveLineType()
@@ -363,7 +360,7 @@ public class MarkdownStreamParser
 
         // ThematicBreak should be checked before ListItem
         // TODO How to move this after ListItem
-        if (!isLineNeverThematicBreak)
+        if (!isLineNeverThematicBreak && trimmed.Length > 0)
         {
             char lastChar = trimmed[trimmed.Length - 1];
             if (lastChar != '-' && lastChar != '_' && lastChar != '*')
@@ -372,7 +369,7 @@ public class MarkdownStreamParser
             }
             else
             {
-                if (IsThematicBreak(trimmed))
+                if (trimmed.Length > 3 && IsThematicBreak(trimmed))
                 {
                     activeLine.Type = LineType.ThematicBreak;
                     activeLine.IndentLevel = 0;
@@ -382,7 +379,7 @@ public class MarkdownStreamParser
         }
 
         // Heading
-        if (activeLine.Type == LineType.Heading || (line.EndsWith(" ") && Regex.IsMatch(line, @"^\s*#{1,6}\s")))
+        if (activeLine.Type == LineType.Heading || (line.Length > 0 && line[line.Length - 1] == ' ' && Regex.IsMatch(line, @"^\s*#{1,6}\s")))
         {
             if (activeLine.Type != LineType.Heading)
             {
@@ -397,7 +394,7 @@ public class MarkdownStreamParser
         }
 
         // ListItem
-        if (activeLine.Type == LineType.ListItem || (line.EndsWith(" ") && IsListItem(line)))
+        if (activeLine.Type == LineType.ListItem || (line.Length > 0 && line[line.Length - 1] == ' ' && IsListItem(line)))
         {
             if (activeLine.Type != LineType.ListItem)
             {
@@ -429,7 +426,7 @@ public class MarkdownStreamParser
         }
 
         // Quote
-        if (activeLine.Type == LineType.Quote || trimmed.StartsWith(">"))
+        if (activeLine.Type == LineType.Quote || (trimmed.Length > 0 && trimmed[0] == '>'))
         {
             if (CurrentIndentLevel > 0 && activeLine.Type != LineType.Quote)
             {
@@ -468,9 +465,28 @@ public class MarkdownStreamParser
             return true;
         }
 
-        if (inCodeBlock && codeBlockType == CodeBlockType.Backtick && line.EndsWith("\n"))
+        if (inCodeBlock && codeBlockType == CodeBlockType.Backtick && line.Length > 3 && line[line.Length - 1] == '\n')
         {
-            if (Regex.IsMatch(trimmed, @"\n *```$"))
+            bool isFinishMarker = true;
+            if (trimmed[trimmed.Length - 1] != '`' || trimmed[trimmed.Length - 2] != '`' || trimmed[trimmed.Length - 3] != '`')
+            {
+                isFinishMarker = false;
+            }
+
+            for (int i = trimmed.Length - 4; i >= 0; --i)
+            {
+                if(trimmed[i] == '\n')
+                {
+                    break;
+                }
+
+                if(trimmed[i] != ' ')
+                {
+                    isFinishMarker = false;
+                    break;
+                }
+            }
+            if(isFinishMarker)
             {
                 inCodeBlock = false;
                 return true;
@@ -478,7 +494,7 @@ public class MarkdownStreamParser
         }
 
         // "```" should be checked before to check "    ";
-        if (line.EndsWith("\n") && trimmed.StartsWith("```"))
+        if (line[line.Length - 1] == '\n' && trimmed.Length > 2 && trimmed[0] == '`' && trimmed[1] == '`' && trimmed[2] == '`')
         {
             if (!inCodeBlock)
             {
@@ -503,7 +519,7 @@ public class MarkdownStreamParser
             return true;
         }
 
-        if (line.StartsWith("    "))
+        if (line.Length > 3 && line[0] == ' ' && line[1] == ' ' && line[2] == ' ' && line[3] == ' ')
         {
             int indent = 0;
             int contentStart = 0;
@@ -663,7 +679,10 @@ public class MarkdownStreamParser
                             }
                             content = content + (content.Length == 0 ? "" : "\n") + line.Substring(activeLine.blockIndent);
                         }
-                        break;
+                        activeLine.Content.Clear();
+                        activeLine.Content.Append(content);
+                        requireLineFullUpdate = false;
+                        return;
                     }
                 case LineType.Table:
                     {
@@ -707,6 +726,11 @@ public class MarkdownStreamParser
         }
         else
         {
+            if (activeLine.Type == LineType.ThematicBreak)
+            {
+                return;
+            }
+
             if (activeLine.Type == LineType.Empty)
             {
                 activeLine.Content.Clear();
@@ -719,11 +743,6 @@ public class MarkdownStreamParser
             }
 
             char lineLastChar = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer[activeLine.TrailingBuffer.Length - 1] : activeLine.ContentBuffer[activeLine.ContentBuffer.Length - 1];
-            if (lineLastChar == '\r')
-            {
-                return;
-            }
-
             StringBuilder builder = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
             if (activeLine.Type == LineType.CodeBlock)
             {
@@ -776,21 +795,31 @@ public class MarkdownStreamParser
         indent = 0;
         contentStart = 0;
 
-        int i = 0;
-        while (i < line.Length && line[i] == ' ')
+        indent = 0;
+        while (indent < line.Length && line[indent] == ' ')
         {
-            i++;
+            indent++;
         }
-        indent = i;
-        contentStart = i;
+        contentStart = indent;
 
-        string trimmed = line.Substring(i);
-        var match = Regex.Match(trimmed, @"^([-*+]|\d+\.) ");
-        if (match.Success)
+        if (line[contentStart] == '-' || line[contentStart] == '+' || line[contentStart] == '*')
         {
-            int markerLength = match.Value.Length;
-            contentStart += markerLength;
+            contentStart++;
         }
+        else
+        {
+            while (contentStart < line.Length - 1 && char.IsDigit(line[contentStart]))
+            {
+                contentStart++;
+            }
+            if (line[contentStart] == '.')
+            {
+                contentStart++;
+            }
+        }
+
+        // space after marker.
+        contentStart++;
     }
 
     private int ComputeIndentLevel(int indent, int contentStart, bool isList)
@@ -843,7 +872,31 @@ public class MarkdownStreamParser
 
     private bool IsThematicBreak(string trimmedLine)
     {
-        return Regex.IsMatch(trimmedLine, @"^(-\s*){3,}$") || Regex.IsMatch(trimmedLine, @"^(_\s*){3,}$") || Regex.IsMatch(trimmedLine, @"^(\*\s*){3,}$");
+        char thematicBreakTypeChar = trimmedLine[0];
+        if(thematicBreakTypeChar != '-' && thematicBreakTypeChar != '_' && thematicBreakTypeChar != '*')
+        {
+            return false;
+        }
+
+        int count = 0;
+        foreach (char c in trimmedLine)
+        {
+            if (c != thematicBreakTypeChar && c != ' ')
+            {
+                return false;
+            }
+
+            if (c == thematicBreakTypeChar)
+            {
+                count++;
+            }
+
+            if (count >= 3)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void PrintLines()
