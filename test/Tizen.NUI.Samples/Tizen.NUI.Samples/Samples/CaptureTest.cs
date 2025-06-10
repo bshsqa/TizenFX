@@ -113,8 +113,8 @@ public class MarkdownStreamParser
 
     private int CurrentIndentLevel => indentStack.Count - 1;
 
-            double totaltime = 0.0;
-            int tickCount = 0;
+    double totaltime = 0.0;
+    int tickCount = 0;
 
     public void InputChar(char c)
     {
@@ -130,22 +130,22 @@ public class MarkdownStreamParser
         {
             activeLine.TrailingBuffer.Append(c);
         }
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
 
         NewLineType newLineType = IsNewLineRequired();
 
-            stopwatch.Stop();
+        stopwatch.Stop();
 
-            double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
-            Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
-            if (elapsedMilliseconds < 30.0)
-            {
-                tickCount++;
-                totaltime += elapsedMilliseconds;
-                double aveTime = totaltime / tickCount;
-                Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
-            }
+        double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
+        Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
+        if (elapsedMilliseconds < 30.0)
+        {
+            tickCount++;
+            totaltime += elapsedMilliseconds;
+            double aveTime = totaltime / tickCount;
+            Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
+        }
 
         if (newLineType != NewLineType.NotNewLine)
         {
@@ -194,9 +194,9 @@ public class MarkdownStreamParser
 
         // Handle Code Block
         // Code Block Start -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!inCodeBlock && trailingBuffer.EndsWith("\n") && Regex.IsMatch(trimmedTrailingBuffer, @"^\s*```"))
+        if (!inCodeBlock && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && Regex.IsMatch(trimmedTrailingBuffer, @"^\s*```"))
         {
-            if(string.IsNullOrWhiteSpace(content))
+            if (string.IsNullOrWhiteSpace(content))
             {
                 return NewLineType.NotNewLine;
             }
@@ -204,9 +204,9 @@ public class MarkdownStreamParser
         }
 
         // Code Block Start or End-> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (trailingBuffer.EndsWith("\n") && Regex.IsMatch(trimmedTrailingBuffer, "^```$"))
+        if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && Regex.IsMatch(trimmedTrailingBuffer, "^```$"))
         {
-            if(string.IsNullOrWhiteSpace(content))
+            if (string.IsNullOrWhiteSpace(content))
             {
                 return NewLineType.NotNewLine;
             }
@@ -245,37 +245,37 @@ public class MarkdownStreamParser
         // Handle Code Block Finished
 
         // "\n   \n" -> Empry new line. Merge trailingBuffer to ContentBuffer
-        if (trailingBuffer.EndsWith("\n") && string.IsNullOrWhiteSpace(trailingBuffer))
+        if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && string.IsNullOrWhiteSpace(trailingBuffer))
         {
             return (string.IsNullOrEmpty(content)) ? NewLineType.MergeToContent : NewLineType.FinalizeAndReset;
         }
 
         // "  \n" -> Empry new line. Merge trailingBuffer to ContentBuffer
-        if (trailingBuffer.EndsWith("  \n"))
+        if (trailingBuffer.Length >= 3 && trailingBuffer[trailingBuffer.Length - 3] == ' ' && trailingBuffer[trailingBuffer.Length - 2] == ' ' && trailingBuffer[trailingBuffer.Length - 1] == '\n')
         {
             return NewLineType.MergeToContent;
         }
 
         // ThematicBreak -> Empry new line. Merge trailingBuffer to ContentBuffer
-        if (trailingBuffer.EndsWith("\n") && IsThematicBreak(trimmedTrailingBuffer))
+        if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && IsThematicBreak(trimmedTrailingBuffer))
         {
             return (string.IsNullOrEmpty(content)) ? NewLineType.MergeToContent : NewLineType.FinalizeAndReset;
         }
 
         // "\n" after heading -> Empry new line. Merge trailingBuffer to ContentBuffer
-        if (trailingBuffer.EndsWith("\n") && activeLine.Type == LineType.Heading) //Regex.IsMatch(trimmedTrailingBuffer, @"^\s*#{1,6}\s"))
+        if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && activeLine.Type == LineType.Heading) //Regex.IsMatch(trimmedTrailingBuffer, @"^\s*#{1,6}\s"))
         {
             return NewLineType.MergeToContent;
         }
 
         // List -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!string.IsNullOrWhiteSpace(content) && trailingBuffer.EndsWith(" ") && Regex.IsMatch(trailingBuffer, @"^\s*([-*+]|\d+\.)\s$"))
+        if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsListItem(trailingBuffer))// Regex.IsMatch(trailingBuffer, @"^\s*([-*+]|\d+\.)\s$"))
         {
             return NewLineType.MoveToNewLine;
         }
 
         // Heading -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!string.IsNullOrWhiteSpace(content) && trailingBuffer.EndsWith(" ") && Regex.IsMatch(trailingBuffer, @"^\s*#\s$"))
+        if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsHeading(trailingBuffer))// Regex.IsMatch(trailingBuffer, @"^\s*#\s$"))
         {
             return NewLineType.MoveToNewLine;
         }
@@ -476,18 +476,18 @@ public class MarkdownStreamParser
 
             for (int i = trimmed.Length - 4; i >= 0; --i)
             {
-                if(trimmed[i] == '\n')
+                if (trimmed[i] == '\n')
                 {
                     break;
                 }
 
-                if(trimmed[i] != ' ')
+                if (trimmed[i] != ' ')
                 {
                     isFinishMarker = false;
                     break;
                 }
             }
-            if(isFinishMarker)
+            if (isFinishMarker)
             {
                 inCodeBlock = false;
                 return true;
@@ -869,7 +869,7 @@ public class MarkdownStreamParser
     private bool IsThematicBreak(string trimmedLine)
     {
         char thematicBreakTypeChar = trimmedLine[0];
-        if(thematicBreakTypeChar != '-' && thematicBreakTypeChar != '_' && thematicBreakTypeChar != '*')
+        if (thematicBreakTypeChar != '-' && thematicBreakTypeChar != '_' && thematicBreakTypeChar != '*')
         {
             return false;
         }
@@ -898,14 +898,14 @@ public class MarkdownStreamParser
     private bool IsHeading(string line)
     {
         int contentStart = 0;
-        while(contentStart < line.Length && line[contentStart] == ' ')
+        while (contentStart < line.Length && line[contentStart] == ' ')
         {
             contentStart++;
         }
 
-        while(contentStart < line.Length && line[contentStart] != ' ')
+        while (contentStart < line.Length && line[contentStart] != ' ')
         {
-            if(line[contentStart] != '#')
+            if (line[contentStart] != '#')
             {
                 return false;
             }
@@ -917,9 +917,14 @@ public class MarkdownStreamParser
     private bool IsListItem(string line)
     {
         int contentStart = 0;
-        while(contentStart < line.Length && line[contentStart] == ' ')
+        while (contentStart < line.Length && line[contentStart] == ' ')
         {
             contentStart++;
+        }
+
+        if(contentStart >= line.Length)
+        {
+            return false;
         }
 
         if (line[contentStart] != '-' && line[contentStart] != '+' && line[contentStart] != '*' && !char.IsDigit(line[contentStart]))
@@ -930,7 +935,7 @@ public class MarkdownStreamParser
         bool isOrderedList = (char.IsDigit(line[contentStart])) ? true : false;
         if (!isOrderedList)
         {
-            if (line[contentStart + 1] == ' ')
+            if (contentStart < line.Length && line[contentStart + 1] == ' ')
             {
                 return true;
             }
@@ -942,7 +947,7 @@ public class MarkdownStreamParser
             contentStart++;
         }
 
-        if(line[contentStart] == '.' && line[contentStart + 1] == ' ')
+        if (contentStart < line.Length && line[contentStart] == '.' && line[contentStart + 1] == ' ')
         {
             return true;
         }
@@ -1108,7 +1113,7 @@ namespace Tizen.NUI.Samples
                 SizeWidth = 200,
             };
 
-//            window.Add(timeLabel);
+            //            window.Add(timeLabel);
 
             timer.Tick += (e, s) =>
             {
