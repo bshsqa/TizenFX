@@ -72,6 +72,59 @@ public class IndentEntry
     public override string ToString() => $"(Indent: {Indent}, ContentStart: {ContentStart})";
 }
 
+public ref struct TokenEnumerator
+{
+    private ReadOnlySpan<char> _input;
+    private int _position;
+    private readonly int _maxTokenLength;
+
+    public TokenEnumerator(ReadOnlySpan<char> input, int maxTokenLength = 10)
+    {
+        _input = input;
+        _position = 0;
+        _maxTokenLength = maxTokenLength;
+        Current = default;
+    }
+
+    public ReadOnlySpan<char> Current { get; private set; }
+
+    public bool MoveNext()
+    {
+        if (_position >= _input.Length)
+            return false;
+
+        int start = _position;
+        int count = 0;
+
+        while (_position < _input.Length && count < _maxTokenLength)
+        {
+            char c = _input[_position];
+            _position++;
+            count++;
+
+            if (IsDelimiter(c))
+            {
+                break; // 포함하고 토큰 종료
+            }
+        }
+
+        // 만약 10자 도달했지만 아직 delimiter를 만나지 않았다면,
+        // 이후 delimiter가 남아있다면 다음 토큰에서 잡히게 됨
+        int slicePosition = _position;
+        if(_input[_position - 1] == '\r')
+        {
+            slicePosition--;
+        }
+        Current = _input.Slice(start, slicePosition - start);
+        return true;
+    }
+
+    private static bool IsDelimiter(char c) =>
+        c == ' ' || c == '\t' || c == '\n' || c == '\r';
+
+    public TokenEnumerator GetEnumerator() => this;
+}
+
 public class MarkdownStreamParser
 {
     enum NewLineType
@@ -118,24 +171,33 @@ public class MarkdownStreamParser
     double totaltime = 0.0;
     int tickCount = 0;
 
-    public void InputChar(char c)
+    public void Append(string inputStream)
     {
-        if (c == '\r')
+        var enumerator = new TokenEnumerator(inputStream);
+        while (enumerator.MoveNext())
         {
-            return;
+            var token = enumerator.Current;
+            AppendToken(token);
         }
 
-        if (c == '\t')
+    }
+
+    public void AppendToken(ReadOnlySpan<char> token)
+    {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        if (token[token.Length - 1] == '\t')
         {
+            activeLine.TrailingBuffer.Append(token.Slice(0, token.Length - 1));
             AppendTabAsSpaces();
         }
         else
         {
-            activeLine.TrailingBuffer.Append(c);
+            activeLine.TrailingBuffer.Append(token);
         }
 
         NewLineType newLineType = IsNewLineRequired();
-
         if (newLineType != NewLineType.NotNewLine)
         {
             requireLineFullUpdate = (requireLineFullUpdate || newLineType == NewLineType.MoveToNewLine || newLineType == NewLineType.FinalizeAndReset) ? true : false;
@@ -149,7 +211,28 @@ public class MarkdownStreamParser
             activeLine.TrailingBuffer.Clear();
         }
 
-        UpdateActiveLine();
+        UpdateActiveLineType();
+        UpdateActiveLineContent(token);
+
+        stopwatch.Stop();
+        double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
+        Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
+        if (elapsedMilliseconds < 30.0)
+        {
+            tickCount++;
+            totaltime += elapsedMilliseconds;
+            double aveTime = totaltime / tickCount;
+            Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
+        }
+        else
+        {
+            Tizen.Log.Error("NUI", $"OUTLIER\n");
+        }
+
+        if (elapsedMilliseconds > 10.0)
+        {
+            Tizen.Log.Error("NUI", $"current input : {token.ToString()}, content : {activeLine.ContentBuffer.ToString()}, trail : {activeLine.TrailingBuffer.ToString()}\n");
+        }
     }
 
     private void AppendTabAsSpaces()
@@ -229,8 +312,7 @@ public class MarkdownStreamParser
             }
 
             int indent = 0;
-            int contentStart = 0;
-            ComputeIndentAndContentStart(trailingBuffer, out indent, out contentStart);
+            ComputeIndent(trailingBuffer, out indent);
 
             var top = indentStack.Peek();
             int delta = indent - activeLine.blockIndent;
@@ -317,7 +399,12 @@ public class MarkdownStreamParser
         string newLineString = activeLine.TrailingBuffer.ToString();
         activeLine.TrailingBuffer.Clear();
 
-        UpdateActiveLine();
+        LineType previousType = activeLine.Type;
+        UpdateActiveLineType();
+        if(previousType != activeLine.Type || requireLineFullUpdate)
+        {
+            ResetActiveLineContent();    
+        }
 
         StartNewLine(newLineString);
 
@@ -325,7 +412,13 @@ public class MarkdownStreamParser
         {
             activeLine.ContentBuffer.AppendLine(activeLine.TrailingBuffer.ToString());
             activeLine.TrailingBuffer.Clear();
-            UpdateActiveLine();
+
+            previousType = activeLine.Type;
+            UpdateActiveLineType();
+            if (previousType != activeLine.Type || requireLineFullUpdate)
+            {
+                ResetActiveLineContent();
+            }
             StartNewLine(activeLine.TrailingBuffer.ToString());
         }
     }
@@ -352,36 +445,6 @@ public class MarkdownStreamParser
         isLineNeverThematicBreak = false;
     }
 
-    private void UpdateActiveLine()
-    {
-        LineType previousType = activeLine.Type;
-        UpdateActiveLineType();
-
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        UpdateActiveLineContent(previousType != activeLine.Type);
-
-        stopwatch.Stop();
-        double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
-        Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
-        if (elapsedMilliseconds < 30.0)
-        {
-            tickCount++;
-            totaltime += elapsedMilliseconds;
-            double aveTime = totaltime / tickCount;
-            Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
-        }
-        else
-        {
-            Tizen.Log.Error("NUI", $"OUTLIER\n");
-        }
-
-        if (elapsedMilliseconds > 10.0)
-        {
-            Tizen.Log.Error("NUI", $"current input : , content : {activeLine.ContentBuffer.ToString()}, trail : {activeLine.TrailingBuffer.ToString()}\n");
-        }
-    }
-
     private void UpdateActiveLineType()
     {
         string line = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
@@ -400,7 +463,6 @@ public class MarkdownStreamParser
         }
 
         // ThematicBreak should be checked before ListItem
-        // TODO How to move this after ListItem
         if (!isLineNeverThematicBreak && trimmed.Length > 0)
         {
             char lastChar = trimmed[trimmed.Length - 1];
@@ -470,8 +532,8 @@ public class MarkdownStreamParser
         {
             if (CurrentIndentLevel > 0 && activeLine.Type != LineType.Quote)
             {
-                ComputeIndentAndContentStart(line, out indent, out contentStart);
-                activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, false);
+                ComputeIndent(line, out indent);
+                activeLine.IndentLevel = ComputeIndentLevel(indent, indent, false);
             }
             activeLine.Type = LineType.Quote;
             return;
@@ -482,8 +544,8 @@ public class MarkdownStreamParser
         {
             if (activeLine.IndentLevel == 0)
             {
-                ComputeIndentAndContentStart(line, out indent, out contentStart);
-                activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, false);
+                ComputeIndent(line, out indent);
+                activeLine.IndentLevel = ComputeIndentLevel(indent, indent, false);
             }
         }
         else
@@ -539,9 +601,8 @@ public class MarkdownStreamParser
                 if (CurrentIndentLevel > 0 && activeLine.Type != LineType.CodeBlock)
                 {
                     int indent = 0;
-                    int contentStart = 0;
-                    ComputeIndentAndContentStart(line, out indent, out contentStart);
-                    int blockIndentLevel = ComputeIndentLevel(indent, contentStart, false);
+                    ComputeIndent(line, out indent);
+                    int blockIndentLevel = ComputeIndentLevel(indent, indent, false);
                     if (blockIndentLevel == CurrentIndentLevel)
                     {
                         activeLine.blockIndent = indent;
@@ -558,8 +619,7 @@ public class MarkdownStreamParser
         if (line.Length > 3 && line[0] == ' ' && line[1] == ' ' && line[2] == ' ' && line[3] == ' ')
         {
             int indent = 0;
-            int contentStart = 0;
-            ComputeIndentAndContentStart(line, out indent, out contentStart);
+            ComputeIndent(line, out indent);
 
             if (indent >= 4 + indentStack.Peek().ContentStart)
             {
@@ -589,244 +649,245 @@ public class MarkdownStreamParser
         return (trimmedLine.Length > 2 && trimmedLine[0] == '`' && trimmedLine[1] == '`' && trimmedLine[2] == '`');
     }
 
-    private void UpdateActiveLineContent(bool typeChanged)
+    private void ResetActiveLineContent()
     {
-        if (typeChanged || requireLineFullUpdate)
+        activeLine.Content.Clear();
+        switch (activeLine.Type)
         {
-            activeLine.Content.Clear();
-            switch (activeLine.Type)
-            {
-                case LineType.Paragraph:
+            case LineType.Paragraph:
+                {
+                    char prevChar = ' ';
+                    for (int i = 0; i < 2; ++i)
                     {
-                        char prevChar = ' ';
-                        for (int i = 0; i < 2; ++i)
+                        StringBuilder builder = (i == 0) ? activeLine.ContentBuffer : activeLine.TrailingBuffer;
+
+                        int bufferPoint = 0;
+                        int bufferLength = builder.Length;
+
+
+                        while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
                         {
-                            StringBuilder builder = (i == 0) ? activeLine.ContentBuffer : activeLine.TrailingBuffer;
+                            bufferPoint++;
+                        }
 
-                            int bufferPoint = 0;
-                            int bufferLength = builder.Length;
+                        while (bufferPoint < bufferLength)
+                        {
+                            char currentChar = (builder[bufferPoint] == '\n') ? ' ' : builder[bufferPoint];
+                            if (prevChar != ' ' || currentChar != ' ')
+                            {
+                                activeLine.Content.Append(currentChar);
+                            }
+                            prevChar = currentChar;
+                            bufferPoint++;
+                        }
+                    }
+                    break;
+                }
+            case LineType.Heading:
+                {
+                    int trailingBufferStart = 0;
+                    int trailingBufferEnd = activeLine.TrailingBuffer.Length - 1;
+                    while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
+                    {
+                        trailingBufferStart++;
+                    }
 
+                    while (trailingBufferStart < trailingBufferEnd && activeLine.TrailingBuffer[trailingBufferStart] == '#')
+                    {
+                        trailingBufferStart++;
+                    }
+
+                    while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
+                    {
+                        trailingBufferStart++;
+                    }
+
+                    while (trailingBufferEnd >= trailingBufferStart && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferEnd]))
+                    {
+                        trailingBufferEnd--;
+                    }
+
+                    char prevChar = ' ';
+                    for (int i = trailingBufferStart; i <= trailingBufferEnd; ++i)
+                    {
+                        char currentChar = (activeLine.TrailingBuffer[i] == '\n') ? ' ' : activeLine.TrailingBuffer[i];
+                        if (prevChar != ' ' || currentChar != ' ')
+                        {
+                            activeLine.Content.Append(currentChar);
+                        }
+                        prevChar = currentChar;
+                    }
+                    break;
+                }
+            case LineType.ListItem:
+                {
+                    StringBuilder builder = (activeLine.ContentBuffer.Length == 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
+                    int bufferStart = 0;
+                    int bufferEnd = builder.Length - 1;
+                    while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
+                    {
+                        bufferStart++;
+                    }
+
+                    if (builder[bufferStart] == '-' || builder[bufferStart] == '+' || builder[bufferStart] == '*')
+                    {
+                        bufferStart++;
+                    }
+                    else
+                    {
+                        while (bufferStart < bufferEnd && char.IsDigit(builder[bufferStart]))
+                        {
+                            bufferStart++;
+                        }
+                        if (builder[bufferStart] == '.')
+                        {
+                            bufferStart++;
+                        }
+                    }
+
+                    while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
+                    {
+                        bufferStart++;
+                    }
+
+                    while (bufferEnd >= bufferStart && char.IsWhiteSpace(builder[bufferEnd]))
+                    {
+                        bufferEnd--;
+                    }
+
+                    char prevChar = ' ';
+                    for (int i = bufferStart; i <= bufferEnd; ++i)
+                    {
+                        char currentChar = (builder[i] == '\n') ? ' ' : builder[i];
+                        if (prevChar != ' ' || currentChar != ' ')
+                        {
+                            activeLine.Content.Append(currentChar);
+                        }
+                        prevChar = currentChar;
+                    }
+                    break;
+                }
+            case LineType.Quote:
+                {
+                    char prevChar = ' ';
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        StringBuilder builder = (i == 0) ? activeLine.ContentBuffer : activeLine.TrailingBuffer;
+
+                        int bufferPoint = 0;
+                        int bufferLength = builder.Length;
+
+                        while (bufferPoint < builder.Length)
+                        {
+                            while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
+                            {
+                                bufferPoint++;
+                            }
+
+                            if (bufferPoint < bufferLength && builder[bufferPoint] == '>')
+                            {
+                                bufferPoint++;
+                            }
 
                             while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
                             {
                                 bufferPoint++;
                             }
 
-                            while (bufferPoint < bufferLength)
+                            while (bufferPoint < bufferLength && builder[bufferPoint] != '\n')
                             {
-                                char currentChar = (builder[bufferPoint] == '\n') ? ' ' : builder[bufferPoint];
-                                if (prevChar != ' ' || currentChar != ' ')
+                                if (prevChar != ' ' || builder[bufferPoint] != ' ')
                                 {
-                                    activeLine.Content.Append(currentChar);
+                                    activeLine.Content.Append(builder[bufferPoint]);
                                 }
-                                prevChar = currentChar;
+                                prevChar = builder[bufferPoint];
+                                bufferPoint++;
+                            }
+
+                            if (bufferPoint < bufferLength && builder[bufferPoint] == '\n')
+                            {
+                                if (bufferPoint > 2 && builder[bufferPoint - 1] == ' ' && builder[bufferPoint - 2] == ' ')
+                                {
+                                    activeLine.Content.Append('\n');
+                                }
+                                else
+                                {
+                                    if (prevChar != ' ')
+                                    {
+                                        activeLine.Content.Append(' ');
+                                    }
+                                }
+                                prevChar = ' ';
                                 bufferPoint++;
                             }
                         }
-                        break;
                     }
-                case LineType.Heading:
+                    break;
+                }
+            case LineType.CodeBlock:
+                {
+                    string content = "";
+                    string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+                    var lines = contentLine.Split('\n').ToList();
+
+                    string firstLine = lines[0];
+                    Match startMatch = Regex.Match(firstLine, @"^(\s*)(`{3,})([^\r\n]*)?$");
+                    if (startMatch.Success)
                     {
-                        int trailingBufferStart = 0;
-                        int trailingBufferEnd = activeLine.TrailingBuffer.Length - 1;
-                        while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
-                        {
-                            trailingBufferStart++;
-                        }
-
-                        while (trailingBufferStart < trailingBufferEnd && activeLine.TrailingBuffer[trailingBufferStart] == '#')
-                        {
-                            trailingBufferStart++;
-                        }
-
-                        while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
-                        {
-                            trailingBufferStart++;
-                        }
-
-                        while (trailingBufferEnd >= trailingBufferStart && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferEnd]))
-                        {
-                            trailingBufferEnd--;
-                        }
-
-                        char prevChar = ' ';
-                        for (int i = trailingBufferStart; i <= trailingBufferEnd; ++i)
-                        {
-                            char currentChar = (activeLine.TrailingBuffer[i] == '\n') ? ' ' : activeLine.TrailingBuffer[i];
-                            if (prevChar != ' ' || currentChar != ' ')
-                            {
-                                activeLine.Content.Append(currentChar);
-                            }
-                            prevChar = currentChar;
-                        }
-                        break;
+                        activeLine.BlockInfoString = startMatch.Groups[3].Value.Trim();
                     }
-                case LineType.ListItem:
+
+                    int codeStartLine = codeBlockType == CodeBlockType.Backtick ? 1 : 0;
+                    for (int i = codeStartLine; i < lines.Count; ++i)
                     {
-                        StringBuilder builder = (activeLine.ContentBuffer.Length == 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
-                        int bufferStart = 0;
-                        int bufferEnd = builder.Length - 1;
-                        while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
+                        string line = lines[i];
+                        if (Regex.IsMatch(line, @"^\s*`{3,}\s*$") || line.Length <= activeLine.blockIndent)
                         {
-                            bufferStart++;
+                            break;
                         }
-
-                        if (builder[bufferStart] == '-' || builder[bufferStart] == '+' || builder[bufferStart] == '*')
-                        {
-                            bufferStart++;
-                        }
-                        else
-                        {
-                            while (bufferStart < bufferEnd && char.IsDigit(builder[bufferStart]))
-                            {
-                                bufferStart++;
-                            }
-                            if (builder[bufferStart] == '.')
-                            {
-                                bufferStart++;
-                            }
-                        }
-
-                        while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
-                        {
-                            bufferStart++;
-                        }
-
-                        while (bufferEnd >= bufferStart && char.IsWhiteSpace(builder[bufferEnd]))
-                        {
-                            bufferEnd--;
-                        }
-
-                        char prevChar = ' ';
-                        for (int i = bufferStart; i <= bufferEnd; ++i)
-                        {
-                            char currentChar = (builder[i] == '\n') ? ' ' : builder[i];
-                            if (prevChar != ' ' || currentChar != ' ')
-                            {
-                                activeLine.Content.Append(currentChar);
-                            }
-                            prevChar = currentChar;
-                        }
-                        break;
+                        content = content + (content.Length == 0 ? "" : "\n") + line.Substring(activeLine.blockIndent);
                     }
-                case LineType.Quote:
-                    {
-                        char prevChar = ' ';
-                        for (int i = 0; i < 2; ++i)
-                        {
-                            StringBuilder builder = (i == 0) ? activeLine.ContentBuffer : activeLine.TrailingBuffer;
+                    activeLine.Content.Clear();
+                    activeLine.Content.Append(content);
+                    break;
+                }
+            case LineType.Table:
+                {
+                    string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
+                    activeLine.Content.Append(contentLine);
+                    break;
+                }
+            case LineType.ThematicBreak:
+                {
+                    activeLine.Content.Clear();
+                    activeLine.Content.Append("---");
+                    break;
+                }
+        }
+        requireLineFullUpdate = false;
+        return;
+    }
 
-                            int bufferPoint = 0;
-                            int bufferLength = builder.Length;
-
-                            while (bufferPoint < builder.Length)
-                            {
-                                while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
-                                {
-                                    bufferPoint++;
-                                }
-
-                                if (bufferPoint < bufferLength && builder[bufferPoint] == '>')
-                                {
-                                    bufferPoint++;
-                                }
-
-                                while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
-                                {
-                                    bufferPoint++;
-                                }
-
-                                while (bufferPoint < bufferLength && builder[bufferPoint] != '\n')
-                                {
-                                    if (prevChar != ' ' || builder[bufferPoint] != ' ')
-                                    {
-                                        activeLine.Content.Append(builder[bufferPoint]);
-                                    }
-                                    prevChar = builder[bufferPoint];
-                                    bufferPoint++;
-                                }
-
-                                if (bufferPoint < bufferLength && builder[bufferPoint] == '\n')
-                                {
-                                    if (bufferPoint > 2 && builder[bufferPoint - 1] == ' ' && builder[bufferPoint - 2] == ' ')
-                                    {
-                                        activeLine.Content.Append('\n');
-                                    }
-                                    else
-                                    {
-                                        if (prevChar != ' ')
-                                        {
-                                            activeLine.Content.Append(' ');
-                                        }
-                                    }
-                                    prevChar = ' ';
-                                    bufferPoint++;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                case LineType.CodeBlock:
-                    {
-                        string content = "";
-                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
-                        var lines = contentLine.Split('\n').ToList();
-
-                        string firstLine = lines[0];
-                        Match startMatch = Regex.Match(firstLine, @"^(\s*)(`{3,})([^\r\n]*)?$");
-                        if (startMatch.Success)
-                        {
-                            activeLine.BlockInfoString = startMatch.Groups[3].Value.Trim();
-                        }
-
-                        int codeStartLine = codeBlockType == CodeBlockType.Backtick ? 1 : 0;
-                        for (int i = codeStartLine; i < lines.Count; ++i)
-                        {
-                            string line = lines[i];
-                            if (Regex.IsMatch(line, @"^\s*`{3,}\s*$") || line.Length <= activeLine.blockIndent)
-                            {
-                                break;
-                            }
-                            content = content + (content.Length == 0 ? "" : "\n") + line.Substring(activeLine.blockIndent);
-                        }
-                        activeLine.Content.Clear();
-                        activeLine.Content.Append(content);
-                        break;
-                    }
-                case LineType.Table:
-                    {
-                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
-                        activeLine.Content.Append(contentLine);
-                        break;
-                    }
-                case LineType.ThematicBreak:
-                    {
-                        activeLine.Content.Clear();
-                        activeLine.Content.Append("---");
-                        break;
-                    }
-            }
-            requireLineFullUpdate = false;
+    private void UpdateActiveLineContent(ReadOnlySpan<char> token)
+    {
+        if (activeLine.Type == LineType.ThematicBreak)
+        {
             return;
         }
-        else
+
+        if (activeLine.Type == LineType.Empty)
         {
-            if (activeLine.Type == LineType.ThematicBreak)
-            {
-                return;
-            }
+            activeLine.Content.Clear();
+            return;
+        }
 
-            if (activeLine.Type == LineType.Empty)
-            {
-                activeLine.Content.Clear();
-                return;
-            }
+        if (activeLine.ContentBuffer.Length == 0 && activeLine.TrailingBuffer.Length == 0)
+        {
+            return;
+        }
 
-            if (activeLine.ContentBuffer.Length == 0 && activeLine.TrailingBuffer.Length == 0)
-            {
-                return;
-            }
-
+        if(token.Length == 0)
+        {
             char lineLastChar = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer[activeLine.TrailingBuffer.Length - 1] : activeLine.ContentBuffer[activeLine.ContentBuffer.Length - 1];
             if (activeLine.Type == LineType.CodeBlock)
             {
@@ -868,7 +929,7 @@ public class MarkdownStreamParser
                 return;
             }
 
-            if(activeLine.Type == LineType.Quote && lineLastChar == '\n')
+            if (activeLine.Type == LineType.Quote && lineLastChar == '\n')
             {
                 StringBuilder builder = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
                 if (builder.Length > 2 && builder[builder.Length - 1] == ' ' && builder[builder.Length - 2] == ' ')
@@ -877,23 +938,32 @@ public class MarkdownStreamParser
                     return;
                 }
             }
+        }
 
-            if (lineLastChar == '\n')
-            {
-                lineLastChar = ' ';
-            }
-            activeLine.Content.Append(lineLastChar);
+        if (token[token.Length - 1] == '\n')
+        {
+            activeLine.Content.Append(token.Slice(0, token.Length - 1));
+            activeLine.Content.Append(' ');
+        }
+        else
+        {
+            activeLine.Content.Append(token);
+        }
+    }
+
+    private void ComputeIndent(string line, out int indent)
+    {
+        indent = 0;
+        while (indent < line.Length && line[indent] == ' ')
+        {
+            indent++;
         }
     }
 
     private void ComputeIndentAndContentStart(string line, out int indent, out int contentStart)
     {
         indent = 0;
-        contentStart = 0;
-        while (indent < line.Length && line[indent] == ' ')
-        {
-            indent++;
-        }
+        ComputeIndent(line, out indent);
         contentStart = indent;
 
         if (line[contentStart] == '-' || line[contentStart] == '+' || line[contentStart] == '*')
@@ -1235,6 +1305,16 @@ namespace Tizen.NUI.Samples
 
         TextLabel timeLabel;
 
+        public List<string> SplitEvery10(string input)
+        {
+            var result = new List<string>();
+            for (int i = 0; i < input.Length; i += 10)
+            {
+                int length = Math.Min(10, input.Length - i);
+                result.Add(input.Substring(i, length));
+            }
+            return result;
+        }
 
         public void Activate()
         {
@@ -1269,14 +1349,17 @@ namespace Tizen.NUI.Samples
 
             //            window.Add(timeLabel);
 
+            int chunkIdx = 0;
+            var chunk = SplitEvery10(input);
+
             timer.Tick += (e, s) =>
             {
-                parser.InputChar(input[inputIdx]);
+                parser.Append(chunk[chunkIdx]);
                 parser.ShowContent(root);
 
-                inputIdx++;
+                chunkIdx++;
 
-                if (inputIdx < input.Length)
+                if (chunkIdx < chunk.Count)
                 {
                     return true;
                 }
@@ -1287,6 +1370,11 @@ namespace Tizen.NUI.Samples
                     return false;
                 }
             };
+
+            foreach(var cun in chunk)
+            {
+                Tizen.Log.Error("NUI", $"TOKEN : {cun}\n");
+            }
 
 
             window.TouchEvent += (s, e) =>
