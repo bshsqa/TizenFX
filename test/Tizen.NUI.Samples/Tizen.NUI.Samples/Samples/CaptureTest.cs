@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System;
 using System.Diagnostics;
 using Tizen.NUI.Xaml;
+using System.IO;
 
 
 public enum LineType
@@ -123,6 +124,7 @@ public class MarkdownStreamParser
         {
             return;
         }
+
         if (c == '\t')
         {
             AppendTabAsSpaces();
@@ -131,22 +133,8 @@ public class MarkdownStreamParser
         {
             activeLine.TrailingBuffer.Append(c);
         }
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
 
         NewLineType newLineType = IsNewLineRequired();
-
-        stopwatch.Stop();
-
-        double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
-        Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
-        if (elapsedMilliseconds < 30.0)
-        {
-            tickCount++;
-            totaltime += elapsedMilliseconds;
-            double aveTime = totaltime / tickCount;
-            Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
-        }
 
         if (newLineType != NewLineType.NotNewLine)
         {
@@ -160,7 +148,6 @@ public class MarkdownStreamParser
             activeLine.ContentBuffer.Append(activeLine.TrailingBuffer.ToString());
             activeLine.TrailingBuffer.Clear();
         }
-
 
         UpdateActiveLine();
     }
@@ -193,32 +180,42 @@ public class MarkdownStreamParser
         string trimmedTrailingBuffer = trailingBuffer.Trim();
         string content = activeLine.ContentBuffer.ToString();
 
+        if (trailingBuffer.Length == 0 || (!inCodeBlock && (trimmedTrailingBuffer.Length > 0 && trimmedTrailingBuffer[0] != '>') && trailingBuffer[trailingBuffer.Length - 1] != ' ' && trailingBuffer[trailingBuffer.Length - 1] != '\n'))
+        {
+            return NewLineType.NotNewLine;
+        }
+
         // Handle Code Block
         // Code Block Start -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!inCodeBlock && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && Regex.IsMatch(trimmedTrailingBuffer, @"^\s*```"))
+        if (!inCodeBlock && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && IsCodeBlockMarker(trimmedTrailingBuffer))
         {
             if (string.IsNullOrWhiteSpace(content))
             {
+                //Tizen.Log.Error("NUI", "Type1\n");
                 return NewLineType.NotNewLine;
             }
+                //Tizen.Log.Error("NUI", "Type2\n");
             return NewLineType.MoveToNewLine;
         }
 
         // Code Block Start or End-> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && Regex.IsMatch(trimmedTrailingBuffer, "^```$"))
+        if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && IsCodeBlockMarker(trimmedTrailingBuffer))
         {
             if (string.IsNullOrWhiteSpace(content))
             {
+                //Tizen.Log.Error("NUI", "Type3\n");
                 return NewLineType.NotNewLine;
             }
 
             if (inCodeBlock)
             {
                 requireLineFullUpdate = true;
+                //Tizen.Log.Error("NUI", "Type4\n");
                 return NewLineType.MergeToContent;
             }
             else
             {
+                //Tizen.Log.Error("NUI", "Type5\n");
                 return NewLineType.MoveToNewLine;
             }
         }
@@ -227,6 +224,7 @@ public class MarkdownStreamParser
         {
             if (string.IsNullOrEmpty(trimmedTrailingBuffer))
             {
+                //Tizen.Log.Error("NUI", "Type6\n");
                 return NewLineType.NotNewLine;
             }
 
@@ -239,8 +237,10 @@ public class MarkdownStreamParser
             if (delta < 0)
             {
                 requiredToCloseCodeBlock = true;
+                //Tizen.Log.Error("NUI", "Type7\n");
                 return NewLineType.MoveToNewLine;
             }
+                //Tizen.Log.Error("NUI", "Type8\n");
             return NewLineType.NotNewLine;
         }
         // Handle Code Block Finished
@@ -248,45 +248,61 @@ public class MarkdownStreamParser
         // "\n   \n" -> Empry new line. Merge trailingBuffer to ContentBuffer
         if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && string.IsNullOrWhiteSpace(trailingBuffer))
         {
+                //Tizen.Log.Error("NUI", "Type9\n");
             return (string.IsNullOrEmpty(content)) ? NewLineType.MergeToContent : NewLineType.FinalizeAndReset;
         }
 
         // "  \n" -> Empry new line. Merge trailingBuffer to ContentBuffer
-        if (trailingBuffer.Length >= 3 && trailingBuffer[trailingBuffer.Length - 3] == ' ' && trailingBuffer[trailingBuffer.Length - 2] == ' ' && trailingBuffer[trailingBuffer.Length - 1] == '\n')
+        if (trailingBuffer.Length >= 3 && trailingBuffer[trailingBuffer.Length - 1] == '\n' && trailingBuffer[trailingBuffer.Length - 2] == ' ' && trailingBuffer[trailingBuffer.Length - 3] == ' ')
         {
-            return NewLineType.MergeToContent;
+            if(activeLine.Type != LineType.Quote)
+            {
+                //Tizen.Log.Error("NUI", "Type10\n");
+                return NewLineType.MergeToContent;
+            }
         }
 
         // ThematicBreak -> Empry new line. Merge trailingBuffer to ContentBuffer
         if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && IsThematicBreak(trimmedTrailingBuffer))
         {
+                //Tizen.Log.Error("NUI", "Type11\n");
             return (string.IsNullOrEmpty(content)) ? NewLineType.MergeToContent : NewLineType.FinalizeAndReset;
         }
 
         // "\n" after heading -> Empry new line. Merge trailingBuffer to ContentBuffer
         if ((trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == '\n') && activeLine.Type == LineType.Heading) //Regex.IsMatch(trimmedTrailingBuffer, @"^\s*#{1,6}\s"))
         {
+                //Tizen.Log.Error("NUI", "Type12\n");
             return NewLineType.MergeToContent;
         }
 
         // List -> Copied new line. Do not merge trailingBuffer to ContentBuffer
         if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsListItem(trailingBuffer))// Regex.IsMatch(trailingBuffer, @"^\s*([-*+]|\d+\.)\s$"))
         {
+                //Tizen.Log.Error("NUI", "Type13\n");
             return NewLineType.MoveToNewLine;
         }
 
         // Heading -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsHeading(trailingBuffer))//&& Regex.IsMatch(trailingBuffer, @"^\s*#\s$")) <- TODO
+        int headingLevel = -1;
+        if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsHeadingWithLevel(trailingBuffer, out headingLevel))//&& Regex.IsMatch(trailingBuffer, @"^\s*#\s$")) <- TODO
         {
+                //Tizen.Log.Error("NUI", "Type14\n");
             return NewLineType.MoveToNewLine;
         }
 
         // Quote -> Copied new line. Do not merge trailingBuffer to ContentBuffer
         if (!string.IsNullOrWhiteSpace(content) && (trimmedTrailingBuffer.Length > 0 && trimmedTrailingBuffer[0] == '>'))
         {
-            return NewLineType.MoveToNewLine;
+            if(activeLine.Type != LineType.Quote)
+            {
+                //Tizen.Log.Error("NUI", "Type15\n");
+                // TODO '  \n' after Quote make multi line.
+                return NewLineType.MoveToNewLine;
+            }
         }
 
+                //Tizen.Log.Error("NUI", "Type16\n");
         return NewLineType.NotNewLine;
     }
 
@@ -340,7 +356,30 @@ public class MarkdownStreamParser
     {
         LineType previousType = activeLine.Type;
         UpdateActiveLineType();
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         UpdateActiveLineContent(previousType != activeLine.Type);
+
+        stopwatch.Stop();
+        double elapsedMilliseconds = stopwatch.ElapsedTicks / 10000.0;
+        Tizen.Log.Error("NUI", $"Time : {elapsedMilliseconds}\n");
+        if (elapsedMilliseconds < 30.0)
+        {
+            tickCount++;
+            totaltime += elapsedMilliseconds;
+            double aveTime = totaltime / tickCount;
+            Tizen.Log.Error("NUI", $"AveTime : {aveTime}\n");
+        }
+        else
+        {
+            Tizen.Log.Error("NUI", $"OUTLIER\n");
+        }
+
+        if (elapsedMilliseconds > 10.0)
+        {
+            Tizen.Log.Error("NUI", $"current input : , content : {activeLine.ContentBuffer.ToString()}, trail : {activeLine.TrailingBuffer.ToString()}\n");
+        }
     }
 
     private void UpdateActiveLineType()
@@ -381,7 +420,8 @@ public class MarkdownStreamParser
         }
 
         // Heading
-        if (activeLine.Type == LineType.Heading || (line.Length > 0 && line[line.Length - 1] == ' ' && IsHeading(line))) //Regex.IsMatch(line, @"^\s*#{1,6}\s")))
+        int headingLevel = -1;
+        if (activeLine.Type == LineType.Heading || (line.Length > 0 && line[line.Length - 1] == ' ' && IsHeadingWithLevel(line, out headingLevel))) //Regex.IsMatch(line, @"^\s*#{1,6}\s")))
         {
             if (activeLine.Type != LineType.Heading)
             {
@@ -389,28 +429,26 @@ public class MarkdownStreamParser
 
                 activeLine.IndentLevel = 0;
 
-                Match match = Regex.Match(trimmed, @"^\s*#{1,6}");
-                activeLine.HeadingLevel = match.Value.Length;
+                activeLine.HeadingLevel = headingLevel;
             }
             return;
         }
 
         // ListItem
-        if (activeLine.Type == LineType.ListItem || (line.Length > 0 && line[line.Length - 1] == ' ' && IsListItem(line)))
+        int indent = 0;
+        int contentStart = 0;
+        if (activeLine.Type == LineType.ListItem || (line.Length > 0 && line[line.Length - 1] == ' ' && IsListItemWithIndentAndContentStart(line, out indent, out contentStart)))
         {
             if (activeLine.Type != LineType.ListItem)
             {
-                int indent = 0;
-                int contentStart = 0;
-                ComputeIndentAndContentStart(line, out indent, out contentStart);
                 activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, true);
 
-                Match match = Regex.Match(line, @"^\s*(\d+)\.\s");
-                if (match.Success)
+                if (contentStart - indent > 2)
                 {
                     if (indentStack.Peek().OrderedListIndex == -1)
                     {
-                        indentStack.Peek().OrderedListIndex = Convert.ToInt32(match.Groups[1].ToString());
+                        string subString = line.Substring(indent, contentStart - indent - 2);
+                        indentStack.Peek().OrderedListIndex = Convert.ToInt32(subString);
                     }
                     else
                     {
@@ -432,8 +470,6 @@ public class MarkdownStreamParser
         {
             if (CurrentIndentLevel > 0 && activeLine.Type != LineType.Quote)
             {
-                int indent = 0;
-                int contentStart = 0;
                 ComputeIndentAndContentStart(line, out indent, out contentStart);
                 activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, false);
             }
@@ -446,8 +482,6 @@ public class MarkdownStreamParser
         {
             if (activeLine.IndentLevel == 0)
             {
-                int indent = 0;
-                int contentStart = 0;
                 ComputeIndentAndContentStart(line, out indent, out contentStart);
                 activeLine.IndentLevel = ComputeIndentLevel(indent, contentStart, false);
             }
@@ -496,7 +530,7 @@ public class MarkdownStreamParser
         }
 
         // "```" should be checked before to check "    ";
-        if (line[line.Length - 1] == '\n' && trimmed.Length > 2 && trimmed[0] == '`' && trimmed[1] == '`' && trimmed[2] == '`')
+        if (line[line.Length - 1] == '\n' && IsCodeBlockMarker(trimmed))
         {
             if (!inCodeBlock)
             {
@@ -550,22 +584,49 @@ public class MarkdownStreamParser
         return false;
     }
 
+    private bool IsCodeBlockMarker(string trimmedLine)
+    {
+        return (trimmedLine.Length > 2 && trimmedLine[0] == '`' && trimmedLine[1] == '`' && trimmedLine[2] == '`');
+    }
+
     private void UpdateActiveLineContent(bool typeChanged)
     {
         if (typeChanged || requireLineFullUpdate)
         {
-            string content = new string("");
+            activeLine.Content.Clear();
             switch (activeLine.Type)
             {
                 case LineType.Paragraph:
                     {
-                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
-                        content = contentLine;
+                        char prevChar = ' ';
+                        for (int i = 0; i < 2; ++i)
+                        {
+                            StringBuilder builder = (i == 0) ? activeLine.ContentBuffer : activeLine.TrailingBuffer;
+
+                            int bufferPoint = 0;
+                            int bufferLength = builder.Length;
+
+
+                            while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
+                            {
+                                bufferPoint++;
+                            }
+
+                            while (bufferPoint < bufferLength)
+                            {
+                                char currentChar = (builder[bufferPoint] == '\n') ? ' ' : builder[bufferPoint];
+                                if (prevChar != ' ' || currentChar != ' ')
+                                {
+                                    activeLine.Content.Append(currentChar);
+                                }
+                                prevChar = currentChar;
+                                bufferPoint++;
+                            }
+                        }
                         break;
                     }
                 case LineType.Heading:
                     {
-                        activeLine.Content.Clear();
                         int trailingBufferStart = 0;
                         int trailingBufferEnd = activeLine.TrailingBuffer.Length - 1;
                         while (trailingBufferStart < trailingBufferEnd && char.IsWhiteSpace(activeLine.TrailingBuffer[trailingBufferStart]))
@@ -598,14 +659,11 @@ public class MarkdownStreamParser
                             }
                             prevChar = currentChar;
                         }
-
-                        requireLineFullUpdate = false;
-                        return;
+                        break;
                     }
                 case LineType.ListItem:
                     {
                         StringBuilder builder = (activeLine.ContentBuffer.Length == 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
-                        activeLine.Content.Clear();
                         int bufferStart = 0;
                         int bufferEnd = builder.Length - 1;
                         while (bufferStart < bufferEnd && char.IsWhiteSpace(builder[bufferStart]))
@@ -649,18 +707,68 @@ public class MarkdownStreamParser
                             }
                             prevChar = currentChar;
                         }
-
-                        requireLineFullUpdate = false;
-                        return;
+                        break;
                     }
                 case LineType.Quote:
                     {
-                        string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
-                        content = Regex.Replace(contentLine, @"^\s*>\s*", "");
+                        char prevChar = ' ';
+                        for (int i = 0; i < 2; ++i)
+                        {
+                            StringBuilder builder = (i == 0) ? activeLine.ContentBuffer : activeLine.TrailingBuffer;
+
+                            int bufferPoint = 0;
+                            int bufferLength = builder.Length;
+
+                            while (bufferPoint < builder.Length)
+                            {
+                                while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
+                                {
+                                    bufferPoint++;
+                                }
+
+                                if (bufferPoint < bufferLength && builder[bufferPoint] == '>')
+                                {
+                                    bufferPoint++;
+                                }
+
+                                while (bufferPoint < bufferLength && char.IsWhiteSpace(builder[bufferPoint]))
+                                {
+                                    bufferPoint++;
+                                }
+
+                                while (bufferPoint < bufferLength && builder[bufferPoint] != '\n')
+                                {
+                                    if (prevChar != ' ' || builder[bufferPoint] != ' ')
+                                    {
+                                        activeLine.Content.Append(builder[bufferPoint]);
+                                    }
+                                    prevChar = builder[bufferPoint];
+                                    bufferPoint++;
+                                }
+
+                                if (bufferPoint < bufferLength && builder[bufferPoint] == '\n')
+                                {
+                                    if (bufferPoint > 2 && builder[bufferPoint - 1] == ' ' && builder[bufferPoint - 2] == ' ')
+                                    {
+                                        activeLine.Content.Append('\n');
+                                    }
+                                    else
+                                    {
+                                        if (prevChar != ' ')
+                                        {
+                                            activeLine.Content.Append(' ');
+                                        }
+                                    }
+                                    prevChar = ' ';
+                                    bufferPoint++;
+                                }
+                            }
+                        }
                         break;
                     }
                 case LineType.CodeBlock:
                     {
+                        string content = "";
                         string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
                         var lines = contentLine.Split('\n').ToList();
 
@@ -683,13 +791,12 @@ public class MarkdownStreamParser
                         }
                         activeLine.Content.Clear();
                         activeLine.Content.Append(content);
-                        requireLineFullUpdate = false;
-                        return;
+                        break;
                     }
                 case LineType.Table:
                     {
                         string contentLine = activeLine.ContentBuffer.ToString() + activeLine.TrailingBuffer.ToString();
-                        content = contentLine;
+                        activeLine.Content.Append(contentLine);
                         break;
                     }
                 case LineType.ThematicBreak:
@@ -699,32 +806,8 @@ public class MarkdownStreamParser
                         break;
                     }
             }
-
             requireLineFullUpdate = false;
-            string trimmedContent = content.Trim();
-
-            if (activeLine.Type == LineType.CodeBlock)
-            {
-                return;
-            }
-
-            char previousChar = ' ';
-            activeLine.Content.Clear();
-            foreach (char c in trimmedContent)
-            {
-                if (c == ' ' && previousChar == ' ')
-                {
-                    continue;
-                }
-
-                char newChar = c;
-                if (c == '\n')
-                {
-                    newChar = ' ';
-                }
-                activeLine.Content.Append(newChar);
-                previousChar = c;
-            }
+            return;
         }
         else
         {
@@ -745,9 +828,10 @@ public class MarkdownStreamParser
             }
 
             char lineLastChar = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer[activeLine.TrailingBuffer.Length - 1] : activeLine.ContentBuffer[activeLine.ContentBuffer.Length - 1];
-            StringBuilder builder = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
             if (activeLine.Type == LineType.CodeBlock)
             {
+                StringBuilder builder = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
+
                 bool needToSkip = false;
                 if (lineLastChar == ' ')
                 {
@@ -784,6 +868,16 @@ public class MarkdownStreamParser
                 return;
             }
 
+            if(activeLine.Type == LineType.Quote && lineLastChar == '\n')
+            {
+                StringBuilder builder = (activeLine.TrailingBuffer.Length > 0) ? activeLine.TrailingBuffer : activeLine.ContentBuffer;
+                if (builder.Length > 2 && builder[builder.Length - 1] == ' ' && builder[builder.Length - 2] == ' ')
+                {
+                    activeLine.Content.Append('\n');
+                    return;
+                }
+            }
+
             if (lineLastChar == '\n')
             {
                 lineLastChar = ' ';
@@ -796,8 +890,6 @@ public class MarkdownStreamParser
     {
         indent = 0;
         contentStart = 0;
-
-        indent = 0;
         while (indent < line.Length && line[indent] == ' ')
         {
             indent++;
@@ -896,8 +988,9 @@ public class MarkdownStreamParser
         return false;
     }
 
-    private bool IsHeading(string line)
+    private bool IsHeadingWithLevel(string line, out int level)
     {
+        level = 0;
         int contentStart = 0;
         while (contentStart < line.Length && line[contentStart] == ' ')
         {
@@ -915,6 +1008,7 @@ public class MarkdownStreamParser
             {
                 return false;
             }
+            level++;
             contentStart++;
         }
         return true;
@@ -957,6 +1051,60 @@ public class MarkdownStreamParser
         {
             return true;
         }
+        return false;
+    }
+
+    private bool IsListItemWithIndentAndContentStart(string line, out int indent, out int contentStart)
+    {
+        indent = 0;
+        contentStart = 0;
+        while (indent < line.Length && line[indent] == ' ')
+        {
+            indent++;
+        }
+
+        contentStart = indent;
+        if (contentStart >= line.Length)
+        {
+            indent = 0;
+            contentStart = 0;
+            return false;
+        }
+
+        indent = contentStart;
+        if (line[contentStart] != '-' && line[contentStart] != '+' && line[contentStart] != '*' && !char.IsDigit(line[contentStart]))
+        {
+            indent = 0;
+            contentStart = 0;
+            return false;
+        }
+
+        bool isOrderedList = (char.IsDigit(line[contentStart])) ? true : false;
+        if (!isOrderedList)
+        {
+            if (contentStart < line.Length && line[contentStart + 1] == ' ')
+            {
+                contentStart = indent + 2;
+                return true;
+            }
+            indent = 0;
+            contentStart = 0;
+            return false;
+        }
+
+        while (contentStart < line.Length && char.IsDigit(line[contentStart]))
+        {
+            contentStart++;
+        }
+
+        if (contentStart < line.Length && line[contentStart] == '.' && line[contentStart + 1] == ' ')
+        {
+            contentStart += 2;
+            return true;
+        }
+
+        indent = 0;
+        contentStart = 0;
         return false;
     }
 
@@ -1094,7 +1242,7 @@ namespace Tizen.NUI.Samples
             window.KeyEvent += WindowKeyEvent;
 
             var parser = new MarkdownStreamParser();
-            string input = "### Heading\npara  \nnew para\n  - List item lv1\n   - List item lv1\n    - List item lv2\n     - List item lv2\n- List item lv1\n   - List item lv2\n     - List item lv3\n\n       >Continuation Quote lv3\n\n  Continuation Block lv1\n    - List item lv2\n\nParagraph\n     # Heading in code block\nParagraph\n# Heading\nParagraph text\n\nParagraph text2\n- List item lv1\n  - List item lv2\n    ```code block lv2\n    more code lv2\n  ```\n  more code lv1\n```  \nmore code lv0\n  ```\n  Paragraph text3\n    Paragraph text 4\n   ** *   *\n  _ _ __ \n __*___ \n - -- - \n      \n132. number list\n     13. number list\n     16. number list\n132. number list\n153. number list\n+ unordered list\n5. number list\n100. number list\n         space codeblock indented\n\n         space codeblock\n         more code block\n   paragraph code block failed\n\n- List lv1\n  - List lv2\n        Paragraph test space code block but failed.\n\n        space code block lv2.\n      Paragraph code block broken.\n    Paragraph continue.\n\n    Paragraph continue.\n\n  Paragraph lv1.\n\n";
+            string input = "### Heading\npara  \nnew para\n  - List item lv1\n   - List item lv1\n    - List item lv2\n     - List item lv2\n- List item lv1\n   - List item lv2\n     - List item lv3\n\n       >Continuation Quote lv3\n\n  Continuation Block lv1\n    - List item lv2\n\nParagraph\n     # Heading in code block\nParagraph\n# Heading\nParagraph text\n\nParagraph text2\n- List item lv1\n  - List item lv2\n    ```code block lv2\n    more code lv2\n  ```\n  more code lv1\n```  \nmore code lv0\n  ```\n  Paragraph text3\n    Paragraph text 4\n   ** *   *\n  _ _ __ \n __*___ \n - -- - \n      \n132. number list\n     13. number list\n     16. number list\n132. number list\n153. number list\n+ unordered list\n5. number list\n100. number list\n         space codeblock indented\n\n         space codeblock\n         more code block\n   paragraph code block failed\n\n- List lv1\n  - List lv2\n        Paragraph test space code block but failed.\n\n        space code block lv2.\n      Paragraph code block broken.\n    Paragraph continue.\n\n    Paragraph continue.\n\n  Paragraph lv1.\n\n>Quote lv1\n>Quote lv1 (inline)  \n>Quote lv1 (TODO continue)\n\nQuote lv1\n\n>Quote lv1 (Not continue)";
             //string input = "firstline\n- list\n  ```str\n  asdf\n ```\nnext code";
             //string input = "- List item lv1\n  - List item lv2\n    ```code block lv2\n    more code lv2\n  ```\n  more code lv1\n```  \nmore code lv0\n  ```\n  Paragraph text3\n    Paragraph text 4";
 
