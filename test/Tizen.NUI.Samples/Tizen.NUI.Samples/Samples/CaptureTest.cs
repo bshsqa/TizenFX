@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 
 using System;
 using System.Diagnostics;
+using Tizen.NUI.Xaml;
 
 
 public enum LineType
@@ -275,13 +276,13 @@ public class MarkdownStreamParser
         }
 
         // Heading -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsHeading(trailingBuffer))// Regex.IsMatch(trailingBuffer, @"^\s*#\s$"))
+        if (!string.IsNullOrWhiteSpace(content) && (trailingBuffer.Length > 0 && trailingBuffer[trailingBuffer.Length - 1] == ' ') && IsHeading(trailingBuffer))//&& Regex.IsMatch(trailingBuffer, @"^\s*#\s$")) <- TODO
         {
             return NewLineType.MoveToNewLine;
         }
 
         // Quote -> Copied new line. Do not merge trailingBuffer to ContentBuffer
-        if (!string.IsNullOrWhiteSpace(content) && Regex.IsMatch(trailingBuffer, @"^\s*>$"))
+        if (!string.IsNullOrWhiteSpace(content) && (trimmedTrailingBuffer.Length > 0 && trimmedTrailingBuffer[0] == '>'))
         {
             return NewLineType.MoveToNewLine;
         }
@@ -901,6 +902,11 @@ public class MarkdownStreamParser
         while (contentStart < line.Length && line[contentStart] == ' ')
         {
             contentStart++;
+        }
+
+        if(contentStart >= line.Length || line[contentStart] != '#')
+        {
+            return false;
         }
 
         while (contentStart < line.Length && line[contentStart] != ' ')
