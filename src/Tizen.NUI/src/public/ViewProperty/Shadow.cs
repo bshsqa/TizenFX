@@ -66,7 +66,7 @@ namespace Tizen.NUI
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Shadow(float blurRadius, ColorVisualCutoutPolicyType cutoutPolicy, Color color, Vector2 offset = null, Vector2 extents = null) : base(offset, extents)
         {
-            BlurRadius = blurRadius;
+            BlurRadius = 0;//blurRadius;
             CutoutPolicy = cutoutPolicy;
             Color = color == null ? new Color(defaultColor) : new Color(color);
         }

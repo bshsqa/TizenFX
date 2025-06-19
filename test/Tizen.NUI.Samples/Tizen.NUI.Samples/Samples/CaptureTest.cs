@@ -26,6 +26,10 @@ namespace Tizen.NUI.Samples
             View lowerBotton = CreateLowerBottonStyle(new Size(500.0f, 100.0f));
             lowerBotton.Position = new Position(50.0f, 200.0f);
             window.Add(lowerBotton);
+
+            View lowerBotton2 = CreateLowerBottonStyle2(new Size(500.0f, 100.0f));
+            lowerBotton2.Position = new Position(50.0f, 350.0f);
+            window.Add(lowerBotton2);
         }
 
         private View CreateUpperBottonStyle(Size size)
@@ -35,7 +39,7 @@ namespace Tizen.NUI.Samples
             Visuals.ColorVisual shadowVisual1 = new Visuals.ColorVisual()
             {
                 Name = "shadow1",
-                Color = Color.Gray,
+                Color = Color.Black,
                 BlurRadius = blurRadius,
                 OffsetX = 10.0f,
                 OffsetY = 10.0f,
@@ -104,12 +108,12 @@ namespace Tizen.NUI.Samples
                 CornerRadius = cornerRadius + blurRadius + 1,// + (blurRadius / 2.0f) + 1.0f,
 
                 BorderlineWidth = blurRadius + 1.0f,
-                BorderlineColor = Color.Gray,//new Vector4(0.5f, 0.5f, 0.5f, 0.5f),
+                BorderlineColor = Color.Black,
                 BorderlineOffset = 1.0f,
 
                 BlurRadius = blurRadius, //(blurRadius / 2.0f),
 
-                CutoutPolicy = ColorVisualCutoutPolicyType.CutoutOutsideWithCornerRadius,
+                CutoutPolicy = ColorVisualCutoutPolicyType.None,
             };
 
             Visuals.ColorVisual shadowVisual2 = new Visuals.ColorVisual()
@@ -150,6 +154,25 @@ namespace Tizen.NUI.Samples
             botton.AddVisual(shadowVisual2);
             shadowVisual1.LowerToBottom();
             shadowVisual2.LowerToBottom();
+
+            return botton;
+        }
+
+        private View CreateLowerBottonStyle2(Size size)
+        {
+            float blurRadius = 20.0f;
+            float cornerRadius = Math.Min(size.Width, size.Height) / 2.0f;
+
+            TextLabel botton = new TextLabel("shape case 3")
+            {
+                Name = "test_root",
+                Size = size,
+                CornerRadius = cornerRadius,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextColor = new Vector4(0.5f, 0.5f, 0.5f, 1.0f),
+                InnerShadow = new InnerShadow(new UIExtents(0.0f, 0.0f, 0.0f, 0.0f), 20.0f, Color.Black, ColorVisualCutoutPolicyType.None),
+            };
 
             return botton;
         }

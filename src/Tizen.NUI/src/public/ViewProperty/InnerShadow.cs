@@ -126,7 +126,7 @@ namespace Tizen.NUI
 
             map.Set(Visual.Property.BorderlineColor, Color ?? Color.Transparent);
             map.Set(Visual.Property.BorderlineWidth, ShadowWidth);
-            map.Set(Visual.Property.BorderlineOffset, -1.0f);
+            map.Set(Visual.Property.BorderlineOffset, 1.0f);
 
             return map;
         }
@@ -167,8 +167,14 @@ namespace Tizen.NUI
             var shadowWidth = CalculateShadowWidthByExtents(insetExtents, blurRadius);
             using var offset = CalculateOffsetByExtents(insetExtents);
             using var extents = CalculateExtraSizeByExtents(insetExtents, shadowWidth, blurRadius);
+            Tizen.Log.Error("NUI", $"shadowWidth : {shadowWidth}, offset : {offset.X}, {offset.Y}, radius : {blurRadius}, extents : {extents.X}, {extents.Y}\n");
 
-            return new InnerShadow(shadowWidth, blurRadius, cutoutPolicy, color, offset, extents);
+
+//            shadowWidth = blurRadius + 1;
+//            Vector2 offset2 = new Vector2(-10.0f, -10.0f);
+
+            return new InnerShadow(20.0f, 0.0f, cutoutPolicy, color, new Vector2(0, 0), new Vector2(0, 0));
+//            return new InnerShadow(shadowWidth, blurRadius, cutoutPolicy, color, offset, extents);
         }
     }
 }
