@@ -3,115 +3,166 @@ using global::System;
 using Tizen.NUI;
 using Tizen.NUI.BaseComponents;
 using NUnit.Framework;
+using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace Tizen.NUI.Samples
 {
     using log = Tizen.Log;
     public class CaptureTest : IExample
     {
+        private Window window;
+
         public void Activate()
         {
-            log.Debug(tag, $"Activate(): start \n");
-            resourcePath = Tizen.Applications.Application.Current.DirectoryInfo.Resource;
-
             window = NUIApplication.GetDefaultWindow();
             window.TouchEvent += Win_TouchEvent;
+            window.SetBackgroundColor(Color.LightGrey);
 
-            root = new View()
-            {
-                Name = "test_root",
-                Size = new Size(500, 500),
-                Position = new Position(10, 10),
-                BackgroundColor = Color.White,
-            };
+            View upperBotton = CreateUpperBottonStyle(new Size(500.0f, 100.0f));
+            upperBotton.Position = new Position(50.0f, 50.0f);
+            window.Add(upperBotton);
 
-            window.Add(root);
-
-            log.Debug(tag, $"root view added \n");
-
-            capturedView0 = new ImageView(resourcePath + "/images/image1.jpg")
-            {
-                Name = "test_v0",
-                Size = new Size(100, 100),
-                BackgroundColor = Color.Red,
-            };
-            root.Add(capturedView0);
-
-            capturedView1 = new ImageView(resourcePath + "/images/image2.jpg")
-            {
-                Name = "test_v1",
-                Size = new Size(150, 150),
-                Position = new Position(150, 150),
-                BackgroundColor = Color.Yellow,
-            };
-            root.Add(capturedView1);
-
-            //TDD
-            //tddTest();
-            //checkCaptureNew();
+            View lowerBotton = CreateLowerBottonStyle(new Size(500.0f, 100.0f));
+            lowerBotton.Position = new Position(50.0f, 200.0f);
+            window.Add(lowerBotton);
         }
 
-        private void onCaptureFinished(object sender, CaptureFinishedEventArgs e)
+        private View CreateUpperBottonStyle(Size size)
         {
-            log.Debug(tag, $"onCaptureFinished() statue={e.Success} \n");
-
-            if (sender is Capture)
+            float blurRadius = 20.0f;
+            float cornerRadius = Math.Min(size.Width, size.Height) / 2.0f;
+            Visuals.ColorVisual shadowVisual1 = new Visuals.ColorVisual()
             {
-                log.Debug(tag, $"sender is Capture \n");
-                ImageUrl imageUrl = capture.GetImageUrl();
-                capturedImage = new ImageView(imageUrl.ToString());
-                log.Debug(tag, $"url={imageUrl.ToString()} \n");
+                Name = "shadow1",
+                Color = Color.Gray,
+                BlurRadius = blurRadius,
+                OffsetX = 10.0f,
+                OffsetY = 10.0f,
+                CornerRadius = cornerRadius,
+                OffsetXPolicy = VisualTransformPolicyType.Absolute,
+                OffsetYPolicy = VisualTransformPolicyType.Absolute,
+            };
 
-                capturedImage.Size = new Size(510, 510);
-                capturedImage.Position = new Position(10, 10);
-                root.Add(capturedImage);
-                done = false;
-            }
+            Visuals.ColorVisual shadowVisual2 = new Visuals.ColorVisual()
+            {
+                Name = "shadow2",
+                Color = new Vector4(0.9f, 0.9f, 0.9f, 1.0f),
+                BlurRadius = blurRadius,
+                OffsetX = -10.0f,
+                OffsetY = -10.0f,
+                CornerRadius = cornerRadius,
+                OffsetXPolicy = VisualTransformPolicyType.Absolute,
+                OffsetYPolicy = VisualTransformPolicyType.Absolute,
+            };
+
+            Visuals.ColorVisual background = new Visuals.ColorVisual()
+            {
+                Name = "background",
+                Color = Color.LightGray,
+                CornerRadius = cornerRadius,
+            };
+
+            TextLabel botton = new TextLabel("shape case 1")
+            {
+                Name = "test_root",
+                Size = size,
+                CornerRadius = Math.Min(size.Width, size.Height) / 2.0f,
+                BackgroundColor = Color.LightGrey,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextColor = new Vector4(0.5f, 0.5f, 0.5f, 1.0f),
+            };
+            botton.AddVisual(shadowVisual1);
+            botton.AddVisual(shadowVisual2);
+            botton.AddVisual(background);
+            shadowVisual1.LowerToBottom();
+            shadowVisual2.LowerToBottom();
+
+            return botton;
+        }
+
+        private View CreateLowerBottonStyle(Size size)
+        {
+            float blurRadius = 20.0f;
+            float cornerRadius = Math.Min(size.Width, size.Height) / 2.0f;
+
+            Visuals.ColorVisual shadowVisual1 = new Visuals.ColorVisual()
+            {
+                Name = "inner shadow1",
+                Color = Color.Transparent,
+                //
+                OffsetXPolicy = VisualTransformPolicyType.Absolute,
+                OffsetYPolicy = VisualTransformPolicyType.Absolute,
+
+                OffsetX = 10.0f,
+                OffsetY = 10.0f,
+
+                ExtraWidth = 10.0f,
+                ExtraHeight = 10.0f,
+
+                CornerRadius = cornerRadius + blurRadius + 1,// + (blurRadius / 2.0f) + 1.0f,
+
+                BorderlineWidth = blurRadius + 1.0f,
+                BorderlineColor = Color.Gray,//new Vector4(0.5f, 0.5f, 0.5f, 0.5f),
+                BorderlineOffset = 1.0f,
+
+                BlurRadius = blurRadius, //(blurRadius / 2.0f),
+
+                CutoutPolicy = ColorVisualCutoutPolicyType.CutoutOutsideWithCornerRadius,
+            };
+
+            Visuals.ColorVisual shadowVisual2 = new Visuals.ColorVisual()
+            {
+                Name = "inner shadow2",
+                Color = Color.Transparent,
+                //
+                OffsetXPolicy = VisualTransformPolicyType.Absolute,
+                OffsetYPolicy = VisualTransformPolicyType.Absolute,
+
+                OffsetX = -10.0f,
+                OffsetY = -10.0f,
+
+                ExtraWidth = 10.0f,
+                ExtraHeight = 10.0f,
+
+                CornerRadius = cornerRadius + blurRadius + 1,// + (blurRadius / 2.0f) + 1.0f,
+
+                BorderlineWidth = blurRadius + 1.0f,
+                BorderlineColor = new Vector4(0.9f, 0.9f, 0.9f, 1.0f),
+                BorderlineOffset = 1.0f,
+
+                BlurRadius = blurRadius, //(blurRadius / 2.0f),
+
+                CutoutPolicy = ColorVisualCutoutPolicyType.CutoutOutsideWithCornerRadius,
+            };
+
+            TextLabel botton = new TextLabel("shape case 2")
+            {
+                Name = "test_root",
+                Size = size,
+                CornerRadius = cornerRadius,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                TextColor = new Vector4(0.5f, 0.5f, 0.5f, 1.0f),
+            };
+            botton.AddVisual(shadowVisual1);
+            botton.AddVisual(shadowVisual2);
+            shadowVisual1.LowerToBottom();
+            shadowVisual2.LowerToBottom();
+
+            return botton;
         }
 
         private void Win_TouchEvent(object sender, Window.TouchEventArgs e)
         {
             if (e.Touch.GetState(0) == PointStateType.Down)
             {
-                if (!done)
-                {
-                    done = true;
-                    capture = new Capture();
-                    capture.Start(root, new Size(510, 510), "");
-                    capture.Finished += onCaptureFinished;
-                    log.Debug(tag, $"capture done \n");
-                }
             }
-        }
-
-        private void tddTest()
-        {
-            log.Debug(tag, $"TDD test before Assert");
-
-            Assert.IsFalse(true, "TDD test, Exception throw");
-
-            Assert.IsFalse(false, "TDD test, Exception throw");
-
-            log.Debug(tag, $"TDD test after Assert");
-        }
-
-        private void checkCaptureNew()
-        {
-            var target = new Capture();
-            Assert.IsNotNull(target, "target should not be null");
-            Assert.IsTrue(target is Capture, "target should be Capture class");
         }
 
         public void Deactivate()
         {
         }
-
-        const string tag = "NUITEST";
-        private Window window;
-        private View root, capturedView0, capturedView1;
-        private Capture capture;
-        private ImageView capturedImage;
-        private bool done = false;
-        private string resourcePath;
     }
 }
