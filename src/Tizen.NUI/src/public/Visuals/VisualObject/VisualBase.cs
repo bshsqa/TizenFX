@@ -651,6 +651,16 @@ namespace Tizen.NUI.Visuals
                 return transformInfo.extraHeight;
             }
         }
+
+        /// <summary>
+        /// Override corner property from View.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool OverrideCorner
+        {
+            // TODO : How handle when this changed during runtime.
+            set; get;
+        }
         #endregion
 
         #region Public Methods

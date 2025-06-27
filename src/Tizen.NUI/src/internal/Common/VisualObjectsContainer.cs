@@ -124,7 +124,8 @@ namespace Tizen.NUI.Visuals
 
             visuals.Add(visualObject);
 
-            bool ret = Interop.VisualObjectsContainer.AddVisualObject(SwigCPtr, Tizen.NUI.Visuals.VisualBase.getCPtr(visualObject));
+            Tizen.Log.Error("NUI", $"overrid : {visualObject.OverrideCorner}\n");
+            bool ret = Interop.VisualObjectsContainer.AddVisualObject(SwigCPtr, Tizen.NUI.Visuals.VisualBase.getCPtr(visualObject), visualObject.OverrideCorner);
             NDalicPINVOKE.ThrowExceptionIfExists();
             return ret;
         }

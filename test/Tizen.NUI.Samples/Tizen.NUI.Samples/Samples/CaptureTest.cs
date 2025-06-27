@@ -3,6 +3,7 @@ using global::System;
 using Tizen.NUI;
 using Tizen.NUI.BaseComponents;
 using NUnit.Framework;
+using Tizen.NUI.Components;
 
 namespace Tizen.NUI.Samples
 {
@@ -11,107 +12,62 @@ namespace Tizen.NUI.Samples
     {
         public void Activate()
         {
-            log.Debug(tag, $"Activate(): start \n");
-            resourcePath = Tizen.Applications.Application.Current.DirectoryInfo.Resource;
-
             window = NUIApplication.GetDefaultWindow();
             window.TouchEvent += Win_TouchEvent;
 
-            root = new View()
+            View view = new View()
             {
-                Name = "test_root",
-                Size = new Size(500, 500),
-                Position = new Position(10, 10),
-                BackgroundColor = Color.White,
+                Size = new Size(500.0f, 200.0f),
+                PositionUsesPivotPoint = true,
+                ParentOrigin = ParentOrigin.Center,
+                PivotPoint = PivotPoint.Center,
+                BackgroundColor = Color.Blue,
+                CornerRadius = 50.0f,
             };
+            window.Add(view);
 
-            window.Add(root);
+            Visuals.VisualBase shadow = Visuals.ShadowVisualUtility.CreateBoxShadow(50.0f, Color.Black);
+            view.AddVisual(shadow);
 
-            log.Debug(tag, $"root view added \n");
-
-            capturedView0 = new ImageView(resourcePath + "/images/image1.jpg")
+            View view2 = new View()
             {
-                Name = "test_v0",
-                Size = new Size(100, 100),
-                BackgroundColor = Color.Red,
+                Position = new Position(0.0f, 400.0f),
+                Size = new Size(500.0f, 200.0f),
+                PositionUsesPivotPoint = true,
+                ParentOrigin = ParentOrigin.Center,
+                PivotPoint = PivotPoint.Center,
+                BackgroundColor = Color.Blue,
+                CornerRadius = 50.0f,
             };
-            root.Add(capturedView0);
+            window.Add(view2);
 
-            capturedView1 = new ImageView(resourcePath + "/images/image2.jpg")
-            {
-                Name = "test_v1",
-                Size = new Size(150, 150),
-                Position = new Position(150, 150),
-                BackgroundColor = Color.Yellow,
-            };
-            root.Add(capturedView1);
+            Visuals.VisualBase innerShadow = Visuals.ShadowVisualUtility.CreateInnerShadow(new UIExtents(0.0f), 50.0f, Color.Black);
+            view2.AddVisual(innerShadow);
 
-            //TDD
-            //tddTest();
-            //checkCaptureNew();
-        }
 
-        private void onCaptureFinished(object sender, CaptureFinishedEventArgs e)
-        {
-            log.Debug(tag, $"onCaptureFinished() statue={e.Success} \n");
-
-            if (sender is Capture)
-            {
-                log.Debug(tag, $"sender is Capture \n");
-                ImageUrl imageUrl = capture.GetImageUrl();
-                capturedImage = new ImageView(imageUrl.ToString());
-                log.Debug(tag, $"url={imageUrl.ToString()} \n");
-
-                capturedImage.Size = new Size(510, 510);
-                capturedImage.Position = new Position(10, 10);
-                root.Add(capturedImage);
-                done = false;
-            }
+            //            float blurRadius = 50.0f;
+            //            Visuals.ColorVisual shadowVisual1 = new Visuals.ColorVisual()
+            //            {
+            //                Color = Color.Black,
+            //                BlurRadius = blurRadius,
+            //                OffsetXPolicy = VisualTransformPolicyType.Absolute,
+            //                OffsetYPolicy = VisualTransformPolicyType.Absolute,
+            //                CutoutPolicy = ColorVisualCutoutPolicyType.CutoutViewWithCornerRadius,
+            //            };
+            //            view.AddVisual(shadowVisual1);
         }
 
         private void Win_TouchEvent(object sender, Window.TouchEventArgs e)
         {
             if (e.Touch.GetState(0) == PointStateType.Down)
             {
-                if (!done)
-                {
-                    done = true;
-                    capture = new Capture();
-                    capture.Start(root, new Size(510, 510), "");
-                    capture.Finished += onCaptureFinished;
-                    log.Debug(tag, $"capture done \n");
-                }
             }
-        }
-
-        private void tddTest()
-        {
-            log.Debug(tag, $"TDD test before Assert");
-
-            Assert.IsFalse(true, "TDD test, Exception throw");
-
-            Assert.IsFalse(false, "TDD test, Exception throw");
-
-            log.Debug(tag, $"TDD test after Assert");
-        }
-
-        private void checkCaptureNew()
-        {
-            var target = new Capture();
-            Assert.IsNotNull(target, "target should not be null");
-            Assert.IsTrue(target is Capture, "target should be Capture class");
         }
 
         public void Deactivate()
         {
         }
 
-        const string tag = "NUITEST";
         private Window window;
-        private View root, capturedView0, capturedView1;
-        private Capture capture;
-        private ImageView capturedImage;
-        private bool done = false;
-        private string resourcePath;
     }
 }

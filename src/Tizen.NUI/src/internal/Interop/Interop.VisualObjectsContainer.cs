@@ -60,7 +60,7 @@ namespace Tizen.NUI
 
             [global::System.Runtime.InteropServices.DllImport(NDalicPINVOKE.Lib, EntryPoint = "CSharp_Dali_VisualObjectsContainer_AddVisualObject")]
             [return: global::System.Runtime.InteropServices.MarshalAs(global::System.Runtime.InteropServices.UnmanagedType.U1)]
-            public static extern bool AddVisualObject(global::System.Runtime.InteropServices.HandleRef container, global::System.Runtime.InteropServices.HandleRef viewObject);
+            public static extern bool AddVisualObject(global::System.Runtime.InteropServices.HandleRef container, global::System.Runtime.InteropServices.HandleRef viewObject, bool overrideCorner);
 
             [global::System.Runtime.InteropServices.DllImport(NDalicPINVOKE.Lib, EntryPoint = "CSharp_Dali_VisualObjectsContainer_RemoveVisualObject")]
             public static extern void RemoveVisualObject(global::System.Runtime.InteropServices.HandleRef container, global::System.Runtime.InteropServices.HandleRef viewObject);
