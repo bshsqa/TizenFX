@@ -100,6 +100,26 @@ namespace Tizen.NUI
         }
 
         /// <summary>
+        /// Sets a VertexBufferUpdateCallback for dynamic vertex buffer updates.<br />
+        /// This allows real-time modification of vertex data during rendering.
+        /// </summary>
+        /// <param name="callback">The VertexBufferUpdateCallback to set for dynamic updates.</param>
+        /// <exception cref="ArgumentNullException"> Thrown when callback is null. </exception>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void SetVertexBufferUpdateCallback(VertexBufferUpdateCallback callback)
+        {
+            if (null == callback)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            Interop.VertexBuffer.SetVertexBufferUpdateCallback(SwigCPtr, callback.SwigCPtr.Handle);
+
+            if (NDalicPINVOKE.SWIGPendingException.Pending)
+                throw NDalicPINVOKE.SWIGPendingException.Retrieve();
+        }
+
+        /// <summary>
         /// Gets the number of elements in the buffer.
         /// </summary>
         /// <returns>Number of elements in the buffer.</returns>

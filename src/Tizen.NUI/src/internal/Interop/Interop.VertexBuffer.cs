@@ -33,6 +33,9 @@ namespace Tizen.NUI
 
             [global::System.Runtime.InteropServices.DllImport(NDalicPINVOKE.Lib, EntryPoint = "CSharp_Dali_VertexBuffer_GetSize")]
             public static extern uint GetSize(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+            [global::System.Runtime.InteropServices.DllImport(NDalicPINVOKE.Lib, EntryPoint = "CSharp_Dali_VertexBuffer_SetVertexBufferUpdateCallback")]
+            public static extern void SetVertexBufferUpdateCallback(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.IntPtr jarg2);
         }
     }
 }
