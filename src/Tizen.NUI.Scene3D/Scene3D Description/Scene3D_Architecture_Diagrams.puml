@@ -1,0 +1,411 @@
+@startuml Scene3D_Architecture
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+
+title DALi Scene3D 아키텍처 다이어그램
+
+package "DALi Scene3D Core" {
+    class SceneView {
+        +AddCamera(CameraActor)
+        +RemoveCamera(CameraActor)
+        +SelectCamera(uint32_t)
+        +SetImageBasedLightSource(string, string, float)
+        +UseFramebuffer(bool)
+        +SetSkybox(string)
+        +Capture(CameraActor, Vector2)
+        -mCameraActors: vector<CameraActor>
+        -mSelectedCamera: CameraActor
+        -mUseFramebuffer: bool
+        -mIBLTextures: Texture[]
+    }
+
+    class Model {
+        +New(string, string)
+        +GetModelRoot(): ModelNode
+        +GetAnimation(uint32_t): Animation
+        +SetImageBasedLightSource(string, string, float)
+        +CastShadow(bool)
+        +ReceiveShadow(bool)
+        -mModelRoot: ModelNode
+        -mAnimations: vector<Animation>
+        -mResourceStatus: ResourceStatus
+    }
+
+    class Light {
+        +New()
+        +Enable(bool)
+        +EnableShadow(bool)
+        +SetShadowIntensity(float)
+        +SetShadowBias(float)
+        -mEnabled: bool
+        -mShadowEnabled: bool
+        -mShadowIntensity: float
+    }
+}
+
+package "Model Components" {
+    class ModelNode {
+        +AddModelPrimitive(ModelPrimitive)
+        +RemoveModelPrimitive(ModelPrimitive)
+        +FindChildByName(string): ModelNode
+        -mModelPrimitives: vector<ModelPrimitive>
+        -mChildren: vector<ModelNode>
+    }
+
+    class ModelPrimitive {
+        +SetGeometry(Geometry)
+        +SetMaterial(Material)
+        +GetGeometry(): Geometry
+        +GetMaterial(): Material
+        -mGeometry: Geometry
+        -mMaterial: Material
+    }
+
+    class Material {
+        +SetTexture(string, Texture)
+        +GetTexture(string): Texture
+        -mTextures: map<string, Texture>
+        -mProperties: PropertyMap
+    }
+}
+
+package "Model Loader System" {
+    class ModelLoader {
+        +LoadModel(PathProvider, bool): bool
+        +GetScene(): SceneDefinition
+        +GetResources(): ResourceBundle
+        -mImpl: ModelLoaderImpl*
+    }
+
+    class ModelLoaderImpl {
+        <<abstract>>
+        +LoadModel(): bool
+    }
+
+    class GLTF2Loader {
+        +LoadModel(): bool
+        -mAsset: gltf2::Asset
+    }
+
+    class DLILoader {
+        +LoadModel(): bool
+        -mFormat: DliFormat
+    }
+
+    class USDLoader {
+        +LoadModel(): bool
+        -mStage: UsdStageRefPtr
+    }
+
+    ModelLoader --> ModelLoaderImpl
+    ModelLoaderImpl <|-- GLTF2Loader
+    ModelLoaderImpl <|-- DLILoader
+    ModelLoaderImpl <|-- USDLoader
+}
+
+package "Resource Management" {
+    class ResourceBundle {
+        +GetGeometry(uint32_t): Geometry
+        +GetTexture(uint32_t): Texture
+        +GetMaterial(uint32_t): Material
+        -mGeometries: vector<Geometry>
+        -mTextures: vector<Texture>
+        -mMaterials: vector<Material>
+    }
+
+    class SceneDefinition {
+        +GetRootNode(): NodeDefinition
+        +GetAnimations(): vector<AnimationDefinition>
+        -mRootNode: NodeDefinition
+        -mAnimations: vector<AnimationDefinition>
+    }
+}
+
+package "Rendering Pipeline" {
+    class Layer3D {
+        +Add(Actor)
+        +Remove(Actor)
+        -mRenderers: vector<Renderer>
+    }
+
+    class CameraActor {
+        +SetType(CameraType)
+        +SetFieldOfView(float)
+        -mProjectionMatrix: Matrix
+        -mViewMatrix: Matrix
+    }
+
+    class Renderer {
+        +SetGeometry(Geometry)
+        +SetMaterial(Material)
+        -mGeometry: Geometry
+        -mMaterial: Material
+    }
+}
+
+' Relationships
+SceneView ||--o{ CameraActor : "manages"
+SceneView ||--o{ Model : "contains"
+SceneView ||--o{ Light : "illuminates"
+SceneView ||--|| Layer3D : "has"
+
+Model ||--|| ModelNode : "has root"
+ModelNode ||--o{ ModelNode : "parent-child"
+ModelNode ||--o{ ModelPrimitive : "contains"
+ModelPrimitive ||--|| Material : "uses"
+ModelPrimitive ||--|| Geometry : "uses"
+
+ModelLoader ||--|| ResourceBundle : "creates"
+ModelLoader ||--|| SceneDefinition : "loads"
+
+@enduml
+
+@startuml Scene3D_Class_Hierarchy
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Scene3D 클래스 상속 계층도
+
+abstract class Dali::BaseHandle {
+    +operator=()
+    +operator bool()
+}
+
+abstract class Dali::Toolkit::Control {
+    +SetProperty(Property::Index, Property::Value)
+    +GetProperty(Property::Index): Property::Value
+}
+
+class SceneView {
+    +AddCamera(CameraActor)
+    +RemoveCamera(CameraActor)
+    +SelectCamera(uint32_t)
+    +SetImageBasedLightSource(string, string, float)
+}
+
+class Model {
+    +GetModelRoot(): ModelNode
+    +GetAnimation(uint32_t): Animation
+    +SetImageBasedLightSource(string, string, float)
+}
+
+class Light {
+    +Enable(bool)
+    +EnableShadow(bool)
+    +SetShadowIntensity(float)
+}
+
+class ModelPrimitive {
+    +SetGeometry(Geometry)
+    +SetMaterial(Material)
+}
+
+class ModelNode {
+    +AddModelPrimitive(ModelPrimitive)
+    +FindChildByName(string): ModelNode
+}
+
+class Material {
+    +SetTexture(string, Texture)
+    +GetTexture(string): Texture
+}
+
+' Inheritance relationships
+BaseHandle <|-- Control
+Control <|-- SceneView
+Control <|-- Model
+Control <|-- Light
+BaseHandle <|-- ModelPrimitive
+BaseHandle <|-- ModelNode
+BaseHandle <|-- Material
+
+@enduml
+
+@startuml Scene3D_Model_Loader_Flow
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title 모델 로더 작업 흐름
+
+actor Developer
+participant "Application" as App
+participant "Model" as Model
+participant "ModelLoader" as Loader
+participant "Format Loader" as FormatLoader
+participant "ResourceBundle" as Resources
+database "File System" as Files
+
+Developer -> App: Model::New(url, resourceDir)
+App -> Model: Create Model instance
+Model -> Loader: ModelLoader(url, resourceDir, result)
+Loader -> Loader: CreateModelLoader()
+Loader -> FormatLoader: new GLTF2Loader() / DLILoader() / USDLoader()
+Loader -> FormatLoader: LoadModel()
+FormatLoader -> Files: Read model file
+Files --> FormatLoader: File data
+FormatLoader -> FormatLoader: Parse scene data
+FormatLoader -> Resources: Load geometries
+FormatLoader -> Resources: Load textures
+FormatLoader -> Resources: Load materials
+FormatLoader --> Loader: LoadResult
+Loader --> Model: SceneDefinition & ResourceBundle
+Model --> App: Model handle
+App --> Developer: Ready to use
+
+note over FormatLoader
+Format detection based on file extension:
+- .gltf, .glb → GLTF2Loader
+- .dli → DLILoader  
+- .usd, .usda, .usdc → USDLoader
+end note
+
+@enduml
+
+@startuml Scene3D_Rendering_Pipeline
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Scene3D 렌더링 파이프라인
+
+participant "Window" as Window
+participant "SceneView" as SceneView
+participant "Layer3D" as Layer3D
+participant "CameraActor" as Camera
+participant "Model" as Model
+participant "ModelNode" as Node
+participant "ModelPrimitive" as Primitive
+participant "Renderer" as Renderer
+participant "GPU" as GPU
+
+Window -> SceneView: OnRender()
+SceneView -> Camera: GetViewMatrix()
+SceneView -> Camera: GetProjectionMatrix()
+Camera --> SceneView: View & Projection matrices
+
+SceneView -> Layer3D: Render()
+Layer3D -> Model: Render()
+Model -> Node: Render()
+Node -> Primitive: Render()
+Primitive -> Renderer: Render()
+
+Renderer -> GPU: SetGeometry()
+Renderer -> GPU: SetMaterial()
+Renderer -> GPU: SetTransform()
+Renderer -> GPU: SetViewProjection()
+GPU --> Renderer: Rendered result
+Renderer --> Primitive: Success
+Primitive --> Node: Success
+Node --> Model: Success
+Model --> Layer3D: Success
+Layer3D --> SceneView: Success
+
+note over SceneView
+If UseFramebuffer=true:
+- Render to FBO texture
+- Apply post-processing effects
+- Blit to window surface
+
+If UseFramebuffer=false:
+- Render directly to window
+- Better performance
+- Always on top
+end note
+
+@enduml
+
+@startuml DALi_vs_NUI_Scene3D
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title DALi Scene3D vs NUI Scene3D 관계
+
+package "C++ DALi Scene3D" {
+    class DaliSceneView {
+        +AddCamera(CameraActor)
+        +SetImageBasedLightSource(string, string, float)
+        +UseFramebuffer(bool)
+    }
+
+    class DaliModel {
+        +GetModelRoot(): ModelNode
+        +GetAnimation(uint32_t): Animation
+    }
+
+    class DaliLight {
+        +Enable(bool)
+        +EnableShadow(bool)
+    }
+}
+
+package "C# NUI Scene3D" {
+    class NUISceneView {
+        +AddCamera(Camera)
+        +SetImageBasedLightSource(string, string, float)
+        +UseFramebuffer: bool
+        +CameraTransition(uint, int, AlphaFunction)
+        +CaptureAsync(Camera, Vector2): Task<ImageUrl>
+    }
+
+    class NUIModel {
+        +GetModelRoot(): ModelNode
+        +GetAnimation(uint32_t): Animation
+    }
+
+    class NUILight {
+        +Enable(bool)
+        +EnableShadow(bool)
+    }
+}
+
+package "C# Binding Layer" {
+    class SceneViewWrap {
+        +AddCamera(IntPtr, IntPtr)
+        +SetImageBasedLightSource(IntPtr, string, string, float)
+        +UseFramebuffer(IntPtr, bool)
+    }
+
+    class ModelWrap {
+        +GetModelRoot(IntPtr): IntPtr
+        +GetAnimation(IntPtr, uint32_t): IntPtr
+    }
+
+    class LightWrap {
+        +Enable(IntPtr, bool)
+        +EnableShadow(IntPtr, bool)
+    }
+}
+
+' Relationships
+DaliSceneView ..> SceneViewWrap : "P/Invoke calls"
+DaliModel ..> ModelWrap : "P/Invoke calls"
+DaliLight ..> LightWrap : "P/Invoke calls"
+
+NUISceneView --> SceneViewWrap : "Wraps C++ API"
+NUIModel --> ModelWrap : "Wraps C++ API"
+NUILight --> LightWrap : "Wraps C++ API"
+
+note right of NUISceneView
+NUI-specific features:
+- C# async/await pattern
+- .NET event system
+- Property accessors
+- Task-based operations
+- C# memory management
+end note
+
+note left of DaliSceneView
+DALi-specific features:
+- C++ native performance
+- Direct memory access
+- Signal/slot system
+- Raw pointer operations
+- Manual memory management
+end note
+
+@enduml
