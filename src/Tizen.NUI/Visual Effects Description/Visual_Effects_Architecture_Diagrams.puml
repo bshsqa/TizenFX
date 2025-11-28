@@ -1,0 +1,722 @@
+@startuml Visual Effects Architecture Diagrams
+
+!theme plain
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+' ============================================
+' 1. Visual Effects 아키텍처 전체 구조도
+' ============================================
+
+title Visual Effects 아키텍처 전체 구조
+
+package "DALi Core Layer" {
+    class Actor {
+        +SetProperty()
+        +GetProperty()
+        +AddRenderer()
+    }
+    
+    class RenderTask {
+        +SetSourceActor()
+        +SetFrameBuffer()
+        +SetOrderIndex()
+    }
+    
+    class RenderTaskList {
+        +CreateTask()
+        +ReorderTasks()
+        +SortTasks()
+    }
+    
+    class FrameBuffer {
+        +AttachColorTexture()
+        +AttachDepthTexture()
+    }
+}
+
+package "DALi Toolkit Layer" {
+    class Control {
+        +SetRenderEffect()
+        +ClearRenderEffect()
+        +GetRenderEffect()
+        -mRenderEffect: RenderEffectImplPtr
+    }
+    
+    class RenderEffect <<abstract>> {
+        +Activate()
+        +Deactivate()
+        +Refresh()
+        +IsActivated()
+        #GetOffScreenRenderableType()
+    }
+    
+    class RenderEffectImpl <<abstract>> {
+        +Initialize()
+        +Activate()
+        +Deactivate()
+        +GetOffScreenRenderTasks()
+        #mOwnerControl: Control
+        #mIsActivated: bool
+    }
+    
+    class MaskEffect {
+        +New(maskControl)
+        +New(maskControl, mode, position, scale)
+        +SetTargetMaskOnce()
+        +SetSourceMaskOnce()
+    }
+    
+    class MaskEffectImpl {
+        -mMaskControl: Control
+        -mMaskMode: MaskMode
+        -mMaskPosition: Vector2
+        -mMaskScale: Vector2
+    }
+    
+    class BackgroundBlurEffect {
+        +New(blurRadius)
+    }
+    
+    class BackgroundBlurEffectImpl {
+        -mBlurRadius: float
+        -mCaptureTask: RenderTask
+        -mBlurTask: RenderTask
+    }
+    
+    class GaussianBlurEffect {
+        +New(blurRadius)
+    }
+    
+    class GaussianBlurEffectImpl {
+        -mBlurRadius: float
+    }
+}
+
+package "NUI Layer" {
+    class View {
+        +SetRenderEffect()
+        +ClearRenderEffect()
+        +AddShadow()
+        -_ownerView: WeakReference<View>
+    }
+    
+    class RenderEffect {
+        +CreateBackgroundBlurEffect()
+        +CreateGaussianBlurEffect()
+        +CreateMaskEffect()
+        +Dispose()
+        +AliveCount: int
+    }
+    
+    class MaskEffect {
+        +MaskMode: MaskEffectMode
+        +Position: Vector2
+        +Scale: Vector2
+    }
+    
+    class Shadow {
+        +Color: Vector4
+        +Offset: Vector2
+        +BlurRadius: float
+    }
+    
+    class InnerShadow {
+    }
+}
+
+' 관계 정의
+Actor <|-- Control
+Control --> RenderEffect : "owns 1"
+RenderEffect <|-- MaskEffect
+RenderEffect <|-- BackgroundBlurEffect
+RenderEffect <|-- GaussianBlurEffect
+RenderEffect --> RenderEffectImpl : "handle"
+RenderEffectImpl <|-- MaskEffectImpl
+RenderEffectImpl <|-- BackgroundBlurEffectImpl
+RenderEffectImpl <|-- GaussianBlurEffectImpl
+
+Control --> RenderTaskList : "uses"
+RenderTaskList --> RenderTask : "manages"
+RenderTask --> FrameBuffer : "renders to"
+
+View <|-- Control
+View --> RenderEffect : "uses"
+RenderEffect --> MaskEffect : "creates"
+RenderEffect --> Shadow : "creates"
+
+' P/Invoke 관계
+RenderEffect ..> RenderEffect : "P/Invoke"
+MaskEffect ..> MaskEffect : "P/Invoke"
+
+@enduml
+
+@startuml Visual Effects Class Hierarchy
+
+title Visual Effects 클래스 상속 계층도
+
+package "Base Classes" {
+    class BaseHandle {
+        +GetObjectPtr()
+    }
+    
+    class RefObject {
+        +AddRef()
+        +Release()
+        +GetRefCount()
+    }
+}
+
+package "RenderEffect Hierarchy" {
+    class RenderEffect <<abstract>> {
+        +Activate() <<abstract>>
+        +Deactivate() <<abstract>>
+        +Refresh() <<abstract>>
+        +IsActivated() <<abstract>>
+        #GetOffScreenRenderableType() <<abstract>>
+    }
+    
+    class RenderEffectImpl <<abstract>> {
+        +Initialize()
+        +Activate()
+        +Deactivate()
+        +GetOffScreenRenderTasks()
+        #mOwnerControl: Control
+        #mIsActivated: bool
+    }
+    
+    class MaskEffect {
+        +New(maskControl)
+        +New(maskControl, mode, position, scale)
+        +SetTargetMaskOnce()
+        +SetSourceMaskOnce()
+        +GetTargetMaskOnce()
+        +GetSourceMaskOnce()
+    }
+    
+    class MaskEffectImpl {
+        -mMaskControl: Control
+        -mMaskMode: MaskMode
+        -mMaskPosition: Vector2
+        -mMaskScale: Vector2
+        -mTargetMaskOnce: bool
+        -mSourceMaskOnce: bool
+    }
+    
+    class BackgroundBlurEffect {
+        +New(blurRadius)
+    }
+    
+    class BackgroundBlurEffectImpl {
+        -mBlurRadius: float
+        -mCaptureTask: RenderTask
+        -mBlurTask: RenderTask
+        -mFinalTask: RenderTask
+    }
+    
+    class GaussianBlurEffect {
+        +New(blurRadius)
+    }
+    
+    class GaussianBlurEffectImpl {
+        -mBlurRadius: float
+        -mBlurTask: RenderTask
+    }
+}
+
+package "NUI Bindings" {
+    class RenderEffect {
+        +CreateBackgroundBlurEffect()
+        +CreateGaussianBlurEffect()
+        +CreateMaskEffect()
+        +Activate()
+        +Deactivate()
+        +Dispose()
+        +AliveCount: int
+    }
+    
+    class MaskEffect {
+        +MaskMode: MaskEffectMode
+        +Position: Vector2
+        +Scale: Vector2
+        +TargetMaskOnce: bool
+        +SourceMaskOnce: bool
+    }
+    
+    class BackgroundBlurEffect {
+    }
+    
+    class GaussianBlurEffect {
+    }
+}
+
+' 상속 관계
+BaseHandle <|-- RenderEffect
+RefObject <|-- RenderEffectImpl
+
+RenderEffect <|-- MaskEffect
+RenderEffect <|-- BackgroundBlurEffect
+RenderEffect <|-- GaussianBlurEffect
+
+RenderEffectImpl <|-- MaskEffectImpl
+RenderEffectImpl <|-- BackgroundBlurEffectImpl
+RenderEffectImpl <|-- GaussianBlurEffectImpl
+
+' 핸들-구현 관계
+RenderEffect --> RenderEffectImpl : "handle"
+MaskEffect --> MaskEffectImpl : "handle"
+BackgroundBlurEffect --> BackgroundBlurEffectImpl : "handle"
+GaussianBlurEffect --> GaussianBlurEffectImpl : "handle"
+
+' NUI 바인딩 관계
+RenderEffect <|-- RenderEffect
+MaskEffect <|-- MaskEffect
+BackgroundBlurEffect <|-- BackgroundBlurEffect
+GaussianBlurEffect <|-- GaussianBlurEffect
+
+@enduml
+
+@startuml OffScreen Rendering Flow
+
+title 오프스크린 렌더링 흐름
+
+participant "Control" as Control
+participant "RenderEffect" as Effect
+participant "RenderTaskList" as RTL
+participant "FramebufferManager" as FBM
+participant "GPU" as GPU
+
+== BACKWARD 타입 렌더링 (MaskEffect) ==
+
+Control -> Effect: GetOffScreenRenderTasks(false)
+activate Effect
+
+Effect -> FBM: AcquireFramebuffer(size)
+activate FBM
+FBM --> Effect: FrameBuffer
+deactivate FBM
+
+Effect -> RTL: CreateSourceRenderTask()
+activate RTL
+RTL --> Effect: sourceTask
+deactivate RTL
+
+Effect -> RTL: CreateMaskRenderTask()
+activate RTL
+RTL --> Effect: maskTask
+deactivate RTL
+
+Effect -> RTL: CreateCompositeRenderTask()
+activate RTL
+RTL --> Effect: compositeTask
+deactivate RTL
+
+Effect --> Control: Return tasks [sourceTask, maskTask, compositeTask]
+deactivate Effect
+
+Control -> GPU: Execute render tasks
+activate GPU
+GPU --> Control: Rendering complete
+deactivate GPU
+
+== FORWARD 타입 렌더링 (BackgroundBlurEffect) ==
+
+Control -> Effect: GetOffScreenRenderTasks(true)
+activate Effect
+
+Effect -> RTL: CreateBackgroundCaptureTask()
+activate RTL
+RTL --> Effect: captureTask
+deactivate RTL
+
+Effect -> FBM: AcquireFramebuffer(size)
+activate FBM
+FBM --> Effect: FrameBuffer
+deactivate FBM
+
+Effect -> RTL: CreateBlurRenderTask()
+activate RTL
+RTL --> Effect: blurTask
+deactivate RTL
+
+Effect -> RTL: CreateFinalRenderTask()
+activate RTL
+RTL --> Effect: finalTask
+deactivate RTL
+
+Effect --> Control: Return tasks [captureTask, blurTask, finalTask]
+deactivate Effect
+
+Control -> GPU: Execute render tasks
+activate GPU
+GPU --> Control: Rendering complete
+deactivate GPU
+
+@enduml
+
+@startuml RenderTask Reordering Flow
+
+title RenderTask 재정렬 작업 흐름
+
+participant "Control" as Control
+participant "RenderTaskList" as RTL
+participant "LayerList" as LL
+participant "OffScreenRenderable" as OSR
+participant "RenderTask" as RT
+
+== 재정렬 요청 ==
+
+Control -> RTL: RequestRenderTaskReordering()
+activate RTL
+note right: mIsRequestedToReorderTask = true
+
+== 재정렬 실행 ==
+
+RTL -> LL: GetLayerCount()
+activate LL
+LL --> RTL: layerCount
+deactivate LL
+
+loop 각 레이어에 대해
+    RTL -> LL: GetLayer(i)
+    activate LL
+    LL --> RTL: layer
+    deactivate LL
+    
+    RTL -> OSR: FindOffScreenRenderables(layer)
+    activate OSR
+    OSR --> RTL: renderableData
+    deactivate OSR
+end
+
+RTL -> OSR: CalculateRenderingOrder(renderableData)
+activate OSR
+
+note right: BACKWARD 타입 먼저 처리
+OSR -> RT: SetOrderIndex(orderIndex++) for BACKWARD tasks
+
+note right: FORWARD 타입 나중에 처리
+OSR -> RT: SetOrderIndex(orderIndex++) for FORWARD tasks
+
+OSR --> RTL: Order calculation complete
+deactivate OSR
+
+RTL -> RTL: SortTasks()
+note right: std::stable_sort by OrderIndex
+
+RTL -> RTL: mIsRequestedToReorderTask = false
+deactivate RTL
+
+@enduml
+
+@startuml DALi vs NUI Relationship
+
+title DALi vs NUI Visual Effects 관계도
+
+package "DALi C++ Layer" {
+    class "RenderEffect (C++)" as DaliRenderEffect {
+        +Activate()
+        +Deactivate()
+        +Refresh()
+        +IsActivated()
+    }
+    
+    class "MaskEffect (C++)" as DaliMaskEffect {
+        +New(maskControl)
+        +SetTargetMaskOnce()
+    }
+    
+    class "Control (C++)" as DaliControl {
+        +SetRenderEffect()
+        +ClearRenderEffect()
+    }
+}
+
+package "P/Invoke Boundary" {
+    interface "Interop Layer" {
+        +Interop_RenderEffectActivate()
+        +Interop_RenderEffectDeactivate()
+        +Interop_MaskEffectNew()
+    }
+}
+
+package "NUI C# Layer" {
+    class "RenderEffect (C#)" as NUIRenderEffect {
+        +CreateBackgroundBlurEffect()
+        +CreateMaskEffect()
+        +Activate()
+        +Deactivate()
+        +Dispose()
+        +AliveCount
+    }
+    
+    class "MaskEffect (C#)" as NUIMaskEffect {
+        +MaskMode: MaskEffectMode
+        +Position: Vector2
+        +Scale: Vector2
+    }
+    
+    class "View (C#)" as NUIView {
+        +SetRenderEffect()
+        +ClearRenderEffect()
+        +AddShadow()
+    }
+}
+
+' 관계 정의
+DaliRenderEffect <|-- DaliMaskEffect
+DaliControl --> DaliRenderEffect : "owns"
+
+NUIRenderEffect <|-- NUIMaskEffect
+NUIView --> NUIRenderEffect : "uses"
+
+' P/Invoke 관계
+NUIRenderEffect ..> Interop Layer : "calls"
+NUIMaskEffect ..> Interop Layer : "calls"
+Interoper Layer ..> DaliRenderEffect : "binds to"
+Interoper Layer ..> DaliMaskEffect : "binds to"
+
+' 메모리 관리 차이
+note right of DaliControl
+  **DALi 메모리 관리**
+  - 참조 카운트 기반
+  - 수동 생명주기 관리
+  - WeakHandle로 순환 참조 방지
+end note
+
+note right of NUIView
+  **NUI 메모리 관리**
+  - 가비지 컬렉션 기반
+  - 자동 생명주기 관리
+  - WeakReference로 순환 참조 방지
+  - Dispose() 패턴 권장
+end note
+
+@enduml
+
+@startuml Effect Lifecycle Management
+
+title RenderEffect 생명주기 관리
+
+state "Created" as Created {
+    [*] --> Created
+    Created --> Initializing : New()
+}
+
+state "Initializing" as Initializing {
+    Initializing --> Ready : Initialize()
+}
+
+state "Ready" as Ready {
+    Ready --> Activating : SetRenderEffect()
+}
+
+state "Activating" as Activating {
+    Activating --> Active : Activate()
+}
+
+state "Active" as Active {
+    Active --> Refreshing : Refresh()
+    Refreshing --> Active : Complete
+    Active --> Deactivating : ClearRenderEffect()
+    Active --> Deactivating : Deactivate()
+}
+
+state "Deactivating" as Deactivating {
+    Deactivating --> Ready : Complete
+}
+
+state "Destroying" as Destroying {
+    Ready --> Destroying : ~RenderEffect()
+    Destroying --> [*] : Complete
+}
+
+state "Error" as Error {
+    Initializing --> Error : Initialize Failed
+    Activating --> Error : Activate Failed
+    Deactivating --> Error : Deactivate Failed
+    
+    Error --> Destroying : Cleanup
+}
+
+'DALi 라이프사이클
+state "DALi Lifecycle" as DALiLifecycle {
+    state "Reference Counted" as RefCounted {
+        note right: AddRef()/Release()로\n참조 카운트 관리
+    }
+}
+
+'NUI 라이프사이클
+state "NUI Lifecycle" as NUILifecycle {
+    state "Garbage Collected" as GCD {
+        note right: GC가 자동 정리\nDispose() 권장
+    }
+}
+
+Created --> DALiLifecycle : C++ Implementation
+Created --> NUILifecycle : C# Binding
+
+@enduml
+
+@startuml Memory Management Architecture
+
+title 메모리 관리 아키텍처
+
+package "DALi Memory Management" {
+    class "RefObject" as RefObject {
+        -mRefCount: atomic<int>
+        +AddRef()
+        +Release()
+        +GetRefCount()
+    }
+    
+    class "RenderEffectImpl" as DaliImpl {
+        -mOwnerControl: WeakHandle<Control>
+        +SetOwnerControl()
+        +ClearOwnerControl()
+    }
+    
+    class "Control" as DaliControl {
+        -mRenderEffect: RenderEffectImplPtr
+        +SetRenderEffect()
+        +ClearRenderEffect()
+    }
+    
+    class "WeakHandle" as WeakHandle {
+        -mWeakPtr: weak_ptr<T>
+        +GetHandle()
+        +IsValid()
+    }
+}
+
+package "NUI Memory Management" {
+    class "RenderEffect" as NUIEffect {
+        -_ownerView: WeakReference<View>
+        -aliveCount: int
+        +SetOwnerView()
+        +Dispose()
+    }
+    
+    class "View" as NUIView {
+        +SetRenderEffect()
+        +ClearRenderEffect()
+    }
+    
+    class "WeakReference" as WeakRef {
+        -Target: object
+        +TryGetTarget()
+        +IsAlive
+    }
+}
+
+' DALi 메모리 관리 관계
+RefObject <|-- DaliImpl
+DaliImpl --> WeakHandle : "uses"
+DaliControl --> DaliImpl : "owns (strong)"
+
+' NUI 메모리 관리 관계
+NUIEffect --> WeakRef : "uses"
+NUIView --> NUIEffect : "uses"
+
+' 순환 참조 방지
+note right of DaliImpl
+  **DALi 순환 참조 방지**
+  Control → RenderEffectImpl (강한 참조)
+  RenderEffectImpl → Control (WeakHandle)
+end note
+
+note right of NUIEffect
+  **NUI 순환 참조 방지**
+  View → RenderEffect (강한 참조)
+  RenderEffect → View (WeakReference)
+end note
+
+@enduml
+
+@startuml Performance Optimization Architecture
+
+title 성능 최적화 아키텍처
+
+package "Object Pooling" {
+    class "EffectPool" as EffectPool {
+        -mPool: vector<RenderEffect>
+        +GetEffect()
+        +ReturnEffect()
+    }
+    
+    class "FramebufferManager" as FBManager {
+        -mFramebufferPool: vector<FramebufferEntry>
+        +AcquireFramebuffer()
+        +ReleaseFramebuffer()
+    }
+    
+    class "ShaderCache" as ShaderCache {
+        -mShaderCache: unordered_map<string, Shader>
+        +GetShader()
+    }
+}
+
+package "Render Task Optimization" {
+    class "RenderTaskOptimizer" as RTOptimizer {
+        +OptimizeRenderTasks()
+        +MergeTasksWithSameTarget()
+        +RemoveRedundantTasks()
+    }
+    
+    class "RenderTaskList" as RTList {
+        -mTasks: vector<RenderTask>
+        +ReorderTasks()
+        +SortTasks()
+    }
+}
+
+package "Memory Optimization" {
+    class "LRUCache" as LRUCache {
+        -mCache: unordered_map<Key, Value>
+        -mUsageOrder: list<Key>
+        +Get()
+        +Put()
+    }
+    
+    class "ResourcePool" as ResourcePool {
+        -mTexturePool: map<pair<Vector2, Format>, TextureEntry>
+        +GetTexture()
+        +ReleaseTexture()
+    }
+}
+
+' 관계 정의
+EffectPool --> FBManager : "uses"
+EffectPool --> ShaderCache : "uses"
+
+RTList --> RTOptimizer : "uses"
+RTOptimizer --> FBManager : "uses"
+
+LRUCache --> ResourcePool : "extends"
+ResourcePool --> FBManager : "uses"
+
+' 성능 최적화 특징
+note right of EffectPool
+  **객체 풀링**
+  - 반복 생성/소멸 방지
+  - 메모리 단편화 감소
+  - 생성 시간 단축
+end note
+
+note right of RTOptimizer
+  **렌더 태스크 최적화**
+  - 동일 타겟 병합
+  - 불필요한 태스크 제거
+  - 렌더링 순서 최적화
+end note
+
+note right of LRUCache
+  **메모리 캐싱**
+  - LRU 알고리즘
+  - 자동 리소스 정리
+  - 메모리 사용량 제어
+end note
+
+@enduml
