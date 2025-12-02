@@ -1,0 +1,180 @@
+@startuml Control_Class_Hierarchy
+!theme plain
+skinparam classAttributeIconSize 0
+
+title DALi Control 클래스 계층 구조
+
+package "DALi Core" {
+    class BaseObject {
+        +ReferenceCounting
+        +PropertySystem
+    }
+    
+    class Handle {
+        +mImpl: BaseObject*
+    }
+    
+    class Actor {
+        +Position: Vector3
+        +Size: Vector3
+        +Scale: Vector3
+        +Orientation: Quaternion
+        +Color: Vector4
+        +Visible: bool
+        +Parent: Actor
+        +Children: Actor[]
+    }
+    
+    class CustomActor {
+        +OnSceneConnection()
+        +OnSceneDisconnection()
+        +OnChildAdd()
+        +OnChildRemove()
+        +OnSizeSet()
+        +OnRelayout()
+    }
+    
+    class CustomActorImpl {
+        +mActor: Actor
+        +mBehaviourFlags: uint32_t
+        +OnInitialize()
+        +OnSizeSet()
+        +OnRelayout()
+    }
+}
+
+package "DALi Toolkit" {
+    class Control {
+        +StyleName: string
+        +KeyInputFocus: bool
+        +Background: Property::Map
+        +Margin: Extents
+        +Padding: Extents
+        +SetStyleName()
+        +SetKeyInputFocus()
+        +SetBackgroundColor()
+        +ClearBackground()
+        +KeyEventSignal()
+        +ResourceReadySignal()
+    }
+    
+    class ControlImpl {
+        +mControlImpl: Control&
+        +mState: DevelControl::State
+        +mSubStateName: string
+        +mStyleName: string
+        +mBackgroundColor: Vector4
+        +mKeyEventSignal
+        +mKeyInputFocusGainedSignal
+        +mKeyInputFocusLostSignal
+        +mResourceReadySignal
+        +OnInitialize()
+        +OnStyleChange()
+        +OnKeyInputFocusGained()
+        +OnKeyInputFocusLost()
+        +OnKeyEvent()
+    }
+    
+    class ControlDataImpl {
+        +mControlImpl: Control&
+        +mState: DevelControl::State
+        +mSubStateName: string
+        +mAccessibilityData
+        +mVisualData
+        +mStyleName: string
+        +mBackgroundColor: Vector4
+        +mMargin: Extents
+        +mPadding: Extents
+        +mKeyEventSignal
+        +mKeyInputFocusGainedSignal
+        +mKeyInputFocusLostSignal
+        +mResourceReadySignal
+        +RegisterVisual()
+        +UnregisterVisual()
+        +GetVisual()
+        +EnableVisual()
+        +SetState()
+        +SetSubState()
+        +IsResourceReady()
+    }
+    
+    class ImageView {
+        +Image: string|Property::Map
+        +PreMultipliedAlpha: bool
+        +PlaceholderImage: string
+        +EnableTransitionEffect: bool
+        +TransitionEffectOption: Property::Map
+        +PixelArea: Vector4
+        +SetImage()
+        +New()
+    }
+    
+    class TextLabel {
+        +Text: string
+        +FontFamily: string
+        +FontStyle: string|Property::Map
+        +PointSize: float
+        +MultiLine: bool
+        +HorizontalAlignment: string
+        +VerticalAlignment: string
+        +TextColor: Vector4
+        +EnableMarkup: bool
+        +EnableAutoScroll: bool
+        +AutoScrollSpeed: int
+        +SetProperty()
+        +New()
+    }
+}
+
+' 상속 관계
+BaseObject <|-- CustomActorImpl
+Handle <|-- Actor
+Actor <|-- CustomActor
+CustomActor <|-- Control
+Control <|-- ImageView
+Control <|-- TextLabel
+
+' 구현 관계
+CustomActorImpl <|.. ControlImpl
+ControlImpl <|.. ControlDataImpl
+
+' 합성 관계
+Control *-- ControlDataImpl : contains
+ControlImpl *-- ControlDataImpl : uses
+
+' 메모 설명
+note right of Control
+  Control은 모든 컨트롤의 기본 클래스
+  - 스타일링 지원
+  - 키보드 입력 포커스
+  - 제스처 감지
+  - 비주얼 관리
+  - 접근성 지원
+end note
+
+note right of ControlDataImpl
+  Control의 실제 데이터 구현
+  - 비주얼 데이터 관리
+  - 접근성 데이터 관리
+  - 상태 관리
+  - 리소스 관리
+  - 애니메이션 지원
+end note
+
+note right of ImageView
+  이미지 표시 컨트롤
+  - URL 기반 이미지 로딩
+  - 픽셀 영역 지정
+  - 전환 효과 지원
+  - 플레이스홀더 이미지
+end note
+
+note right of TextLabel
+  텍스트 표시 컨트롤
+  - 다중 라인 지원
+  - 마크업 처리
+  - 자동 스크롤
+  - 텍스트 스타일링
+end note
+
+@enduml

@@ -1,0 +1,284 @@
+@startuml Visual_Class_Hierarchy
+!theme plain
+skinparam classAttributeIconSize 0
+
+title DALi Visual 클래스 계층 구조
+
+package "DALi Toolkit - Visual Base" {
+    class BaseObject {
+        +ReferenceCounting
+        +PropertySystem
+    }
+    
+    class VisualBase {
+        +Name: string
+        +Type: Visual::Type
+        +DepthIndex: int
+        +MixColor: Vector4
+        +SetProperties()
+        +SetName()
+        +SetTransformAndSize()
+        +SetDepthIndex()
+        +SetOnScene()
+        +SetOffScene()
+        +CreatePropertyMap()
+        +DoAction()
+        +AnimateProperty()
+        +ResourceReady()
+        +IsResourceReady()
+    }
+    
+    class VisualBaseImpl {
+        +mImpl: Impl*
+        +mFactoryCache: VisualFactoryCache&
+        +SetProperties()
+        +OnInitialize()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +DoSetOffScene()
+        +OnSetTransform()
+        +UpdateShader()
+        +GenerateShader()
+    }
+    
+    class VisualBaseDataImpl {
+        +mRenderer: VisualRenderer
+        +mCustomShaders: CustomShader[]
+        +mEventObserver: EventObserver*
+        +mName: string
+        +mTransform: Transform
+        +mMixColor: Vector4
+        +mControlSize: Size
+        +mDecorationData: DecorationData*
+        +mDepthIndex: int
+        +mFittingMode: FittingMode
+        +mFlags: int
+        +mResourceStatus: ResourceStatus
+        +mType: Visual::Type
+        +mAlwaysUsingBorderline: bool
+        +mAlwaysUsingCornerRadius: bool
+        +mAlwaysUsingCornerSquareness: bool
+        +mIgnoreFittingMode: bool
+        +mPixelAreaSetByFittingMode: bool
+        +mTransformMapSetForFittingMode: bool
+        +mTransformMapUsingDefault: bool
+        +mTransformMapChanged: bool
+    }
+    
+    class CustomShader {
+        +mVertexShader: string
+        +mFragmentShader: string
+        +mGridSize: ImageDimensions
+        +mHints: Shader::Hint::Value
+        +mRenderPassTag: int32_t
+        +mName: string
+        +SetPropertyMap()
+        +CreatePropertyMap()
+    }
+    
+    class Transform {
+        +mOffset: Vector2
+        +mSize: Vector2
+        +mExtraSize: Vector2
+        +mOffsetSizeMode: Vector4
+        +mOrigin: Align::Type
+        +mAnchorPoint: Align::Type
+        +SetPropertyMap()
+        +GetPropertyMap()
+        +UpdatePropertyMap()
+        +SetUniforms()
+        +GetVisualSize()
+        +GetDefaultTransformMap()
+    }
+}
+
+package "DALi Toolkit - Visual Types" {
+    class ImageVisual {
+        +mPixelArea: Vector4
+        +mImageUrl: VisualUrl
+        +mMaskingData: MaskingDataPointer
+        +mDesiredSize: ImageDimensions
+        +mTextureId: TextureId
+        +mTextures: TextureSet
+        +mNativeTexture: Texture
+        +mTextureSize: Vector2
+        +mFittingMode: FittingMode::Type
+        +mSamplingMode: SamplingMode::Type
+        +mWrapModeU: WrapMode::Type
+        +mWrapModeV: WrapMode::Type
+        +mLoadPolicy: LoadPolicy::Type
+        +mReleasePolicy: ReleasePolicy::Type
+        +mAtlasRect: Vector4
+        +mLoadState: LoadState
+        +mAttemptAtlasing: bool
+        +mOrientationCorrection: bool
+        +mNeedYuvToRgb: bool
+        +mNeedUnifiedYuvAndRgb: bool
+        +mEnableBrokenImage: bool
+        +mUseFastTrackUploading: bool
+        +mRendererAdded: bool
+        +mUseBrokenImageRenderer: bool
+        +mUseSynchronousSizing: bool
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +EnablePreMultipliedAlpha()
+        +OnDoAction()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +DoSetOffScene()
+        +OnSetTransform()
+        +UpdateShader()
+        +GenerateShader()
+        +UploadCompleted()
+        +LoadComplete()
+        +FastLoadComplete()
+    }
+    
+    class ColorVisual {
+        +mColor: Vector4
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class TextVisual {
+        +mText: string
+        +mFontFamily: string
+        +mFontStyle: Property::Map
+        +mPointSize: float
+        +mTextColor: Vector4
+        +mMultiLine: bool
+        +mHorizontalAlignment: HorizontalAlignment::Type
+        +mVerticalAlignment: VerticalAlignment::Type
+        +mEnableMarkup: bool
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class BorderVisual {
+        +mColor: Vector4
+        +mSize: float
+        +mCornerColor: Vector4
+        +mCornerSize: float
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class GradientVisual {
+        +mStartColor: Vector4
+        +mEndColor: Vector4
+        +mStartPosition: Vector2
+        +mEndPosition: Vector2
+        +mGradientUnits: GradientUnits::Type
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class PrimitiveVisual {
+        +mShape: PrimitiveVisual::Shape::Type
+        +mColor: Vector4
+        +mSlices: int
+        +mRings: int
+        +mBevelPercentage: float
+        +mScaleDimensions: Vector3
+        +mThreeDimensions: bool
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+}
+
+' 상속 관계
+BaseObject <|-- VisualBaseImpl
+VisualBaseImpl <|-- VisualBase
+VisualBase <|-- ImageVisual
+VisualBase <|-- ColorVisual
+VisualBase <|-- TextVisual
+VisualBase <|-- BorderVisual
+VisualBase <|-- GradientVisual
+VisualBase <|-- PrimitiveVisual
+
+' 합성 관계
+VisualBaseImpl *-- VisualBaseDataImpl : contains
+VisualBaseDataImpl *-- CustomShader : contains
+VisualBaseDataImpl *-- Transform : contains
+
+' 메모 설명
+note right of VisualBase
+  모든 Visual의 기본 클래스
+  - 속성 관리
+  - 변환 및 크기 조정
+  - 깊이 인덱스 관리
+  - 씬 연결/해제
+  - 애니메이션 지원
+  - 리소스 상태 관리
+end note
+
+note right of VisualBaseDataImpl
+  Visual의 실제 데이터 구현
+  - 렌더러 관리
+  - 커스텀 셰이더 지원
+  - 변환 데이터 관리
+  - 장식 데이터 관리
+  - 피팅 모드 지원
+end note
+
+note right of ImageVisual
+  이미지 렌더링 비주얼
+  - 텍스처 로딩 및 관리
+  - 아틀라싱 지원
+  - 마스킹 기능
+  - YUV to RGB 변환
+  - 고속 로딩 지원
+end note
+
+note right of ColorVisual
+  단색 렌더링 비주얼
+  - 간단한 사각형 렌더링
+  - 혼합 색상 지원
+  - 코너 반경 지원
+end note
+
+note right of TextVisual
+  텍스트 렌더링 비주얼
+  - 폰트 렌더링
+  - 다중 라인 지원
+  - 마크업 처리
+  - 텍스트 스타일링
+end note
+
+note right of BorderVisual
+  테두리 렌더링 비주얼
+  - 테두리 색상 및 크기
+  - 코너 테두리 지원
+  - 안티앨리어싱
+end note
+
+note right of GradientVisual
+  그라데이션 렌더링 비주얼
+  - 선형 그라데이션
+  - 방사형 그라데이션
+  - 다중 색상 지원
+end note
+
+note right of PrimitiveVisual
+  기본 도형 렌더링 비주얼
+  - 원, 사각형, 삼각형
+  - 3D 기본 도형 지원
+  - 베벨 효과 지원
+end note
+
+@enduml

@@ -1,0 +1,437 @@
+@startuml DALi_Overall_Architecture
+!theme plain
+skinparam classAttributeIconSize 0
+
+title DALi 전체 아키텍처 - Control과 Visual
+
+package "Application Layer" {
+    [Application] as App
+}
+
+package "DALi Toolkit - Control Layer" {
+    class Control {
+        +StyleName: string
+        +KeyInputFocus: bool
+        +Background: Property::Map
+        +Margin: Extents
+        +Padding: Extents
+        +SetStyleName()
+        +SetKeyInputFocus()
+        +SetBackgroundColor()
+        +ClearBackground()
+        +KeyEventSignal()
+        +ResourceReadySignal()
+    }
+    
+    class ImageView {
+        +Image: string|Property::Map
+        +PreMultipliedAlpha: bool
+        +PlaceholderImage: string
+        +EnableTransitionEffect: bool
+        +TransitionEffectOption: Property::Map
+        +PixelArea: Vector4
+        +SetImage()
+        +New()
+    }
+    
+    class TextLabel {
+        +Text: string
+        +FontFamily: string
+        +FontStyle: string|Property::Map
+        +PointSize: float
+        +MultiLine: bool
+        +HorizontalAlignment: string
+        +VerticalAlignment: string
+        +TextColor: Vector4
+        +EnableMarkup: bool
+        +EnableAutoScroll: bool
+        +AutoScrollSpeed: int
+        +SetProperty()
+        +New()
+    }
+    
+    class ControlImpl {
+        +mControlImpl: Control&
+        +mState: DevelControl::State
+        +mSubStateName: string
+        +OnInitialize()
+        +OnStyleChange()
+        +OnKeyInputFocusGained()
+        +OnKeyInputFocusLost()
+        +OnKeyEvent()
+    }
+    
+    class ControlDataImpl {
+        +mControlImpl: Control&
+        +mState: DevelControl::State
+        +mSubStateName: string
+        +mAccessibilityData
+        +mVisualData
+        +mStyleName: string
+        +mBackgroundColor: Vector4
+        +mMargin: Extents
+        +mPadding: Extents
+        +RegisterVisual()
+        +UnregisterVisual()
+        +GetVisual()
+        +EnableVisual()
+        +SetState()
+        +SetSubState()
+        +IsResourceReady()
+    }
+}
+
+package "DALi Toolkit - Visual Management Layer" {
+    class VisualFactory {
+        +CreateVisual()
+        +CreateImageVisual()
+        +CreateColorVisual()
+        +CreateTextVisual()
+        +CreateBorderVisual()
+        +CreateGradientVisual()
+        +CreatePrimitiveVisual()
+    }
+    
+    class VisualFactoryCache {
+        +mRendererCache: Renderer[]
+        +mShaderCache: Shader[]
+        +mGeometryCache: Geometry[]
+        +GetRenderer()
+        +GetShader()
+        +GetGeometry()
+    }
+    
+    class VisualData {
+        +mVisuals: Property::Index -> Visual::Base[]
+        +mVisualEnables: Property::Index -> bool[]
+        +mVisualResourceStatus: Property::Index -> ResourceStatus[]
+        +mVisualDepthIndices: Property::Index -> int[]
+        +RegisterVisual()
+        +UnregisterVisual()
+        +GetVisual()
+        +EnableVisual()
+        +GetVisualResourceStatus()
+    }
+}
+
+package "DALi Toolkit - Visual Layer" {
+    class VisualBase {
+        +Name: string
+        +Type: Visual::Type
+        +DepthIndex: int
+        +MixColor: Vector4
+        +SetProperties()
+        +SetName()
+        +SetTransformAndSize()
+        +SetDepthIndex()
+        +SetOnScene()
+        +SetOffScene()
+        +CreatePropertyMap()
+        +DoAction()
+        +AnimateProperty()
+        +ResourceReady()
+        +IsResourceReady()
+    }
+    
+    class ImageVisual {
+        +mPixelArea: Vector4
+        +mImageUrl: VisualUrl
+        +mMaskingData: MaskingDataPointer
+        +mDesiredSize: ImageDimensions
+        +mTextureId: TextureId
+        +mTextures: TextureSet
+        +mNativeTexture: Texture
+        +mTextureSize: Vector2
+        +mFittingMode: FittingMode::Type
+        +mSamplingMode: SamplingMode::Type
+        +mWrapModeU: WrapMode::Type
+        +mWrapModeV: WrapMode::Type
+        +mLoadPolicy: LoadPolicy::Type
+        +mReleasePolicy: ReleasePolicy::Type
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +EnablePreMultipliedAlpha()
+        +OnDoAction()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +DoSetOffScene()
+        +OnSetTransform()
+        +UpdateShader()
+        +GenerateShader()
+        +UploadCompleted()
+        +LoadComplete()
+        +FastLoadComplete()
+    }
+    
+    class TextVisual {
+        +mText: string
+        +mFontFamily: string
+        +mFontStyle: Property::Map
+        +mPointSize: float
+        +mTextColor: Vector4
+        +mMultiLine: bool
+        +mHorizontalAlignment: HorizontalAlignment::Type
+        +mVerticalAlignment: VerticalAlignment::Type
+        +mEnableMarkup: bool
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class ColorVisual {
+        +mColor: Vector4
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class BorderVisual {
+        +mColor: Vector4
+        +mSize: float
+        +mCornerColor: Vector4
+        +mCornerSize: float
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class GradientVisual {
+        +mStartColor: Vector4
+        +mEndColor: Vector4
+        +mStartPosition: Vector2
+        +mEndPosition: Vector2
+        +mGradientUnits: GradientUnits::Type
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+    
+    class PrimitiveVisual {
+        +mShape: PrimitiveVisual::Shape::Type
+        +mColor: Vector4
+        +mSlices: int
+        +mRings: int
+        +mBevelPercentage: float
+        +mScaleDimensions: Vector3
+        +mThreeDimensions: bool
+        +GetNaturalSize()
+        +DoCreatePropertyMap()
+        +DoSetProperties()
+        +DoSetOnScene()
+        +OnSetTransform()
+    }
+}
+
+package "DALi Core - Actor Layer" {
+    class Actor {
+        +Position: Vector3
+        +Size: Vector3
+        +Scale: Vector3
+        +Orientation: Quaternion
+        +Color: Vector4
+        +Visible: bool
+        +Parent: Actor
+        +Children: Actor[]
+        +SetPosition()
+        +SetSize()
+        +SetScale()
+        +SetOrientation()
+        +SetColor()
+        +SetVisible()
+        +Add()
+        +Remove()
+    }
+    
+    class CustomActor {
+        +OnSceneConnection()
+        +OnSceneDisconnection()
+        +OnChildAdd()
+        +OnChildRemove()
+        +OnSizeSet()
+        +OnRelayout()
+    }
+    
+    class CustomActorImpl {
+        +mActor: Actor
+        +mBehaviourFlags: uint32_t
+        +OnInitialize()
+        +OnSizeSet()
+        +OnRelayout()
+    }
+}
+
+package "DALi Core - Rendering Layer" {
+    class Renderer {
+        +mGeometry: Geometry
+        +mMaterial: Material
+        +mDepthIndex: int
+        +SetGeometry()
+        +SetMaterial()
+        +SetDepthIndex()
+    }
+    
+    class Geometry {
+        +mVertices: VertexBuffer[]
+        +mIndices: IndexBuffer
+        +SetVertices()
+        +SetIndices()
+    }
+    
+    class Material {
+        +mTextureSet: TextureSet
+        +mShader: Shader
+        +SetTextureSet()
+        +SetShader()
+    }
+    
+    class TextureSet {
+        +mTextures: Texture[]
+        +SetTexture()
+        +GetTexture()
+    }
+    
+    class Texture {
+        +mWidth: uint32_t
+        +mHeight: uint32_t
+        +mFormat: Pixel::Format
+        +Upload()
+        +Download()
+    }
+    
+    class Shader {
+        +mVertexShader: string
+        +mFragmentShader: string
+        +SetShader()
+        +Compile()
+    }
+}
+
+package "Resource Management Layer" {
+    class TextureManager {
+        +LoadTexture()
+        +UploadTexture()
+        +RemoveTexture()
+        +GetTexture()
+        +AddObserver()
+        +RemoveObserver()
+    }
+    
+    class ImageLoader {
+        +LoadImage()
+        +DecodeImage()
+        +GetImageSize()
+        +GetPixelFormat()
+    }
+    
+    class FontManager {
+        +LoadFont()
+        +GetFontMetrics()
+        +GetGlyphBitmap()
+        +GetGlyphMetrics()
+    }
+}
+
+' 상속 관계
+Control <|-- ImageView
+Control <|-- TextLabel
+CustomActor <|-- Control
+VisualBase <|-- ImageVisual
+VisualBase <|-- TextVisual
+VisualBase <|-- ColorVisual
+VisualBase <|-- BorderVisual
+VisualBase <|-- GradientVisual
+VisualBase <|-- PrimitiveVisual
+
+' 구현 관계
+CustomActorImpl <|.. ControlImpl
+ControlImpl <|.. ControlDataImpl
+
+' 합성 관계
+Control *-- ControlImpl : contains
+ControlImpl *-- ControlDataImpl : uses
+ControlDataImpl *-- VisualData : contains
+VisualData *-- VisualBase : manages
+VisualFactory *-- VisualFactoryCache : uses
+VisualFactory *-- VisualBase : creates
+VisualBase *-- Renderer : uses
+Renderer *-- Geometry : uses
+Renderer *-- Material : uses
+Material *-- TextureSet : uses
+TextureSet *-- Texture : uses
+ImageVisual *-- TextureManager : uses
+TextVisual *-- FontManager : uses
+
+' 의존 관계
+App ..> Control : uses
+App ..> ImageView : uses
+App ..> TextLabel : uses
+ImageView ..> ImageVisual : creates
+TextLabel ..> TextVisual : creates
+ControlDataImpl ..> VisualFactory : uses
+ImageVisual ..> ImageLoader : loads from
+TextVisual ..> FontManager : loads from
+TextureManager ..> ImageLoader : uses
+
+' 데이터 흐름
+App --> Control : 1. 생성
+Control --> ControlImpl : 2. 초기화
+ControlImpl --> ControlDataImpl : 3. 데이터 설정
+ControlDataImpl --> VisualFactory : 4. Visual 생성 요청
+VisualFactory --> VisualBase : 5. Visual 생성
+VisualBase --> Renderer : 6. 렌더러 설정
+Renderer --> Geometry : 7. 지오메트리 설정
+Renderer --> Material : 8. 머티리얼 설정
+Material --> TextureSet : 9. 텍스처 설정
+TextureSet --> Texture : 10. 텍스처 로딩
+Texture --> TextureManager : 11. 텍스처 관리
+TextureManager --> ImageLoader : 12. 이미지 로딩
+
+' 메모 설명
+note top of App
+  애플리케이션 계층
+  - UI 컴포넌트 생성 및 관리
+  - 사용자 이벤트 처리
+  - 상태 관리
+end note
+
+note right of Control
+  Control 계층
+  - UI 컴포넌트 기반 클래스
+  - 사용자 입력 처리
+  - 스타일링 지원
+  - 상태 관리
+end note
+
+note right of VisualBase
+  Visual 계층
+  - 렌더링 로직 캡슐화
+  - 리소스 관리
+  - 애니메이션 지원
+  - 효율적인 렌더링
+end note
+
+note right of Renderer
+  렌더링 계층
+  - 저수준 렌더링 API
+  - GPU 리소스 관리
+  - 드로우 콜 최적화
+  - 하드웨어 가속
+end note
+
+note bottom of TextureManager
+  리소스 관리 계층
+  - 텍스처 로딩 및 캐싱
+  - 메모리 관리
+  - 비동기 로딩
+  - 아틀라싱 최적화
+end note
+
+@enduml
