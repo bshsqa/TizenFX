@@ -1,0 +1,450 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CLICKS_PER_MODE=6
+FPS=30
+INTERVAL=1.45
+TIMEOUT=15.0
+WARMUP=2.0
+TAIL=1.0
+OUTPUT="$HOME/Videos/gradient-loading-effect-nui-demo-$(date +%Y%m%d-%H%M%S).mp4"
+WINDOW_WIDTH=700
+WINDOW_HEIGHT=700
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --output)
+      OUTPUT="$2"
+      shift 2
+      ;;
+    --clicks-per-mode)
+      CLICKS_PER_MODE="$2"
+      shift 2
+      ;;
+    --fps)
+      FPS="$2"
+      shift 2
+      ;;
+    --interval)
+      INTERVAL="$2"
+      shift 2
+      ;;
+    --timeout)
+      TIMEOUT="$2"
+      shift 2
+      ;;
+    --warmup)
+      WARMUP="$2"
+      shift 2
+      ;;
+    --tail)
+      TAIL="$2"
+      shift 2
+      ;;
+    --window-size)
+      WINDOW_WIDTH="${2%x*}"
+      WINDOW_HEIGHT="${2#*x}"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      exit 2
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if [[ -z "${DISPLAY:-}" ]]; then
+  echo "DISPLAY is not set. This recorder needs an X11 display." >&2
+  exit 1
+fi
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "ffmpeg is required for recording." >&2
+  echo "Install it first, for example: sudo apt-get install ffmpeg" >&2
+  exit 1
+fi
+
+if [[ $# -eq 0 ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+  set -- dotnet run --project "$PROJECT_DIR/GradientLoadingEffect.csproj"
+fi
+
+TMP_DIR="${TMPDIR:-/tmp}/gradient-loading-effect-demo-recorder"
+HELPER="$TMP_DIR/x11_demo_driver"
+SOURCE="$TMP_DIR/x11_demo_driver.cpp"
+mkdir -p "$TMP_DIR" "$(dirname "$OUTPUT")"
+
+cat > "$SOURCE" <<'EOF'
+#include <X11/Xatom.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
+
+#include <algorithm>
+#include <chrono>
+#include <cstdlib>
+#include <cstring>
+#include <dirent.h>
+#include <fstream>
+#include <iostream>
+#include <set>
+#include <string>
+#include <thread>
+#include <vector>
+
+namespace
+{
+bool ReadParentPid(pid_t pid, pid_t& parentPid)
+{
+  std::ifstream stat("/proc/" + std::to_string(pid) + "/stat");
+  std::string   line;
+  if(!std::getline(stat, line))
+  {
+    return false;
+  }
+
+  const auto closeParen = line.rfind(')');
+  if(closeParen == std::string::npos || closeParen + 4 >= line.size())
+  {
+    return false;
+  }
+
+  const char* cursor = line.c_str() + closeParen + 4;
+  char*       end    = nullptr;
+  parentPid          = static_cast<pid_t>(std::strtol(cursor, &end, 10));
+  return end != cursor;
+}
+
+std::set<pid_t> CollectProcessTree(pid_t rootPid)
+{
+  std::set<pid_t> result;
+  result.insert(rootPid);
+
+  bool changed = true;
+  while(changed)
+  {
+    changed = false;
+    DIR* proc = opendir("/proc");
+    if(!proc)
+    {
+      return result;
+    }
+
+    while(dirent* entry = readdir(proc))
+    {
+      if(!std::all_of(entry->d_name, entry->d_name + std::strlen(entry->d_name), ::isdigit))
+      {
+        continue;
+      }
+
+      const pid_t pid = static_cast<pid_t>(std::strtol(entry->d_name, nullptr, 10));
+      pid_t       parentPid{};
+      if(ReadParentPid(pid, parentPid) && result.count(parentPid) && !result.count(pid))
+      {
+        result.insert(pid);
+        changed = true;
+      }
+    }
+    closedir(proc);
+  }
+  return result;
+}
+
+bool GetWindowPid(Display* display, Window window, pid_t& pid)
+{
+  Atom property = XInternAtom(display, "_NET_WM_PID", True);
+  if(property == None)
+  {
+    return false;
+  }
+
+  Atom           actualType{};
+  int            actualFormat{};
+  unsigned long  itemCount{};
+  unsigned long  bytesAfter{};
+  unsigned char* data{};
+
+  int status = XGetWindowProperty(display, window, property, 0, 1, False, XA_CARDINAL, &actualType, &actualFormat, &itemCount, &bytesAfter, &data);
+  if(status != Success || !data || itemCount == 0)
+  {
+    if(data)
+    {
+      XFree(data);
+    }
+    return false;
+  }
+
+  pid = *reinterpret_cast<unsigned long*>(data);
+  XFree(data);
+  return true;
+}
+
+bool IsWindowViewable(Display* display, Window window)
+{
+  XWindowAttributes attributes{};
+  return XGetWindowAttributes(display, window, &attributes) && attributes.map_state == IsViewable && attributes.width > 0 && attributes.height > 0;
+}
+
+void FindWindowsForPids(Display* display, Window root, const std::set<pid_t>& pids, std::vector<Window>& windows)
+{
+  pid_t windowPid{};
+  if(GetWindowPid(display, root, windowPid) && pids.count(windowPid) && IsWindowViewable(display, root))
+  {
+    windows.push_back(root);
+  }
+
+  Window  returnedRoot{};
+  Window  returnedParent{};
+  Window* children{};
+  unsigned int childCount{};
+  if(XQueryTree(display, root, &returnedRoot, &returnedParent, &children, &childCount))
+  {
+    for(unsigned int i = 0; i < childCount; ++i)
+    {
+      FindWindowsForPids(display, children[i], pids, windows);
+    }
+    if(children)
+    {
+      XFree(children);
+    }
+  }
+}
+
+Window FindWindow(Display* display, pid_t rootPid)
+{
+  const auto pids = CollectProcessTree(rootPid);
+  std::vector<Window> windows;
+  FindWindowsForPids(display, DefaultRootWindow(display), pids, windows);
+  return windows.empty() ? 0 : windows.back();
+}
+
+Window WaitForWindow(Display* display, pid_t rootPid, double timeoutSeconds)
+{
+  Window window = 0;
+  const auto deadline = std::chrono::steady_clock::now() + std::chrono::duration<double>(timeoutSeconds);
+  while(std::chrono::steady_clock::now() < deadline)
+  {
+    window = FindWindow(display, rootPid);
+    if(window)
+    {
+      break;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+  return window;
+}
+
+bool GetGeometry(Display* display, Window window, int& x, int& y, int& width, int& height)
+{
+  XWindowAttributes attributes{};
+  if(!XGetWindowAttributes(display, window, &attributes))
+  {
+    return false;
+  }
+
+  Window child{};
+  if(!XTranslateCoordinates(display, window, DefaultRootWindow(display), 0, 0, &x, &y, &child))
+  {
+    return false;
+  }
+
+  width  = attributes.width;
+  height = attributes.height;
+  return true;
+}
+
+bool ClickWindowCenter(Display* display, Window window)
+{
+  int x{};
+  int y{};
+  int width{};
+  int height{};
+  if(!GetGeometry(display, window, x, y, width, height))
+  {
+    return false;
+  }
+
+  XTestFakeMotionEvent(display, DefaultScreen(display), x + width / 2, y + height / 2, CurrentTime);
+  XTestFakeButtonEvent(display, 1, True, CurrentTime);
+  XTestFakeButtonEvent(display, 1, False, CurrentTime);
+  XFlush(display);
+  return true;
+}
+
+bool PressKey(Display* display, const char* keyName)
+{
+  KeySym keySym = XStringToKeysym(keyName);
+  if(keySym == NoSymbol && std::strlen(keyName) == 1)
+  {
+    keySym = static_cast<KeySym>(keyName[0]);
+  }
+  if(keySym == NoSymbol)
+  {
+    return false;
+  }
+
+  KeyCode keyCode = XKeysymToKeycode(display, keySym);
+  if(keyCode == 0)
+  {
+    return false;
+  }
+
+  XTestFakeKeyEvent(display, keyCode, True, CurrentTime);
+  XTestFakeKeyEvent(display, keyCode, False, CurrentTime);
+  XFlush(display);
+  return true;
+}
+} // namespace
+
+int main(int argc, char** argv)
+{
+  if(argc < 4)
+  {
+    std::cerr << "Usage: " << argv[0] << " <pid> <timeout> <geometry|click|key> [key-name]\n";
+    return 2;
+  }
+
+  const pid_t rootPid = static_cast<pid_t>(std::strtol(argv[1], nullptr, 10));
+  const double timeout = std::atof(argv[2]);
+  const std::string command = argv[3];
+
+  Display* display = XOpenDisplay(nullptr);
+  if(!display)
+  {
+    std::cerr << "Failed to open X display\n";
+    return 1;
+  }
+
+  int eventBase{};
+  int errorBase{};
+  int major{};
+  int minor{};
+  if(!XTestQueryExtension(display, &eventBase, &errorBase, &major, &minor))
+  {
+    std::cerr << "XTest extension is not available\n";
+    XCloseDisplay(display);
+    return 1;
+  }
+
+  Window window = WaitForWindow(display, rootPid, timeout);
+  if(!window)
+  {
+    std::cerr << "Could not find a visible X11 window for pid " << rootPid << "\n";
+    XCloseDisplay(display);
+    return 1;
+  }
+
+  if(command == "geometry")
+  {
+    int x{};
+    int y{};
+    int width{};
+    int height{};
+    if(!GetGeometry(display, window, x, y, width, height))
+    {
+      std::cerr << "Failed to read window geometry\n";
+      XCloseDisplay(display);
+      return 1;
+    }
+
+    width -= width % 2;
+    height -= height % 2;
+    std::cout << x << ' ' << y << ' ' << width << ' ' << height << '\n';
+  }
+  else if(command == "click")
+  {
+    if(!ClickWindowCenter(display, window))
+    {
+      std::cerr << "Failed to click target window\n";
+      XCloseDisplay(display);
+      return 1;
+    }
+  }
+  else if(command == "key")
+  {
+    if(argc != 5 || !PressKey(display, argv[4]))
+    {
+      std::cerr << "Failed to press key\n";
+      XCloseDisplay(display);
+      return 1;
+    }
+  }
+  else
+  {
+    std::cerr << "Unknown command: " << command << '\n';
+    XCloseDisplay(display);
+    return 2;
+  }
+
+  XCloseDisplay(display);
+  return 0;
+}
+EOF
+
+if [[ ! -x "$HELPER" || "$SOURCE" -nt "$HELPER" ]]; then
+  c++ -std=c++17 "$SOURCE" -o "$HELPER" $(pkg-config --cflags --libs x11 xtst)
+fi
+
+env DALI_WINDOW_WIDTH="$WINDOW_WIDTH" DALI_WINDOW_HEIGHT="$WINDOW_HEIGHT" "$@" &
+APP_PID=$!
+FFMPEG_PID=""
+
+cleanup()
+{
+  if [[ -n "$FFMPEG_PID" ]] && kill -0 "$FFMPEG_PID" 2>/dev/null; then
+    kill -INT "$FFMPEG_PID" 2>/dev/null || true
+    wait "$FFMPEG_PID" 2>/dev/null || true
+  fi
+  if kill -0 "$APP_PID" 2>/dev/null; then
+    kill "$APP_PID" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT
+
+sleep "$WARMUP"
+read -r X Y WIDTH HEIGHT < <("$HELPER" "$APP_PID" "$TIMEOUT" geometry)
+
+ffmpeg -y \
+  -f x11grab \
+  -framerate "$FPS" \
+  -video_size "${WIDTH}x${HEIGHT}" \
+  -i "${DISPLAY}+${X},${Y}" \
+  -an \
+  -c:v libx264 \
+  -preset veryfast \
+  -pix_fmt yuv420p \
+  "$OUTPUT" &
+FFMPEG_PID=$!
+
+sleep 0.6
+
+"$HELPER" "$APP_PID" "$TIMEOUT" key 1
+for ((i = 1; i < CLICKS_PER_MODE; ++i)); do
+  sleep "$INTERVAL"
+  "$HELPER" "$APP_PID" "$TIMEOUT" click
+done
+
+sleep "$INTERVAL"
+"$HELPER" "$APP_PID" "$TIMEOUT" key 2
+for ((i = 1; i < CLICKS_PER_MODE; ++i)); do
+  sleep "$INTERVAL"
+  "$HELPER" "$APP_PID" "$TIMEOUT" click
+done
+
+sleep "$TAIL"
+kill -INT "$FFMPEG_PID" 2>/dev/null || true
+wait "$FFMPEG_PID" 2>/dev/null || true
+FFMPEG_PID=""
+
+kill "$APP_PID" 2>/dev/null || true
+wait "$APP_PID" 2>/dev/null || true
+
+echo "Saved: $OUTPUT"
